@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Portal</title>
+  <style>
+    :root {
+     --blue: #050609;
+  --grey: #c6daf9;
+  --dark-grey: #276ed1;
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--grey);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #fff;
+      padding: 30px 26px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,.1);
+      width: 92%;
+      max-width: 420px;
+    }
+    h1 {
+      margin: 0 0 12px;
+      font-size: 1.6rem;
+      color: var(--blue);
+      text-align: center;
+    }
+    p {
+      margin: 0 0 18px;
+      color: var(--dark-grey);
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: 600;
+      color: var(--dark-grey);
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 1rem;
+      outline: none;
+      transition: border .2s;
+    }
+    input:focus {
+      border-color: var(--blue);
+    }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-blue {
+      background: var(--blue);
+      color: #fff;
+    }
+    .btn-grey {
+      background: #e5e7eb;
+      color: var(--dark-grey);
+    }
+    .toggle-link {
+      text-align: center;
+      margin-top: 12px;
+      color: var(--blue);
+      cursor: pointer;
+      font-size: .95rem;
+    }
+    .captcha-box {
+      background: #f3f4f6;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 8px 0;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+    .error {
+      color: #d93025;
+      font-size: .85rem;
+      margin-top: 6px;
+      display: none;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <!-- Start Screen -->
+  <div class="card" id="startScreen">
+    <h1>Welcome Student</h1>
+    <p>Are you new or already registered?</p>
+    <button class="btn btn-blue" onclick="showLogin()">Already Registered</button>
+    <button class="btn btn-grey" onclick="showSignup()">New Student</button>
+  </div>
+
+  <!-- Login Page -->
+  <div class="card hidden" id="loginPage">
+    <h1>Login</h1>
+    <label for="loginEmail">Email</label>
+    <input type="email" id="loginEmail" placeholder="name@gmail.com" required>
+    <label for="loginPassword">Password</label>
+    <input type="password" id="loginPassword" placeholder="Enter password" required>
+    <button class="btn btn-blue">Login</button>
+    <div class="toggle-link" onclick="goBack()">⬅ Back</div>
+  </div>
+
+  <!-- Signup Page -->
+  <div class="card hidden" id="signupPage">
+    <h1>Sign Up</h1>
+    <label for="fullName">Full Name</label>
+    <input type="text" id="fullName" placeholder="Enter name" required>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" placeholder="Enter phone no." required pattern="[0-9]{10}">
+
+    <label for="email">Email</label>
+    <input type="email" id="email" placeholder="name@gmail.com" required>
+
+    <label for="setPassword">Set Password</label>
+    <input type="password" id="setPassword" placeholder="Enter password" 
+      required pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$"
+      title="Min 8 chars, 1 uppercase, 1 special char">
+
+    <label for="confirmPassword">Confirm Password</label>
+    <input type="password" id="confirmPassword" placeholder="Re-enter password" required>
+    <div class="error" id="passwordError">Passwords do not match</div>
+
+    <label>Captcha</label>
+    <div class="captcha-box" id="captcha"></div>
+    <input type="text" id="captchaInput" placeholder="Enter captcha" required>
+    <div class="error" id="captchaError">Captcha incorrect</div>
+
+    <button class="btn btn-blue" onclick="validateSignup(event)">Sign Up</button>
+    <div class="toggle-link" onclick="goBack()">⬅ Back</div>
+  </div>
+
+  <script>
+    const startScreen = document.getElementById("startScreen");
+    const loginPage = document.getElementById("loginPage");
+    const signupPage = document.getElementById("signupPage");
+    const captchaBox = document.getElementById("captcha");
+    const captchaInput = document.getElementById("captchaInput");
+    const captchaError = document.getElementById("captchaError");
+    const passwordError = document.getElementById("passwordError");
+
+    function showLogin() {
+      startScreen.classList.add("hidden");
+      loginPage.classList.remove("hidden");
+    }
+    function showSignup() {
+      startScreen.classList.add("hidden");
+      signupPage.classList.remove("hidden");
+      generateCaptcha();
+    }
+    function goBack() {
+      loginPage.classList.add("hidden");
+      signupPage.classList.add("hidden");
+      startScreen.classList.remove("hidden");
+    }
+
+    function generateCaptcha() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let captcha = "";
+      for (let i = 0; i < 5; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      captchaBox.textContent = captcha;
+    }
+
+    function validateSignup(e) {
+      e.preventDefault();
+      const pass = document.getElementById("setPassword").value;
+      const confirm = document.getElementById("confirmPassword").value;
+      const captchaText = captchaBox.textContent;
+      const enteredCaptcha = captchaInput.value;
+
+      let valid = true;
+
+      // Check password match
+      if (pass !== confirm) {
+        passwordError.style.display = "block";
+        valid = false;
+      } else {
+        passwordError.style.display = "none";
+      }
+
+      // Check captcha
+      if (enteredCaptcha !== captchaText) {
+        captchaError.style.display = "block";
+        valid = false;
+      } else {
+        captchaError.style.display = "none";
+      }
+
+      if (valid) {
+        alert("Signup successful! 🎉");
+        goBack();
+      }
+    }
+  </script>
+</body>
+</html>
