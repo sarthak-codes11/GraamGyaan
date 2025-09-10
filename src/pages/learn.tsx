@@ -31,7 +31,7 @@ import { BottomBar } from "~/components/BottomBar";
 import { RightBar } from "~/components/RightBar";
 import { LeftBar } from "~/components/LeftBar";
 import { useRouter } from "next/router";
-import { LoginScreen, useLoginScreen } from "~/components/LoginScreen";
+import LoginScreen, { useLoginScreen } from "~/components/LoginScreen";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import type { Tile, TileType, Unit } from "~/utils/units";
 import { units } from "~/utils/units";
@@ -139,10 +139,7 @@ const getTileLeftClassName = ({
   }
 
   const classNames =
-    unitNumber % 2 === 1
-      ? tileLeftClassNames
-      : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
-
+    unitNumber % 2 === 1 ? tileLeftClassNames : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
   return classNames[index % classNames.length] ?? "left-0";
 };
 
@@ -162,14 +159,13 @@ const getTileTooltipLeftOffset = ({
   if (index >= tilesLength - 1) {
     return tileTooltipLeftOffsets[0];
   }
-
   const offsets =
-    unitNumber % 2 === 1
-      ? tileTooltipLeftOffsets
-      : [
-          ...tileTooltipLeftOffsets.slice(4),
-          ...tileTooltipLeftOffsets.slice(0, 4),
-        ];
+    unitNumber % 2 === 1 ?
+      tileTooltipLeftOffsets
+    : [
+      ...tileTooltipLeftOffsets.slice(4),
+      ...tileTooltipLeftOffsets.slice(0, 4),
+    ];
 
   return offsets[index % offsets.length] ?? tileTooltipLeftOffsets[0];
 };
@@ -222,7 +218,6 @@ const TileTooltip = ({
       if (clickIsInsideTooltip) return;
       closeTooltip();
     };
-
     window.addEventListener("click", containsTileTooltip, true);
     return () => window.removeEventListener("click", containsTileTooltip, true);
   }, [selectedTile, tileTooltipRef, closeTooltip, index]);
@@ -242,11 +237,11 @@ const TileTooltip = ({
       <div
         className={[
           "absolute z-30 flex w-[300px] flex-col gap-4 rounded-xl p-4 font-bold transition-all duration-300",
-          status === "ACTIVE"
-            ? activeBackgroundColor
-            : status === "LOCKED"
-              ? "border-2 border-gray-200 bg-gray-100"
-              : "bg-yellow-400",
+          status === "ACTIVE" ?
+            activeBackgroundColor
+          : status === "LOCKED" ?
+            "border-2 border-gray-200 bg-gray-100"
+          : "bg-yellow-400",
           index === selectedTile ? "top-4 scale-100" : "-top-14 scale-0",
         ].join(" ")}
         style={{ left: "calc(50% - 150px)" }}
@@ -254,24 +249,28 @@ const TileTooltip = ({
         <div
           className={[
             "absolute left-[140px] top-[-8px] h-4 w-4 rotate-45",
-            status === "ACTIVE"
-              ? activeBackgroundColor
-              : status === "LOCKED"
-                ? "border-l-2 border-t-2 border-gray-200 bg-gray-100"
-                : "bg-yellow-400",
+            status === "ACTIVE" ?
+              activeBackgroundColor
+            : status === "LOCKED" ?
+              "border-l-2 border-t-2 border-gray-200 bg-gray-100"
+            : "bg-yellow-400",
           ].join(" ")}
           style={{
-            left: getTileTooltipLeftOffset({ index, unitNumber, tilesLength }),
+            left: getTileTooltipLeftOffset({
+              index,
+              unitNumber,
+              tilesLength,
+            }),
           }}
         ></div>
         <div
           className={[
             "text-lg",
-            status === "ACTIVE"
-              ? "text-white"
-              : status === "LOCKED"
-                ? "text-gray-400"
-                : "text-yellow-600",
+            status === "ACTIVE" ?
+              "text-white"
+            : status === "LOCKED" ?
+              "text-gray-400"
+            : "text-yellow-600",
           ].join(" ")}
         >
           {description}
@@ -308,7 +307,6 @@ const TileTooltip = ({
 
 const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   const router = useRouter();
-
   const [selectedTile, setSelectedTile] = useState<null | number>(null);
 
   useEffect(() => {
@@ -318,7 +316,6 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   }, []);
 
   const closeTooltip = useCallback(() => setSelectedTile(null), []);
-
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
   const increaseLessonsCompleted = useBoundStore(
     (x) => x.increaseLessonsCompleted,
@@ -367,17 +364,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         ].join(" ")}
                       >
                         {tile.type === "fast-forward" && status === "LOCKED" ? (
-                          <HoverLabel
-                            text="Jump here?"
-                            textColor={unit.textColor}
-                          />
+                          <HoverLabel text="Jump here?" textColor={unit.textColor} />
                         ) : selectedTile !== i && status === "ACTIVE" ? (
                           <HoverLabel text="Start" textColor={unit.textColor} />
                         ) : null}
-                        <LessonCompletionSvg
-                          lessonsCompleted={lessonsCompleted}
-                          status={status}
-                        />
+                        <LessonCompletionSvg lessonsCompleted={lessonsCompleted} status={status} />
                         <button
                           className={[
                             "absolute m-3 rounded-full border-b-8 p-4",
@@ -425,7 +416,9 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         role="button"
                         tabIndex={status === "ACTIVE" ? 0 : undefined}
                         aria-hidden={status !== "ACTIVE"}
-                        aria-label={status === "ACTIVE" ? "Collect reward" : ""}
+                        aria-label={
+                          status === "ACTIVE" ? "Collect reward" : ""
+                        }
                       >
                         {status === "ACTIVE" && (
                           <HoverLabel text="Open" textColor="text-yellow-400" />
@@ -447,9 +440,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     case "star":
                       return tile.description;
                     case "fast-forward":
-                      return status === "LOCKED"
-                        ? "Jump here?"
-                        : tile.description;
+                      return status === "LOCKED" ? "Jump here?" : tile.description;
                     case "trophy":
                       return `Unit ${unit.unitNumber} review`;
                     case "treasure":
@@ -489,8 +480,8 @@ const getTopBarColors = (
 
 const Learn: NextPage = () => {
   const { loginScreenState, setLoginScreenState } = useLoginScreen();
-
   const [scrollY, setScrollY] = useState(0);
+
   useEffect(() => {
     const updateScrollY = () => setScrollY(globalThis.scrollY ?? scrollY);
     updateScrollY();
@@ -507,7 +498,6 @@ const Learn: NextPage = () => {
         borderColor={topBarColors.borderColor}
       />
       <LeftBar selectedTab="Learn" />
-
       <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="flex max-w-2xl grow flex-col">
           {units.map((unit) => (
@@ -534,9 +524,7 @@ const Learn: NextPage = () => {
         </div>
         <RightBar />
       </div>
-
       <div className="pt-[90px]"></div>
-
       <BottomBar selectedTab="Learn" />
       <LoginScreen
         loginScreenState={loginScreenState}
@@ -583,7 +571,6 @@ const HoverLabel = ({
 }) => {
   const hoverElement = useRef<HTMLDivElement | null>(null);
   const [width, setWidth] = useState(72);
-
   useEffect(() => {
     setWidth(hoverElement.current?.clientWidth ?? width);
   }, [hoverElement.current?.clientWidth, width]);
@@ -620,9 +607,10 @@ const UnitHeader = ({
   const language = useBoundStore((x) => x.language);
   return (
     <article
-      className={["max-w-2xl text-white sm:rounded-xl", backgroundColor].join(
-        " ",
-      )}
+      className={[
+        "max-w-2xl text-white sm:rounded-xl",
+        backgroundColor,
+      ].join(" ")}
     >
       <header className="flex items-center justify-between gap-4 p-4">
         <div className="flex flex-col gap-1">
@@ -638,7 +626,8 @@ const UnitHeader = ({
         >
           <GuidebookSvg />
           <span className="sr-only font-bold uppercase lg:not-sr-only">
-            Guidebook
+            {" "}
+            Guidebook{" "}
           </span>
         </Link>
       </header>

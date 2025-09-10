@@ -3,8 +3,7 @@ import type { ComponentProps } from "react";
 import React, { useState } from "react";
 import type { Tab } from "./BottomBar";
 import { useBottomBarItems } from "./BottomBar";
-import type { LoginScreenState } from "./LoginScreen";
-import { LoginScreen } from "./LoginScreen";
+import LoginScreen from "./LoginScreen";
 import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
 import { useBoundStore } from "~/hooks/useBoundStore";
 
@@ -31,8 +30,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const logOut = useBoundStore((x) => x.logOut);
 
   const [moreMenuShown, setMoreMenuShown] = useState(false);
-  const [loginScreenState, setLoginScreenState] =
-    useState<LoginScreenState>("HIDDEN");
+  const [showLogin, setShowLogin] = useState(false);
 
   const bottomBarItems = useBottomBarItems();
 
@@ -69,6 +67,8 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
               </li>
             );
           })}
+
+          {/* More menu */}
           <div
             className="relative flex grow cursor-default items-center gap-3 rounded-xl px-2 py-1 font-bold uppercase text-gray-400 hover:bg-gray-100"
             onClick={() => setMoreMenuShown((x) => !x)}
@@ -109,7 +109,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 {!loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
-                    onClick={() => setLoginScreenState("SIGNUP")}
+                    onClick={() => setShowLogin(true)}
                   >
                     Create a profile
                   </button>
@@ -129,7 +129,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 {!loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
-                    onClick={() => setLoginScreenState("LOGIN")}
+                    onClick={() => setShowLogin(true)}
                   >
                     Sign in
                   </button>
@@ -147,10 +147,22 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
           </div>
         </ul>
       </nav>
-      <LoginScreen
-        loginScreenState={loginScreenState}
-        setLoginScreenState={setLoginScreenState}
-      />
+
+      {/* Login modal */}
+      {showLogin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="relative w-full max-w-md px-4">
+            <button
+              className="absolute right-2 top-2 text-white text-xl"
+              onClick={() => setShowLogin(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <LoginScreen />
+          </div>
+        </div>
+      )}
     </>
   );
 };

@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import Link from "next/link";
+import React, { useState } from "react";
 import { GlobeSvg } from "~/components/Svgs";
-import React from "react";
 import { LanguageHeader } from "~/components/LanguageHeader";
-import { useLoginScreen, LoginScreen } from "~/components/LoginScreen";
+import LoginScreen from "~/components/LoginScreen";
 import _bgSnow from "../../public/bg-snow.svg";
 import type { StaticImageData } from "next/image";
 import { LanguageCarousel } from "~/components/LanguageCarousel";
@@ -11,7 +11,8 @@ import { LanguageCarousel } from "~/components/LanguageCarousel";
 const bgSnow = _bgSnow as StaticImageData;
 
 const Home: NextPage = () => {
-  const { loginScreenState, setLoginScreenState } = useLoginScreen();
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-center bg-[#235390] text-white"
@@ -25,15 +26,18 @@ const Home: NextPage = () => {
             The free, fun, and effective way to learn a language!
           </p>
           <div className="mx-auto mt-4 flex w-fit flex-col items-center gap-3">
+            {/* Register button */}
             <Link
               href="/register"
               className="w-full rounded-2xl border-b-4 border-green-700 bg-green-600 px-10 py-3 text-center font-bold uppercase transition hover:border-green-600 hover:bg-green-500 md:min-w-[320px]"
             >
               Get started
             </Link>
+
+            {/* Login button */}
             <button
               className="w-full rounded-2xl border-2 border-b-4 border-[#042c60] bg-[#235390] px-8 py-3 font-bold uppercase transition hover:bg-[#204b82] md:min-w-[320px]"
-              onClick={() => setLoginScreenState("LOGIN")}
+              onClick={() => setShowLogin(true)}
             >
               I already have an account
             </button>
@@ -41,10 +45,22 @@ const Home: NextPage = () => {
         </div>
       </div>
       <LanguageCarousel />
-      <LoginScreen
-        loginScreenState={loginScreenState}
-        setLoginScreenState={setLoginScreenState}
-      />
+
+      {/* Login Modal */}
+      {showLogin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+          <div className="relative w-full max-w-md px-4">
+            <button
+              className="absolute right-2 top-2 text-white text-xl"
+              onClick={() => setShowLogin(false)}
+              aria-label="Close"
+            >
+              ✕
+            </button>
+            <LoginScreen />
+          </div>
+        </div>
+      )}
     </main>
   );
 };
