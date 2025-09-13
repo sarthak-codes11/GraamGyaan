@@ -21,7 +21,7 @@ import { useRouter } from "next/router";
 
 const lessonProblem1 = {
   type: "SELECT_1_OF_3",
-  question: `tuzya aai ch naav kaay?`,
+  question: `Which one of these is "the apple"?`,
   answers: [
     { icon: <AppleSvg />, name: "la manzana" },
     { icon: <BoySvg />, name: "el niño" },

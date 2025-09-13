@@ -16,35 +16,31 @@ const Home: NextPage = () => {
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-center bg-[#235390] text-white"
-      style={{ backgroundImage: `url(${bgSnow.src})` }}
+
+      style={{backgroundColor:"#FEEBED"}}
     >
-      <LanguageHeader />
-      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36">
-        <GlobeSvg className="h-fit w-7/12 md:w-[360px]" />
+ 
+      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36" style={{ color: "#6F0E1B" }}>
+        <GlobeSvg className="h-fit w-7/12 md:w-[350px]" style={{ stroke: "none" }} />
         <div>
           <p className="mb-6 max-w-[600px] text-center text-3xl font-bold md:mb-12">
-            The free, fun, and effective way to learn a language!
+            Welcome to GraamGyaan
           </p>
           <div className="mx-auto mt-4 flex w-fit flex-col items-center gap-3">
-            {/* Register button */}
-            <Link
-              href="/register"
-              className="w-full rounded-2xl border-b-4 border-green-700 bg-green-600 px-10 py-3 text-center font-bold uppercase transition hover:border-green-600 hover:bg-green-500 md:min-w-[320px]"
-            >
-              Get started
-            </Link>
+            
 
             {/* Login button */}
             <button
-              className="w-full rounded-2xl border-2 border-b-4 border-[#042c60] bg-[#235390] px-8 py-3 font-bold uppercase transition hover:bg-[#204b82] md:min-w-[320px]"
+              className="w-full rounded-2xl border-2 border-b-4 border-[#6F0E1B] bg-[#6F0E1B] px-8 py-3 font-bold uppercase transition hover:bg-[#F47D45] md:min-w-[320px]"
               onClick={() => setShowLogin(true)}
+              style={{ color: "#ffffff" }}
             >
-              gu kha
+              Let's get you signed in
             </button>
           </div>
         </div>
       </div>
-      <LanguageCarousel />
+   
 
       {/* Login Modal */}
       {showLogin && (

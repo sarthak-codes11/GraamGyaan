@@ -1,6 +1,12 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { Fragment, useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  Fragment,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   ActiveBookSvg,
   LockedBookSvg,
@@ -28,7 +34,7 @@ import {
 } from "~/components/Svgs";
 import { TopBar } from "~/components/TopBar";
 import { BottomBar } from "~/components/BottomBar";
-import { RightBar } from "~/components/RightBar";
+import RightBar from "~/components/RightBar";
 import { LeftBar } from "~/components/LeftBar";
 import { useRouter } from "next/router";
 import LoginScreen, { useLoginScreen } from "~/components/LoginScreen";
@@ -137,9 +143,10 @@ const getTileLeftClassName = ({
   if (index >= tilesLength - 1) {
     return "left-0";
   }
-
   const classNames =
-    unitNumber % 2 === 1 ? tileLeftClassNames : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
+    unitNumber % 2 === 1
+      ? tileLeftClassNames
+      : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
   return classNames[index % classNames.length] ?? "left-0";
 };
 
@@ -160,13 +167,12 @@ const getTileTooltipLeftOffset = ({
     return tileTooltipLeftOffsets[0];
   }
   const offsets =
-    unitNumber % 2 === 1 ?
-      tileTooltipLeftOffsets
-    : [
-      ...tileTooltipLeftOffsets.slice(4),
-      ...tileTooltipLeftOffsets.slice(0, 4),
-    ];
-
+    unitNumber % 2 === 1
+      ? tileTooltipLeftOffsets
+      : [
+          ...tileTooltipLeftOffsets.slice(4),
+          ...tileTooltipLeftOffsets.slice(0, 4),
+        ];
   return offsets[index % offsets.length] ?? tileTooltipLeftOffsets[0];
 };
 
@@ -213,7 +219,7 @@ const TileTooltip = ({
     const containsTileTooltip = (event: MouseEvent) => {
       if (selectedTile !== index) return;
       const clickIsInsideTooltip = tileTooltipRef.current?.contains(
-        event.target as Node,
+        event.target as Node
       );
       if (clickIsInsideTooltip) return;
       closeTooltip();
@@ -228,20 +234,17 @@ const TileTooltip = ({
 
   return (
     <div
-      className={[
-        "relative h-0 w-full",
-        index === selectedTile ? "" : "invisible",
-      ].join(" ")}
+      className={["relative h-0 w-full", index === selectedTile ? "" : "invisible"].join(" ")}
       ref={tileTooltipRef}
     >
       <div
         className={[
           "absolute z-30 flex w-[300px] flex-col gap-4 rounded-xl p-4 font-bold transition-all duration-300",
-          status === "ACTIVE" ?
-            activeBackgroundColor
-          : status === "LOCKED" ?
-            "border-2 border-gray-200 bg-gray-100"
-          : "bg-yellow-400",
+          status === "ACTIVE"
+            ? activeBackgroundColor
+            : status === "LOCKED"
+            ? "border-2 border-gray-200 bg-gray-100"
+            : "bg-yellow-400",
           index === selectedTile ? "top-4 scale-100" : "-top-14 scale-0",
         ].join(" ")}
         style={{ left: "calc(50% - 150px)" }}
@@ -249,32 +252,29 @@ const TileTooltip = ({
         <div
           className={[
             "absolute left-[140px] top-[-8px] h-4 w-4 rotate-45",
-            status === "ACTIVE" ?
-              activeBackgroundColor
-            : status === "LOCKED" ?
-              "border-l-2 border-t-2 border-gray-200 bg-gray-100"
-            : "bg-yellow-400",
+            status === "ACTIVE"
+              ? activeBackgroundColor
+              : status === "LOCKED"
+              ? "border-l-2 border-t-2 border-gray-200 bg-gray-100"
+              : "bg-yellow-400",
           ].join(" ")}
           style={{
-            left: getTileTooltipLeftOffset({
-              index,
-              unitNumber,
-              tilesLength,
-            }),
+            left: getTileTooltipLeftOffset({ index, unitNumber, tilesLength }),
           }}
         ></div>
         <div
           className={[
             "text-lg",
-            status === "ACTIVE" ?
-              "text-white"
-            : status === "LOCKED" ?
-              "text-gray-400"
-            : "text-yellow-600",
+            status === "ACTIVE"
+              ? "text-white"
+              : status === "LOCKED"
+              ? "text-gray-400"
+              : "text-yellow-600",
           ].join(" ")}
         >
           {description}
         </div>
+
         {status === "ACTIVE" ? (
           <Link
             href="/lesson"
@@ -283,7 +283,7 @@ const TileTooltip = ({
               activeTextColor,
             ].join(" ")}
           >
-            Start +10 XP
+            Let's Go! +10 XP
           </Link>
         ) : status === "LOCKED" ? (
           <button
@@ -316,9 +316,10 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   }, []);
 
   const closeTooltip = useCallback(() => setSelectedTile(null), []);
+
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
   const increaseLessonsCompleted = useBoundStore(
-    (x) => x.increaseLessonsCompleted,
+    (x) => x.increaseLessonsCompleted
   );
   const increaseLingots = useBoundStore((x) => x.increaseLingots);
 
@@ -368,7 +369,10 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         ) : selectedTile !== i && status === "ACTIVE" ? (
                           <HoverLabel text="Start" textColor={unit.textColor} />
                         ) : null}
-                        <LessonCompletionSvg lessonsCompleted={lessonsCompleted} status={status} />
+                        <LessonCompletionSvg
+                          lessonsCompleted={lessonsCompleted}
+                          status={status}
+                        />
                         <button
                           className={[
                             "absolute m-3 rounded-full border-b-8 p-4",
@@ -384,7 +388,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                               status === "LOCKED"
                             ) {
                               void router.push(
-                                `/lesson?fast-forward=${unit.unitNumber}`,
+                                `/lesson?fast-forward=${unit.unitNumber}`
                               );
                               return;
                             }
@@ -440,7 +444,9 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     case "star":
                       return tile.description;
                     case "fast-forward":
-                      return status === "LOCKED" ? "Jump here?" : tile.description;
+                      return status === "LOCKED"
+                        ? "Jump here?"
+                        : tile.description;
                     case "trophy":
                       return `Unit ${unit.unitNumber} review`;
                     case "treasure":
@@ -459,7 +465,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
 };
 
 const getTopBarColors = (
-  scrollY: number,
+  scrollY: number
 ): {
   backgroundColor: `bg-${string}`;
   borderColor: `border-${string}`;
@@ -480,29 +486,74 @@ const getTopBarColors = (
 
 const Learn: NextPage = () => {
   const { loginScreenState, setLoginScreenState } = useLoginScreen();
-  const [scrollY, setScrollY] = useState(0);
 
+  const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
-    const updateScrollY = () => setScrollY(globalThis.scrollY ?? scrollY);
+    const updateScrollY = () => setScrollY(globalThis.scrollY ?? 0);
     updateScrollY();
     document.addEventListener("scroll", updateScrollY);
     return () => document.removeEventListener("scroll", updateScrollY);
-  }, [scrollY]);
-
+  }, []);
   const topBarColors = getTopBarColors(scrollY);
 
   return (
     <>
-      <TopBar
-        backgroundColor={topBarColors.backgroundColor}
-        borderColor={topBarColors.borderColor}
-      />
+      {/* EDIT 1 of 2: This style block forces the mobile sidebar to be visible */}
+      <style jsx global>{`
+        @media (max-width: 1023px) {
+          #mobile-sidebar-container > div {
+            display: block !important;
+          }
+        }
+        @keyframes gradientShift {
+          0% {
+            background-position: 0% 50%;
+          }
+          50% {
+            background-position: 100% 50%;
+          }
+          100% {
+            background-position: 0% 50%;
+          }
+        }
+      `}</style>
+
+      {/* ========== animated gradient background (fixed, behind everything) ========== */}
+      <div className="pointer-events-none fixed inset-0 -z-50">
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            background:
+              "linear-gradient(270deg, #FFF8F2, #F9EEDD, #FDFDFD, #FFFFFF)",
+            backgroundSize: "600% 600%",
+            animation: "gradientShift 10s ease infinite",
+            filter: "saturate(0.9) brightness(1) opacity(0.6)",
+          }}
+        />
+      </div>
+      {/* ========== page content ========== */}
+
+      <div className="hidden md:block">
+        <TopBar
+          backgroundColor={topBarColors.backgroundColor}
+          borderColor={topBarColors.borderColor}
+        />
+      </div>
+
       <LeftBar selectedTab="Learn" />
+
       <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="flex max-w-2xl grow flex-col">
+          {/* EDIT 2 of 2: The mobile-only RightBar is here, with a special ID */}
+          <div id="mobile-sidebar-container" className="mb-8 block lg:hidden">
+            <RightBar />
+          </div>
+
           {units.map((unit) => (
             <UnitSection unit={unit} key={unit.unitNumber} />
           ))}
+
           <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
             <Link
               href="/lesson?practice"
@@ -511,6 +562,7 @@ const Learn: NextPage = () => {
               <span className="sr-only">Practice exercise</span>
               <PracticeExerciseSvg className="h-8 w-8" />
             </Link>
+
             {scrollY > 100 && (
               <button
                 className="absolute right-4 flex h-14 w-14 items-center justify-center self-end rounded-2xl border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:right-0"
@@ -522,10 +574,14 @@ const Learn: NextPage = () => {
             )}
           </div>
         </div>
+        {/* The original RightBar for desktop remains untouched */}
         <RightBar />
       </div>
-      <div className="pt-[90px]"></div>
+
+      <div className="pt-[90px]" />
+
       <BottomBar selectedTab="Learn" />
+
       <LoginScreen
         loginScreenState={loginScreenState}
         setLoginScreenState={setLoginScreenState}
@@ -535,6 +591,8 @@ const Learn: NextPage = () => {
 };
 
 export default Learn;
+
+/* ---------- helper components used by the page (kept as in original) ---------- */
 
 const LessonCompletionSvg = ({
   lessonsCompleted,
@@ -570,10 +628,13 @@ const HoverLabel = ({
   textColor: `text-${string}`;
 }) => {
   const hoverElement = useRef<HTMLDivElement | null>(null);
+
   const [width, setWidth] = useState(72);
+
   useEffect(() => {
     setWidth(hoverElement.current?.clientWidth ?? width);
-  }, [hoverElement.current?.clientWidth, width]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hoverElement.current?.clientWidth]);
 
   return (
     <div
@@ -588,7 +649,7 @@ const HoverLabel = ({
       <div
         className="absolute h-3 w-3 rotate-45 border-b-2 border-r-2 border-gray-200 bg-white"
         style={{ left: "calc(50% - 8px)", bottom: "-8px" }}
-      ></div>
+      />
     </div>
   );
 };
@@ -604,21 +665,18 @@ const UnitHeader = ({
   backgroundColor: `bg-${string}`;
   borderColor: `border-${string}`;
 }) => {
-  const language = useBoundStore((x) => x.language);
   return (
     <article
-      className={[
-        "max-w-2xl text-white sm:rounded-xl",
-        backgroundColor,
-      ].join(" ")}
+      className={["max-w-2xl text-white sm:rounded-xl", backgroundColor].join(
+        " "
+      )}
     >
       <header className="flex items-center justify-between gap-4 p-4">
         <div className="flex flex-col gap-1">
           <h2 className="text-2xl font-bold">Unit {unitNumber}</h2>
           <p className="text-lg">{description}</p>
         </div>
-        <Link
-          href={`https://duolingo.com/guidebook/${language.code}/${unitNumber}`}
+        <div
           className={[
             "flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100",
             borderColor,
@@ -629,7 +687,7 @@ const UnitHeader = ({
             {" "}
             Guidebook{" "}
           </span>
-        </Link>
+        </div>
       </header>
     </article>
   );

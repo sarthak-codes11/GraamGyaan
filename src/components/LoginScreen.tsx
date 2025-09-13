@@ -56,13 +56,13 @@ export const LoginScreen: React.FC<Props> = ({
           <div className="space-y-3">
             <button
               onClick={() => setScreen("login")}
-              className="w-full rounded-lg bg-[#235390] text-white py-2 font-semibold"
+              className="w-full rounded-lg bg-[#7C1A1D] text-white py-2 font-semibold"
             >
               I already have an account
             </button>
             <button
               onClick={() => setScreen("signup")}
-              className="w-full rounded-lg border py-2 font-semibold"
+              className="w-full rounded-lg border py-2 font-semibold" style = {{ borderColor: "#6F0E1B", color: "#6F0E1B"}}
             >
               Create account
             </button>
@@ -91,9 +91,9 @@ export const LoginScreen: React.FC<Props> = ({
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold" style={{ backgroundColor: "#6F0E1B" }}
           >
-            Login
+            Log in
           </button>
           <p className="text-center mt-3 text-sm">
             New here?{" "}
@@ -123,7 +123,7 @@ export const LoginScreen: React.FC<Props> = ({
           <input type="email" className="w-full mb-2 px-3 py-2 border rounded-lg" required />
           <label className="block text-sm font-medium">Password</label>
           <input type="password" className="w-full mb-4 px-3 py-2 border rounded-lg" required />
-          <button className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold">
+          <button className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold" style={{ backgroundColor: "#6F0E1B" }}>
             Create account
           </button>
           <p className="text-center mt-3 text-sm">
