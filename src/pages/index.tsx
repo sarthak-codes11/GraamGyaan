@@ -17,26 +17,38 @@ const Home: NextPage = () => {
     <main
       className="flex min-h-screen flex-col items-center justify-center bg-[#235390] text-white"
 
-      style={{backgroundColor:"#FEEBED"}}
+      style={{
+  width: "100%",
+  height: "100%",
+  background: "linear-gradient(270deg, #f5f5dc, #fdfaf3, #e6d9b5, #fffaf0)",
+  backgroundSize: "600% 600%",
+  animation: "gradientShift 5s ease infinite",
+}}
+
     >
  
-      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36" style={{ color: "#6F0E1B" }}>
+      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36" style={{ color: "#0B3D0B" }}>
         <GlobeSvg className="h-fit w-7/12 md:w-[350px]" style={{ stroke: "none" }} />
         <div>
-          <p className="mb-6 max-w-[600px] text-center text-3xl font-bold md:mb-12">
-            Welcome to GraamGyaan
-          </p>
+          <p className="mb-6 max-w-[600px] text-center text-4xl md:text-5xl font-extrabold tracking-wide md:mb-12 bg-gradient-to-r from-[#7B3F00] via-[#A0522D] to-[#D2B48C] bg-clip-text text-transparent drop-shadow-md">
+  Welcome to GraamGyaan !
+</p>
+
           <div className="mx-auto mt-4 flex w-fit flex-col items-center gap-3">
             
 
             {/* Login button */}
             <button
-              className="w-full rounded-2xl border-2 border-b-4 border-[#6F0E1B] bg-[#6F0E1B] px-8 py-3 font-bold uppercase transition hover:bg-[#F47D45] md:min-w-[320px]"
-              onClick={() => setShowLogin(true)}
-              style={{ color: "#ffffff" }}
-            >
-              Let's get you signed in
-            </button>
+  className="w-full rounded-2xl border-2 border-b-4 border-[#7B3F00] 
+             bg-[#7B3F00] px-8 py-3 font-bold uppercase 
+             text-white transition-all duration-300 ease-in-out
+             hover:bg-[#5C4033] hover:border-[#5C4033] hover:scale-105 
+             md:min-w-[320px]"
+  onClick={() => setShowLogin(true)}
+>
+  Let's get you signed in
+</button>
+
           </div>
         </div>
       </div>
