@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
@@ -39,15 +39,6 @@ export const LoginScreen: React.FC<Props> = ({
     else setScreen("start");
   }, [loginScreenState]);
 
-  const handleLogin = (e?: React.FormEvent) => {
-    e?.preventDefault();
-    // TODO: add validation / firebase auth here
-    // Hide parent modal if parent passed a setter
-    if (setLoginScreenState) setLoginScreenState("HIDDEN");
-    // then redirect to /learn
-    void router.push("/learn");
-  };
-
   const card = (
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
       {screen === "start" && (
@@ -55,17 +46,16 @@ export const LoginScreen: React.FC<Props> = ({
           <h2 className="text-2xl font-bold mb-3 text-center">Welcome</h2>
           <div className="space-y-3">
             <button
-  onClick={() => setScreen("login")}
-  className="w-full rounded-lg bg-[#7B3F00] text-white py-2 font-semibold 
-             transition-all duration-300 ease-in-out 
-             hover:bg-[#5C4033]"
->
-  I already have an account
-</button>
+              onClick={() => setScreen("login")}
+              className="w-full rounded-lg bg-[#7B3F00] text-white py-2 font-semibold transition-all duration-300 ease-in-out hover:bg-[#5C4033]"
+            >
+              I already have an account
+            </button>
 
             <button
               onClick={() => setScreen("signup")}
-              className="w-full rounded-lg border py-2 font-semibold" style = {{ borderColor: "#6F0E1B", color: "#6F0E1B"}}
+              className="w-full rounded-lg border py-2 font-semibold"
+              style={{ borderColor: "#6F0E1B", color: "#6F0E1B" }}
             >
               Create account
             </button>
@@ -74,7 +64,12 @@ export const LoginScreen: React.FC<Props> = ({
       )}
 
       {screen === "login" && (
-        <form onSubmit={handleLogin}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            void router.push("/selectsub");
+          }}
+        >
           <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
           <label className="block text-sm font-medium">Email</label>
           <input
@@ -94,15 +89,17 @@ export const LoginScreen: React.FC<Props> = ({
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold" style={{ backgroundColor: "#7B3F00" }}
+            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            style={{ backgroundColor: "#7B3F00" }}
           >
             Log in
           </button>
+
           <p className="text-center mt-3 text-sm">
             New here?{" "}
             <button
               type="button"
-              onClick={() => setScreen("signup")}
+              onClick={() => void router.push("/selectsub")}
               className="text-blue-600 font-semibold"
             >
               Sign up
@@ -115,25 +112,32 @@ export const LoginScreen: React.FC<Props> = ({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            // fake signup -> goto learn
-            void router.push("/learn");
+            void router.push("/selectsub");
           }}
         >
           <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
           <label className="block text-sm font-medium">Full name</label>
           <input className="w-full mb-2 px-3 py-2 border rounded-lg" required />
+
           <label className="block text-sm font-medium">Email</label>
           <input type="email" className="w-full mb-2 px-3 py-2 border rounded-lg" required />
+
           <label className="block text-sm font-medium">Password</label>
           <input type="password" className="w-full mb-4 px-3 py-2 border rounded-lg" required />
-          <button className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold" style={{ backgroundColor: "#7B3F00" }}>
+
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            style={{ backgroundColor: "#7B3F00" }}
+          >
             Create account
           </button>
+
           <p className="text-center mt-3 text-sm">
             Already have an account?{" "}
             <button
               type="button"
-              onClick={() => setScreen("login")}
+              onClick={() => void router.push("/selectsub")}
               className="text-blue-600 font-semibold"
             >
               Login

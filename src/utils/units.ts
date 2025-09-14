@@ -19,7 +19,7 @@ export type TileType = Tile["type"];
 export const units: readonly Unit[] = [
   {
     unitNumber: 1,
-    description: "Food and Nutrition",
+    description: "Sorting Material Into Groups",
     backgroundColor: "bg-[#8B5E3C]",   // warm medium brown
 textColor: "text-[#556B2F]",       // soft beige for contrast
 borderColor: "border-[#6B4226]",   // darker brown for depth
@@ -27,7 +27,7 @@ borderColor: "border-[#6B4226]",   // darker brown for depth
     tiles: [
       {
         type: "star",
-        description: "Nutrients in Food",
+        description: "Importance of Sorting Materials",
       },
       {
         type: "book",
