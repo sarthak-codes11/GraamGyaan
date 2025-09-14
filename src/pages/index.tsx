@@ -1,58 +1,119 @@
-import { type NextPage } from "next";
-import Link from "next/link";
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { GlobeSvg } from "~/components/Svgs";
-import { LanguageHeader } from "~/components/LanguageHeader";
 import LoginScreen from "~/components/LoginScreen";
-import _bgSnow from "../../public/bg-snow.svg";
-import type { StaticImageData } from "next/image";
-import { LanguageCarousel } from "~/components/LanguageCarousel";
+import LoginScreenh from "~/components/LoginScreenh";
+import LoginScreent from "~/components/LoginScreent";
+import Link from "next/link";
 
-const bgSnow = _bgSnow as StaticImageData;
+// Text dictionary
+const translations: Record<string, any> = {
+  en: {
+    welcome: "Welcome to GraamGyaan!",
+    signin: "Let's Get You Signed In",
+    changeLang: "🌐 Change Language",
+  },
+  hi: {
+    welcome: "ग्रामज्ञान में आपका स्वागत है!",
+    signin: "चलिए, आपको साइन इन कराते हैं",
+    changeLang: "🌐 भाषा बदलें",
+  },
+  te: {
+    welcome: "గ్రామజ్ఞాన్ కి స్వాగతం!",
+    signin: "మిమ్మల్ని సైన్ ఇన్ చేద్దాం",
+    changeLang: "🌐 భాష మార్చు",
+  },
+};
 
-const Home: NextPage = () => {
+const HomePage: React.FC = () => {
+  const router = useRouter();
+  const { lang } = router.query;
   const [showLogin, setShowLogin] = useState(false);
+  const [showLanguages, setShowLanguages] = useState(false);
+
+  // Default language English
+  const currentLang = typeof lang === "string" ? lang : "en";
+  const t = translations[currentLang] || translations["en"];
+
+  const ActiveLogin =
+    currentLang === "hi"
+      ? LoginScreenh
+      : currentLang === "te"
+      ? LoginScreent
+      : LoginScreen;
 
   return (
     <main
       className="flex min-h-screen flex-col items-center justify-center bg-[#235390] text-white"
-
       style={{
-  width: "100%",
-  height: "100%",
-  background: "linear-gradient(270deg, #f5f5dc, #fdfaf3, #e6d9b5, #fffaf0)",
-  backgroundSize: "600% 600%",
-  animation: "gradientShift 5s ease infinite",
-}}
-
+        width: "100%",
+        height: "100%",
+        background:
+          "linear-gradient(270deg, #f5f5dc, #fdfaf3, #e6d9b5, #fffaf0)",
+        backgroundSize: "600% 600%",
+        animation: "gradientShift 5s ease infinite",
+      }}
     >
- 
       <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36" style={{ color: "#0B3D0B" }}>
-        <GlobeSvg className="h-fit w-7/12 md:w-[350px]" style={{ stroke: "none" }} />
-        <div>
+        {/* Logo */}
+        <GlobeSvg
+          className="h-fit w-7/12 md:w-[350px]"
+          style={{ stroke: "none" }}
+        />
+
+        {/* Text + Buttons */}
+        <div className="flex flex-col items-center">
           <p className="mb-6 max-w-[600px] text-center text-4xl md:text-5xl font-extrabold tracking-wide md:mb-12 bg-gradient-to-r from-[#7B3F00] via-[#A0522D] to-[#D2B48C] bg-clip-text text-transparent drop-shadow-md">
-  Welcome to GraamGyaan !
-</p>
+            {t.welcome}
+          </p>
 
-          <div className="mx-auto mt-4 flex w-fit flex-col items-center gap-3">
-            
+          {/* Sign-in button */}
+          <button
+            className="w-full rounded-2xl border-2 border-b-4 border-[#7B3F00] 
+               bg-[#7B3F00] px-8 py-3 font-bold uppercase 
+               text-white transition-all duration-300 ease-in-out
+               hover:bg-[#5C4033] hover:border-[#5C4033] hover:scale-105 
+               md:min-w-[320px]"
+            onClick={() => setShowLogin(true)}
+          >
+            {t.signin}
+          </button>
 
-            {/* Login button */}
+          {/* Language dropdown */}
+          <div className="relative mt-6">
             <button
-  className="w-full rounded-2xl border-2 border-b-4 border-[#7B3F00] 
-             bg-[#7B3F00] px-8 py-3 font-bold uppercase 
-             text-white transition-all duration-300 ease-in-out
-             hover:bg-[#5C4033] hover:border-[#5C4033] hover:scale-105 
-             md:min-w-[320px]"
-  onClick={() => setShowLogin(true)}
->
-  Let's get you signed in
-</button>
+              onClick={() => setShowLanguages(!showLanguages)}
+              aria-expanded={showLanguages}
+              aria-haspopup="true"
+              className="rounded-xl border-2 border-[#7B3F00] px-6 py-2 bg-[#A0522D] text-white font-semibold hover:bg-[#5C4033] transition"
+            >
+              {t.changeLang}
+            </button>
 
+            {showLanguages && (
+              <div className="absolute left-0 mt-2 w-40 rounded-lg bg-white shadow-lg z-10">
+                <Link
+                  href={{ pathname: "/", query: { lang: "en" } }}
+                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200">
+                  English
+                </Link>
+                <Link
+                  href={{ pathname: "/", query: { lang: "hi" } }}
+                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
+                >
+                  हिंदी
+                </Link>
+                <Link
+                  href={{ pathname: "/", query: { lang: "te" } }}
+                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
+                >
+                  తెలుగు
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
-   
 
       {/* Login Modal */}
       {showLogin && (
@@ -65,7 +126,7 @@ const Home: NextPage = () => {
             >
               ✕
             </button>
-            <LoginScreen />
+            <ActiveLogin />
           </div>
         </div>
       )}
@@ -73,4 +134,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default HomePage;

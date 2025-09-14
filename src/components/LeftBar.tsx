@@ -6,6 +6,7 @@ import { useBottomBarItems } from "./BottomBar";
 import LoginScreen from "./LoginScreen";
 import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
 import { useBoundStore } from "~/hooks/useBoundStore";
+import { useRouter } from "next/router";
 
 const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -28,6 +29,7 @@ const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
 export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
   const logOut = useBoundStore((x) => x.logOut);
+  const router = useRouter();
 
   const [moreMenuShown, setMoreMenuShown] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -129,15 +131,18 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 {!loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
-                    onClick={() => setShowLogin(true)}
+                    onClick={() => router.push("/")}
                   >
-                    Sign in
+                    Sign out
                   </button>
                 )}
                 {loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
-                    onClick={logOut}
+                    onClick={() => {
+                      logOut();
+                      router.push("/");
+                    }}
                   >
                     Sign out
                   </button>
