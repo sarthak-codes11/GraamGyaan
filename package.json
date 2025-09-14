@@ -9,6 +9,7 @@
     "start": "next start"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.57.4",
     "@t3-oss/env-nextjs": "^0.7.3",
     "@types/react-router-dom": "^5.3.3",
     "dayjs": "^1.11.13",
