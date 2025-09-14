@@ -20,9 +20,10 @@ export const units: readonly Unit[] = [
   {
     unitNumber: 1,
     description: "Food and Nutrition",
-    backgroundColor: "bg-[#7C1A1D]",
-    textColor: "text-[#7C1A1D]",
-    borderColor: "border-[#BA5038]",
+    backgroundColor: "bg-[#8B5E3C]",   // warm medium brown
+textColor: "text-[#556B2F]",       // soft beige for contrast
+borderColor: "border-[#6B4226]",   // darker brown for depth
+
     tiles: [
       {
         type: "star",

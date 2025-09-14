@@ -165,14 +165,7 @@ export default function RightBar() {
 
       {/* Sidebar wrapper sitting above gradient */}
       <aside className="relative z-20 hidden sm:flex w-96 flex-col gap-6 p-4">
-        {/* small top row / language preview */}
-        <div className="flex justify-between items-center">
-          <div className="text-sm text-gray-500">
-            Current Language:{" "}
-            <span className="ml-2 font-bold text-gray-800">{language}</span>
-          </div>
-        </div>
-
+        
         {/* Leaderboard (white card, shadow, hover lift) */}
         {loggedIn && lessonsCompleted >= 10 && (
           <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
