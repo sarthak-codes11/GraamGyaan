@@ -3,6 +3,7 @@
 
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "../utils/supabaseClient"; 
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
@@ -13,23 +14,18 @@ type Props = {
   >;
 };
 
-/**
- * Dual-mode LoginScreen:
- * - If loginScreen_state prop is provided -> acts like the old full-screen modal (compat)
- * - If no prop -> renders as a card (perfect for embedding inside your own modal)
- */
 export const LoginScreen: React.FC<Props> = ({
   loginScreenState,
   setLoginScreenState,
 }) => {
   const router = useRouter();
-  const [screen, setScreen] = useState<"start" | "login" | "signup">(
-    "start"
-  );
+  const [screen, setScreen] = useState<"start" | "login" | "signup">("start");
 
-  // simple form state (demo)
+  // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   // sync with old API if parent controls it
   useEffect(() => {
@@ -38,6 +34,48 @@ export const LoginScreen: React.FC<Props> = ({
     else if (loginScreenState === "SIGNUP") setScreen("signup");
     else setScreen("start");
   }, [loginScreenState]);
+
+  // 🔑 Handle Login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      console.log("✅ Logged in:", data);
+      router.push("/selectsub"); // redirect after success
+    }
+
+    setLoading(false);
+  };
+
+  // 🆕 Handle Signup
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      console.log("✅ Signed up:", data);
+      router.push("/selectsub");
+    }
+
+    setLoading(false);
+  };
 
   const card = (
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-gray-800">

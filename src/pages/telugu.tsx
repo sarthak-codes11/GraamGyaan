@@ -49,7 +49,6 @@ const tileStatus = (tile: Tile, lessonsCompleted: number): TileStatus => {
   const tilesCompleted = Math.floor(lessonsCompleted / lessonsPerTile);
   const tiles = units.flatMap((unit) => unit.tiles);
   const tileIndex = tiles.findIndex((t) => t === tile);
-
   if (tileIndex < tilesCompleted) {
     return "COMPLETE";
   }
@@ -231,10 +230,11 @@ const TileTooltip = ({
   const unit = units.find((unit) => unit.unitNumber === unitNumber);
   const activeBackgroundColor = unit?.backgroundColor ?? "bg-green-500";
   const activeTextColor = unit?.textColor ?? "text-green-500";
-
   return (
     <div
-      className={["relative h-0 w-full", index === selectedTile ? "" : "invisible"].join(" ")}
+      className={["relative h-0 w-full", index === selectedTile ? "" : "invisible"].join(
+        " "
+      )}
       ref={tileTooltipRef}
     >
       <div
@@ -262,6 +262,7 @@ const TileTooltip = ({
             left: getTileTooltipLeftOffset({ index, unitNumber, tilesLength }),
           }}
         ></div>
+
         <div
           className={[
             "text-lg",
@@ -283,21 +284,21 @@ const TileTooltip = ({
               activeTextColor,
             ].join(" ")}
           >
-            Let's Go! +10 XP
+            ప్రారంభించండి! +10 XP
           </Link>
         ) : status === "LOCKED" ? (
           <button
             className="w-full rounded-xl bg-gray-200 p-3 uppercase text-gray-400"
             disabled
           >
-            Locked
+            లాక్ చేయబడింది
           </button>
         ) : (
           <Link
             href="/lesson"
             className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
           >
-            Practice +5 XP
+            ప్రాక్టీస్ +5 XP
           </Link>
         )}
       </div>
@@ -365,9 +366,9 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         ].join(" ")}
                       >
                         {tile.type === "fast-forward" && status === "LOCKED" ? (
-                          <HoverLabel text="Jump here?" textColor={unit.textColor} />
+                          <HoverLabel text="ఇక్కడకు వెళ్లాలా?" textColor={unit.textColor} />
                         ) : selectedTile !== i && status === "ACTIVE" ? (
-                          <HoverLabel text="Start" textColor={unit.textColor} />
+                          <HoverLabel text="ప్రారంభించు" textColor={unit.textColor} />
                         ) : null}
                         <LessonCompletionSvg
                           lessonsCompleted={lessonsCompleted}
@@ -396,7 +397,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                           }}
                         >
                           <TileIcon tileType={tile.type} status={status} />
-                          <span className="sr-only">Show lesson</span>
+                          <span className="sr-only">పాఠం చూపించు</span>
                         </button>
                       </div>
                     );
@@ -421,11 +422,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         tabIndex={status === "ACTIVE" ? 0 : undefined}
                         aria-hidden={status !== "ACTIVE"}
                         aria-label={
-                          status === "ACTIVE" ? "Collect reward" : ""
+                          status === "ACTIVE" ? "బహుమతిని సేకరించండి" : ""
                         }
                       >
                         {status === "ACTIVE" && (
-                          <HoverLabel text="Open" textColor="text-yellow-400" />
+                          <HoverLabel text="తెరవండి" textColor="text-yellow-400" />
                         )}
                         <TileIcon tileType={tile.type} status={status} />
                       </div>
@@ -445,10 +446,10 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                       return tile.description;
                     case "fast-forward":
                       return status === "LOCKED"
-                        ? "Jump here?"
+                        ? "ఇక్కడకు వెళ్లాలా?"
                         : tile.description;
                     case "trophy":
-                      return `Unit ${unit.unitNumber} review`;
+                      return `యూనిట్ ${unit.unitNumber} సమీక్ష`;
                     case "treasure":
                       return "";
                   }
@@ -466,15 +467,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
 
 const getTopBarColors = (
   scrollY: number
-): {
-  backgroundColor: `bg-${string}`;
-  borderColor: `border-${string}`;
-} => {
+): { backgroundColor: `bg-${string}`; borderColor: `border-${string}` } => {
   const defaultColors = {
     backgroundColor: "bg-[#58cc02]",
     borderColor: "border-[#46a302]",
   } as const;
-
   if (scrollY < 680) {
     return defaultColors;
   } else if (scrollY < 1830) {
@@ -494,6 +491,7 @@ const Learn: NextPage = () => {
     document.addEventListener("scroll", updateScrollY);
     return () => document.removeEventListener("scroll", updateScrollY);
   }, []);
+
   const topBarColors = getTopBarColors(scrollY);
 
   return (
@@ -517,7 +515,6 @@ const Learn: NextPage = () => {
           }
         }
       `}</style>
-
       {/* ========== animated gradient background (fixed, behind everything) ========== */}
       <div className="pointer-events-none fixed inset-0 -z-50">
         <div
@@ -532,17 +529,15 @@ const Learn: NextPage = () => {
           }}
         />
       </div>
-      {/* ========== page content ========== */}
 
+      {/* ========== page content ========== */}
       <div className="hidden md:block">
         <TopBar
           backgroundColor={topBarColors.backgroundColor}
           borderColor={topBarColors.borderColor}
         />
       </div>
-
       <LeftBar selectedTab="Learn" />
-
       <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="flex max-w-2xl grow flex-col">
           {/* EDIT 2 of 2: The mobile-only RightBar is here, with a special ID */}
@@ -559,7 +554,7 @@ const Learn: NextPage = () => {
               href="/lesson?practice"
               className="absolute left-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:left-0"
             >
-              <span className="sr-only">Practice exercise</span>
+              <span className="sr-only">ప్రాక్టీస్ వ్యాయామం</span>
               <PracticeExerciseSvg className="h-8 w-8" />
             </Link>
 
@@ -568,18 +563,18 @@ const Learn: NextPage = () => {
                 className="absolute right-4 flex h-14 w-14 items-center justify-center self-end rounded-2xl border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:right-0"
                 onClick={() => scrollTo(0, 0)}
               >
-                <span className="sr-only">Jump to top</span>
+                <span className="sr-only">పైకి వెళ్లండి</span>
                 <UpArrowSvg />
               </button>
             )}
           </div>
         </div>
+
         {/* The original RightBar for desktop remains untouched */}
         <RightBar />
       </div>
 
       <div className="pt-[90px]" />
-
       <BottomBar selectedTab="Learn" />
 
       <LoginScreen
@@ -593,7 +588,6 @@ const Learn: NextPage = () => {
 export default Learn;
 
 /* ---------- helper components used by the page (kept as in original) ---------- */
-
 const LessonCompletionSvg = ({
   lessonsCompleted,
   status,
@@ -673,7 +667,7 @@ const UnitHeader = ({
     >
       <header className="flex items-center justify-between gap-4 p-4">
         <div className="flex flex-col gap-1">
-          <h2 className="text-2xl font-bold">Unit {unitNumber}</h2>
+          <h2 className="text-2xl font-bold">యూనిట్ {unitNumber}</h2>
           <p className="text-lg">{description}</p>
         </div>
         <div
@@ -685,7 +679,7 @@ const UnitHeader = ({
           <GuidebookSvg />
           <span className="sr-only font-bold uppercase lg:not-sr-only">
             {" "}
-            Guidebook{" "}
+            మార్గదర్శిని{" "}
           </span>
         </div>
       </header>
