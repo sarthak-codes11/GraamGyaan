@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
@@ -69,7 +69,15 @@ export const LoginScreen: React.FC<Props> = ({
         console.warn("Could not update last_login:", updateError.message);
       }
 
-      router.push("/selectsub");
+      // after login, redirect based on persisted intent (localStorage)
+      if (typeof window !== "undefined") {
+        const intent = window.localStorage.getItem("loginRedirect");
+        const target = intent || "/learn";
+        window.localStorage.removeItem("loginRedirect");
+        void router.push(target);
+      } else {
+        void router.push("/learn");
+      }
     } catch (err: any) {
       console.error(err);
       setError("Something went wrong. Try again.");
@@ -111,7 +119,14 @@ export const LoginScreen: React.FC<Props> = ({
         else console.log("User saved/updated in users table");
       }
 
-      router.push("/selectsub");
+      if (typeof window !== "undefined") {
+        const intent = window.localStorage.getItem("loginRedirect");
+        const target = intent || "/learn";
+        window.localStorage.removeItem("loginRedirect");
+        void router.push(target);
+      } else {
+        void router.push("/learn");
+      }
     } catch (err: any) {
       console.error(err);
       setError("Something went wrong. Try again.");

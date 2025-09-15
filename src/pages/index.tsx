@@ -30,10 +30,12 @@ const HomePage: React.FC = () => {
   const { lang } = router.query;
   const [showLogin, setShowLogin] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
+  // role-based redirect intent is handled via localStorage to avoid URL coupling
 
   // Default language English
   const currentLang = typeof lang === "string" ? lang : "en";
   const t = translations[currentLang] || translations["en"];
+  // no URL-coupled modal opening; rely on local state
 
   const ActiveLogin =
     currentLang === "hi"
@@ -67,17 +69,40 @@ const HomePage: React.FC = () => {
             {t.welcome}
           </p>
 
-          {/* Sign-in button */}
-          <button
-            className="w-full rounded-2xl border-2 border-b-4 border-[#7B3F00] 
-               bg-[#7B3F00] px-8 py-3 font-bold uppercase 
-               text-white transition-all duration-300 ease-in-out
-               hover:bg-[#5C4033] hover:border-[#5C4033] hover:scale-105 
-               md:min-w-[320px]"
-            onClick={() => setShowLogin(true)}
-          >
-            {t.signin}
-          </button>
+          {/* Continue as selector */}
+          <div className="mb-6 flex flex-col items-center gap-3 md:gap-4">
+            <span className="text-base md:text-lg font-extrabold text-[#5C4033] uppercase tracking-wider">
+              Continue as
+            </span>
+            <div className="flex items-center gap-4 md:gap-6">
+              <button
+                className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 md:px-7 md:py-3.5 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200"
+                onClick={() => {
+                  try {
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("loginRedirect", "/learn");
+                    }
+                  } catch {}
+                  setShowLogin(true);
+                }}
+              >
+                <span className="text-sm md:text-base">Student</span>
+              </button>
+              <button
+                className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-white px-6 py-3 md:px-7 md:py-3.5 text-[#7B3F00] font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:bg-[#F5E6D3] hover:scale-[1.03] transition-transform duration-200"
+                onClick={() => {
+                  try {
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("loginRedirect", "/teacher");
+                    }
+                  } catch {}
+                  setShowLogin(true);
+                }}
+              >
+                <span className="text-sm md:text-base">Teacher</span>
+              </button>
+            </div>
+          </div>
 
           {/* Language dropdown */}
           <div className="relative mt-6">
