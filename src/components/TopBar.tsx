@@ -174,9 +174,9 @@ export const TopBar = ({
                       </p>
                       <Link
                         className="font-bold uppercase text-blue-400 transition hover:brightness-110"
-                        href="/shop"
+                        href="/lab"
                       >
-                        Go to shop
+                        Go to Lab
                       </Link>
                     </div>
                   </div>

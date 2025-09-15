@@ -1,0 +1,177 @@
+import type { NextPage } from "next";
+import React from "react";
+
+import { BottomBar } from "~/components/BottomBar";
+import { LeftBar } from "~/components/LeftBar";
+import RightBar from "~/components/RightBar";
+import { TopBar } from "~/components/TopBar";
+
+type Video = { id: number; title: string; watched: boolean };
+
+// LeftBar must be rendered inside the component tree, not at the module top level.
+
+const units: {
+  id: number;
+  title: string;
+  videos: Video[];
+  quizzesAttempted?: number;
+  assignmentsDone?: number;
+  comingSoon?: boolean;
+}[] = [
+  {
+    id: 1,
+    title: "Unit 1",
+    videos: [
+      { id: 1, title: "Intro to Lab", watched: true },
+      { id: 2, title: "Experiment Setup", watched: true },
+      { id: 3, title: "Run Trial", watched: true },
+      { id: 4, title: "Cleanup & Notes", watched: false },
+    ],
+    quizzesAttempted: 1,
+    assignmentsDone: 0,
+  },
+  {
+    id: 2,
+    title: "Unit 2",
+    videos: [
+      { id: 1, title: "Concept A", watched: false },
+      { id: 2, title: "Concept B", watched: true },
+      { id: 3, title: "Demonstration", watched: false },
+      { id: 4, title: "Wrap-up", watched: false },
+    ],
+    quizzesAttempted: 0,
+    assignmentsDone: 0,
+  },
+  {
+    id: 3,
+    title: "Unit 3",
+    videos: [],
+    comingSoon: true,
+    quizzesAttempted: 0,
+    assignmentsDone: 0,
+  },
+];
+
+const LabIcon: React.FC<{ className?: string }> = ({ className }) => (
+  <svg viewBox="0 0 24 24" className={className} xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
+    <path d="M7 2a1 1 0 00-1 1v5.1a3 3 0 001.1 2.34L10 13v6a1 1 0 001 1h2a1 1 0 001-1v-6l2.9-2.56A3 3 0 0018 8.1V3a1 1 0 00-1-1H7z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+
+const percent = (watched: number, total: number) =>
+  total === 0 ? 0 : Math.round((watched / total) * 100);
+
+const LabDashboard: NextPage = () => {
+  // simple aggregated totals for the top stats
+  const totalVideos = units.reduce((acc, u) => acc + u.videos.length, 0);
+  const watchedVideos = units.reduce((acc, u) => acc + u.videos.filter(v => v.watched).length, 0);
+  const totalQuizzes = units.reduce((acc, u) => acc + (u.quizzesAttempted || 0), 0);
+  const totalAssignments = units.reduce((acc, u) => acc + (u.assignmentsDone || 0), 0);
+
+  return (
+    <div>
+      <TopBar />
+      <LeftBar selectedTab="Lab" />
+      <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
+        <div className="px-4 pb-20 w-full max-w-4xl">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-4">
+              <div className="p-3 rounded-lg bg-green-100 text-green-800">
+                <LabIcon className="w-8 h-8" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold">Lab</h1>
+                <p className="text-sm text-gray-500">Hands-on units and videos</p>
+              </div>
+            </div>
+            <div className="text-sm text-gray-500 uppercase tracking-wide">Next: Coming Soon</div>
+          </div>
+
+          {/* Top stats */}
+          <div className="grid grid-cols-3 gap-4 mb-8">
+            <div className="p-4 rounded-2xl bg-white/90 shadow-sm">
+              <div className="text-xs text-gray-500">Videos watched</div>
+              <div className="text-2xl font-bold">{watchedVideos} / {totalVideos}</div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/90 shadow-sm">
+              <div className="text-xs text-gray-500">Quizzes attempted</div>
+              <div className="text-2xl font-bold">{totalQuizzes}</div>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white/90 shadow-sm">
+              <div className="text-xs text-gray-500">Assignments done</div>
+              <div className="text-2xl font-bold">{totalAssignments}</div>
+            </div>
+          </div>
+
+          {/* Units */}
+          <div className="space-y-6">
+            {units.map((u) => {
+              const watched = u.videos.filter(v => v.watched).length;
+              const total = u.videos.length;
+              const pct = percent(watched, total);
+
+              return (
+                <div key={u.id} className="p-5 rounded-2xl bg-white/95 shadow-md">
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h2 className="text-lg font-semibold">{u.title}</h2>
+                      <div className="text-xs text-gray-500">
+                        {u.comingSoon ? "Coming Soon" : `${total} videos • ${u.quizzesAttempted ?? 0} quizzes`}
+                      </div>
+                    </div>
+
+                    {!u.comingSoon && (
+                      <div className="flex items-center gap-3">
+                        <button className="px-3 py-1 rounded-xl bg-green-600 text-white text-sm font-medium">Resume</button>
+                        <button className="px-3 py-1 rounded-xl border border-gray-200 text-sm">View</button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* progress + breakdown */}
+                  {u.comingSoon ? (
+                    <div className="py-6 text-center text-gray-500 italic">This unit will be available soon.</div>
+                  ) : (
+                    <>
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div
+                          className="h-full bg-green-500 rounded-full"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between text-sm text-gray-600">
+                        <div>{watched} watched • {total - watched} remaining</div>
+                        <div className="font-semibold">{pct}%</div>
+                      </div>
+
+                      {/* small video list */}
+                      <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {u.videos.map(v => (
+                          <li key={v.id} className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
+                            <div className={`w-3 h-3 rounded-full ${v.watched ? "bg-green-500" : "bg-gray-300"}`} />
+                            <div className="text-sm">{v.title}</div>
+                            <div className="ml-auto text-xs text-gray-400">{v.watched ? "Watched" : "Not watched"}</div>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <RightBar />
+      </div>
+      
+    </div>
+  );
+};
+
+
+export default LabDashboard;

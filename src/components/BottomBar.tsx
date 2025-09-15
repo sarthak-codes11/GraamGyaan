@@ -7,7 +7,7 @@ type BottomBarItem = {
   icon: JSX.Element;
 };
 
-export type Tab = "Learn" | "Shop" | "Profile" | "Leaderboards";
+export type Tab = "Learn" | "Lab" | "Profile" | "Leaderboards";
 
 export const useBottomBarItems = () => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
@@ -47,8 +47,8 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Shop",
-      href: "/shop",
+      name: "Lab",
+      href: "/lab",
       icon: (
         <svg
           width="46"
