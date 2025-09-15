@@ -1971,25 +1971,31 @@ export const GuidebookSvg = () => {
 
 export const PracticeExerciseSvg = (props: ComponentProps<"svg">) => {
   return (
-    <svg width="23" height="19" viewBox="0 0 23 19" {...props}>
-      <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-        <g fill="#1CB0F6" fillRule="nonzero">
-          <g>
-            <g>
-              <g>
-                <g>
-                  <g>
-                    <g>
-                      <path d="M4.157 17.781a1.5 1.5 0 0 0 2.598-1.5l-3.5-6.062a1.5 1.5 0 0 0-2.598 1.5l3.5 6.062zm4.463-.268a1.5 1.5 0 0 0 2.599-1.5l-5.5-9.526a1.5 1.5 0 0 0-2.598 1.5l5.5 9.526zM18.843 1.219a1.5 1.5 0 0 0-2.598 1.5l3.5 6.062a1.5 1.5 0 0 0 2.598-1.5l-3.5-6.062zm-4.463.268a1.5 1.5 0 0 0-2.599 1.5l5.5 9.526a1.5 1.5 0 0 0 2.598-1.5l-5.5-9.526zm.035 8.062l-1.5-2.598-4.33 2.5 1.5 2.598z" />
-                    </g>
-                  </g>
-                </g>
-              </g>
-            </g>
-          </g>
-        </g>
-      </g>
-    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 23 19" role="img" aria-label="DQ! cartoon circle badge">
+  
+  <circle cx="11.5" cy="9.5" r="8.5" fill="#F5F5DC" stroke="#e0d7c2" stroke-width="0.6"/>
+
+  
+  <defs>
+    <filter id="shadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="0.5" stdDeviation="0.6" flood-color="#000000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+    <text x="11.5" y="12"
+        font-family="'Comic Sans MS', 'Fredoka One', cursive"
+        font-weight="900"
+        font-size="8"
+        text-anchor="middle"
+        fill="#ffffff"
+        stroke="#1f1f1f"
+        stroke-width="0.8"
+        paint-order="stroke fill"
+        filter="url(#shadow)">
+    DQ!
+  </text>
+</svg>
+
   );
 };
 

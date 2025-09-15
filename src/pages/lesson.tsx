@@ -212,8 +212,8 @@ const formatTime = (ms: number): string => {
 
 const TIMER_DURATION_MS = 30000; // 30s per problem
 const MAX_LIVES = 3;
-const XP_PER_CORRECT_ANSWER = 1; // Each correct answer = 1 lesson completed
-const XP_BONUS_FOR_PERFECT = 1; // Perfect score = 1 additional lesson completed
+const XP_PER_CORRECT_ANSWER = 0; // No per-question XP to keep lesson total consistent
+const XP_BONUS_FOR_PERFECT = 0; // No bonus; flat lesson XP is awarded
 
 // COMPONENTS -----------------------------------------------------------------
 
@@ -226,7 +226,7 @@ const ProgressBar = ({ hearts, timer }: { hearts: number; timer: number }) => (
         <LessonTopBarEmptyHeart key={i} width={24} height={24} />
       )
     )}
-    <span className="ml-4 font-mono text-gray-800 text-sm">⏳ {formatTime(timer)}</span>
+    <span className="ml-4 font-mono text-gray-800 text-xl font-bold">⏳ {formatTime(timer)}</span>
   </header>
 );
 
@@ -245,7 +245,7 @@ const FancyButton = ({
   
   const variantClasses = {
     default: "bg-gradient-to-br from-white to-beige-200 hover:from-beige-100 hover:to-white border-gray-300 hover:scale-105 hover:shadow-lg",
-    selected: "bg-gradient-to-br from-blue-100 to-blue-200 border-blue-400 text-blue-800 scale-105",
+    selected: "bg-[#A3B18A] border-[#6B7D5B] text-white scale-105",
     correct: "bg-gradient-to-br from-green-100 to-green-200 border-green-400 text-green-800",
     incorrect: "bg-gradient-to-br from-red-100 to-red-200 border-red-400 text-red-800"
   };
@@ -303,6 +303,7 @@ const LessonComplete = ({
   isPerfect,
   nextUnlock,
   lessonsCompleted,
+  totalTimeMs,
 }: {
   correctAnswerCount: number;
   incorrectAnswerCount: number;
@@ -310,45 +311,55 @@ const LessonComplete = ({
   isPerfect: boolean;
   nextUnlock: string | null;
   lessonsCompleted: number;
-}) => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
-    <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl flex flex-col items-center gap-6 max-w-md">
-      <h1 className="text-3xl font-bold text-gray-800">Lesson Complete </h1>
-      <div className="text-center space-y-2">
-        <p className="text-lg text-green-600 font-semibold">
-          Correct answers: {correctAnswerCount}
-        </p>
-        <p className="text-lg text-red-600 font-semibold">
-          Incorrect answers: {incorrectAnswerCount}
-        </p>
-        <p className="text-lg text-blue-600 font-semibold">
-          Lessons Completed: {lessonsCompleted}
-        </p>
-        {isPerfect && (
-          <p className="text-lg text-yellow-600 font-semibold">
-            Perfect Score! ⭐
+  totalTimeMs: number;
+}) => {
+  const formatTotalTime = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
+      <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl flex flex-col items-center gap-6 max-w-md">
+        <h1 className="text-3xl font-bold text-gray-800">Lesson Complete </h1>
+        <div className="text-center space-y-2">
+          <p className="text-lg text-green-600 font-semibold">
+            Correct answers: {correctAnswerCount}
           </p>
-        )}
-        {nextUnlock && (
-          <div className="flex flex-col items-center gap-3">
-            <p className="text-lg text-purple-600 font-semibold">
-              🚀 "{nextUnlock}" lesson unlocked!
+          <p className="text-lg text-red-600 font-semibold">
+            Incorrect answers: {incorrectAnswerCount}
+          </p>
+          <p className="text-lg text-purple-600 font-semibold">
+            ⏱️ Total time: {formatTotalTime(totalTimeMs)}
+          </p>
+          {isPerfect && (
+            <p className="text-lg text-yellow-600 font-semibold">
+              Perfect Score! ⭐
             </p>
-            <Link
-              href={`/lesson?lesson=${encodeURIComponent(nextUnlock)}`}
-              className="underline text-blue-600"
-            >
-              Start "{nextUnlock}"
-            </Link>
-          </div>
-        )}
+          )}
+          {nextUnlock && (
+            <div className="flex flex-col items-center gap-3">
+              <p className="text-lg text-purple-600 font-semibold">
+                🚀 "{nextUnlock}" lesson unlocked!
+              </p>
+              <Link
+                href={`/lesson?lesson=${encodeURIComponent(nextUnlock)}`}
+                className="underline text-blue-600"
+              >
+                Start "{nextUnlock}"
+              </Link>
+            </div>
+          )}
+        </div>
+        <FancyButton>
+          <Link href="/learn">Back to main</Link>
+        </FancyButton>
       </div>
-      <FancyButton>
-        <Link href="/learn">Back to main</Link>
-      </FancyButton>
     </div>
-  </div>
-);
+  );
+};
 
 // PROBLEM UI -----------------------------------------------------------------
 
@@ -362,6 +373,8 @@ const ProblemMCQ = ({
   onFinish,
   hearts,
   timer,
+  problemIndex,
+  totalQuestions,
 }: any) => {
   const { question, answers, correctAnswer, explanation } = problem;
   
@@ -369,7 +382,8 @@ const ProblemMCQ = ({
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
       <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-2xl flex flex-col gap-6">
         <ProgressBar hearts={hearts} timer={timer} />
-        <h2 className="text-xl font-bold text-gray-800 text-center">{question}</h2>
+        <div className="text-center text-sm font-semibold text-gray-600">Question {problemIndex + 1} of {totalQuestions}</div>
+        <h2 className="text-2xl font-bold text-gray-800 text-center">{question}</h2>
         
         <div className="grid grid-cols-1 gap-3">
           {answers.map((answer: string, i: number) => {
@@ -400,7 +414,7 @@ const ProblemMCQ = ({
                       checked={selectedAnswer === i}
                       onChange={() => setSelectedAnswer(i)}
                       disabled={correctAnswerShown}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500"
+                      className="w-4 h-4 text-[#6B7D5B] bg-gray-100 border-gray-300 focus:ring-[#6B7D5B]"
                     />
                     <span className="font-bold text-lg">{String.fromCharCode(65 + i)})</span>
                     <span>{answer}</span>
@@ -445,6 +459,31 @@ const ProblemMCQ = ({
   );
 };
 
+// Animated gradient background (fixed, behind everything)
+const AnimatedGradientBackground = () => (
+  <>
+    <style jsx global>{`
+      @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+      }
+    `}</style>
+    <div className="pointer-events-none fixed inset-0 -z-50">
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          background: "linear-gradient(270deg, #6B7D5B, #556B2F, #3E4C35, #2B3A2A)",
+          backgroundSize: "600% 600%",
+          animation: "gradientShift 10s ease infinite",
+          filter: "saturate(0.9) brightness(1) opacity(0.6)",
+        }}
+      />
+    </div>
+  </>
+);
+
 // MAIN LESSON ----------------------------------------------------------------
 
 const Lesson: NextPage = () => {
@@ -460,6 +499,8 @@ const Lesson: NextPage = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [xpGained, setXpGained] = useState(0);
   const [nextUnlock, setNextUnlock] = useState<string | null>(null);
+  const [lessonStartTime] = useState(Date.now());
+  const [totalTimeMs, setTotalTimeMs] = useState(0);
 
   // Store hooks
   const increaseXp = useBoundStore((state) => state.increaseXp);
@@ -507,7 +548,12 @@ const Lesson: NextPage = () => {
   const problems = lessons[currentLesson].problems;
   if (!router.isReady) return null; // or a loader
   if (problems.length === 0) {
-    return <div className="min-h-screen flex items-center justify-center">Coming soon</div>;
+    return (
+      <>
+        <AnimatedGradientBackground />
+        <div className="min-h-screen flex items-center justify-center">Coming soon</div>
+      </>
+    );
   }
 
   const problem = problems[problemIdx];
@@ -540,22 +586,36 @@ const Lesson: NextPage = () => {
   }, [problemIdx]);
 
   // Early exits
-  if (lives <= 0) return <LessonFastForwardEndFail unitNumber={1} />;
+  if (lives <= 0) return (
+    <>
+      <AnimatedGradientBackground />
+      <LessonFastForwardEndFail unitNumber={1} />
+    </>
+  );
   if (showSummary) {
     const isPerfect = incorrectAnswerCount === 0;
     return (
-      <LessonComplete
-        correctAnswerCount={correctAnswerCount}
-        incorrectAnswerCount={incorrectAnswerCount}
-        xpGained={xpGained}
-        isPerfect={isPerfect}
-        nextUnlock={nextUnlock}
-        lessonsCompleted={lessonsCompleted}
-      />
+      <>
+        <AnimatedGradientBackground />
+        <LessonComplete
+          correctAnswerCount={correctAnswerCount}
+          incorrectAnswerCount={incorrectAnswerCount}
+          xpGained={xpGained}
+          isPerfect={isPerfect}
+          nextUnlock={nextUnlock}
+          lessonsCompleted={lessonsCompleted}
+          totalTimeMs={totalTimeMs}
+        />
+      </>
     );
   }
 
-  if (!problem) return <div>Unknown problem type</div>;
+  if (!problem) return (
+    <>
+      <AnimatedGradientBackground />
+      <div>Unknown problem type</div>
+    </>
+  );
 
   const isAnswerCorrect = selectedAnswer === problem.correctAnswer;
 
@@ -564,9 +624,6 @@ const Lesson: NextPage = () => {
     
     if (isAnswerCorrect) {
       setCorrectAnswerCount(c => c + 1);
-      const xpToAdd = XP_PER_CORRECT_ANSWER;
-      setXpGained(prev => prev + xpToAdd);
-      increaseXp(xpToAdd);
     } else {
       setIncorrectAnswerCount(c => c + 1);
       setLives(l => Math.max(0, l - 1));
@@ -580,8 +637,10 @@ const Lesson: NextPage = () => {
       setCorrectAnswerShown(false);
       setTimer(TIMER_DURATION_MS);
     } else {
-      // Lesson completed: +10 XP, mark completed, go back to main
-      increaseXp(10);
+      // Lesson completed: +25 XP, mark completed, go back to main
+      const endTime = Date.now();
+      setTotalTimeMs(endTime - lessonStartTime);
+      increaseXp(25);
       increaseLessonsCompleted(1);
       setShowSummary(true);
     }
@@ -590,20 +649,30 @@ const Lesson: NextPage = () => {
   switch (problem.type) {
     case "MCQ":
       return (
-        <ProblemMCQ
-          problem={problem}
-          selectedAnswer={selectedAnswer}
-          setSelectedAnswer={setSelectedAnswer}
-          correctAnswerShown={correctAnswerShown}
-          isAnswerCorrect={isAnswerCorrect}
-          onCheckAnswer={onCheckAnswer}
-          onFinish={onFinish}
-          hearts={lives}
-          timer={timer}
-        />
+        <>
+          <AnimatedGradientBackground />
+          <ProblemMCQ
+            problem={problem}
+            selectedAnswer={selectedAnswer}
+            setSelectedAnswer={setSelectedAnswer}
+            correctAnswerShown={correctAnswerShown}
+            isAnswerCorrect={isAnswerCorrect}
+            onCheckAnswer={onCheckAnswer}
+            onFinish={onFinish}
+            hearts={lives}
+            timer={timer}
+            problemIndex={problemIdx}
+            totalQuestions={problems.length}
+          />
+        </>
       );
     default:
-      return <div>Unknown problem type</div>;
+      return (
+        <>
+          <AnimatedGradientBackground />
+          <div>Unknown problem type</div>
+        </>
+      );
   }
 };
 

@@ -8,6 +8,6 @@ export type GoalXpSlice = {
 };
 
 export const createGoalXpSlice: BoundStateCreator<GoalXpSlice> = (set) => ({
-  goalXp: 10,
+  goalXp: 100,
   setGoalXp: (newGoalXp: GoalXp) => set({ goalXp: newGoalXp }),
 });

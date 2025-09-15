@@ -1,12 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import React, {
-  Fragment,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import {
   ActiveBookSvg,
   LockedBookSvg,
@@ -131,6 +125,7 @@ const tileLeftClassNames = [
 
 type TileLeftClassName = (typeof tileLeftClassNames)[number];
 
+// Replace zigzag computation with linear centering
 const getTileLeftClassName = ({
   index,
   unitNumber,
@@ -140,14 +135,7 @@ const getTileLeftClassName = ({
   unitNumber: number;
   tilesLength: number;
 }): TileLeftClassName => {
-  if (index >= tilesLength - 1) {
-    return "left-0";
-  }
-  const classNames =
-    unitNumber % 2 === 1
-      ? tileLeftClassNames
-      : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
-  return classNames[index % classNames.length] ?? "left-0";
+  return "left-0";
 };
 
 const tileTooltipLeftOffsets = [140, 95, 70, 95, 140, 185, 210, 185] as const;
@@ -163,17 +151,8 @@ const getTileTooltipLeftOffset = ({
   unitNumber: number;
   tilesLength: number;
 }): TileTooltipLeftOffset => {
-  if (index >= tilesLength - 1) {
-    return tileTooltipLeftOffsets[0];
-  }
-  const offsets =
-    unitNumber % 2 === 1
-      ? tileTooltipLeftOffsets
-      : [
-          ...tileTooltipLeftOffsets.slice(4),
-          ...tileTooltipLeftOffsets.slice(0, 4),
-        ];
-  return offsets[index % offsets.length] ?? tileTooltipLeftOffsets[0];
+  // Center tooltip arrow relative to tile since tiles are centered now
+  return 140;
 };
 
 const getTileColors = ({
@@ -283,7 +262,7 @@ const TileTooltip = ({
               activeTextColor,
             ].join(" ")}
           >
-            Let's Go! +10 XP
+            Let's Go! +25 XP
           </Link>
         ) : status === "LOCKED" ? (
           <button
@@ -332,6 +311,8 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
         borderColor={unit.borderColor}
       />
       <div className="relative mb-8 mt-[67px] flex max-w-2xl flex-col items-center gap-4">
+        {/* vertical connector line behind tiles */}
+        <div className="absolute left-1/2 top-0 -z-10 h-full w-1 -translate-x-1/2 rounded bg-[#e5e5e5]" />
         {unit.tiles.map((tile, i): JSX.Element => {
           const status = tileStatus(tile, lessonsCompleted);
           return (
@@ -356,12 +337,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     return (
                       <div
                         className={[
-                          "relative -mb-4 h-[93px] w-[98px]",
-                          getTileLeftClassName({
-                            index: i,
-                            unitNumber: unit.unitNumber,
-                            tilesLength: unit.tiles.length,
-                          }),
+                          "relative -mb-4 h-[93px] w-[98px] left-0",
                         ].join(" ")}
                       >
                         {tile.type === "fast-forward" && status === "LOCKED" ? (
@@ -404,12 +380,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     return (
                       <div
                         className={[
-                          "relative -mb-4",
-                          getTileLeftClassName({
-                            index: i,
-                            unitNumber: unit.unitNumber,
-                            tilesLength: unit.tiles.length,
-                          }),
+                          "relative -mb-4 left-0",
                         ].join(" ")}
                         onClick={() => {
                           if (status === "ACTIVE") {

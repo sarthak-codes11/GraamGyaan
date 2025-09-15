@@ -1,14 +1,15 @@
-import { fakeUsers } from "~/utils/fakeUsers";
 import { useBoundStore } from "~/hooks/useBoundStore";
+import { fakeUsers } from "~/utils/fakeUsers";
 
 export const useLeaderboardUsers = () => {
-  const xpThisWeek = useBoundStore((x) => x.xpThisWeek());
+  const xpToday = useBoundStore((x) => x.xpToday());
   const name = useBoundStore((x) => x.name);
   const userInfo = {
     name,
-    xp: xpThisWeek,
+    xp: xpToday,
     isCurrentUser: true,
   } as const;
+  // Merge motivating dummy users with the real user and sort by XP desc
   return [...fakeUsers, userInfo].sort((a, b) => b.xp - a.xp);
 };
 

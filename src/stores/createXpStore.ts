@@ -19,6 +19,10 @@ const xpAt = (xpByDate: XpByDate, date: dayjs.Dayjs): number => {
   return xpByDate[toDateString(date)] ?? 0;
 };
 
+const xpTotal = (xpByDate: XpByDate): number => {
+  return Object.values(xpByDate).reduce((acc, v) => acc + v, 0);
+};
+
 type XpByDate = Record<DateString, number>;
 
 export type XpSlice = {
@@ -26,6 +30,7 @@ export type XpSlice = {
   increaseXp: (by: number) => void;
   xpToday: () => number;
   xpThisWeek: () => number;
+  xpAllTime: () => number;
 };
 
 export const createXpSlice: BoundStateCreator<XpSlice> = (set, get) => ({
@@ -39,4 +44,5 @@ export const createXpSlice: BoundStateCreator<XpSlice> = (set, get) => ({
       ),
     );
   },
+  xpAllTime: () => xpTotal(get().xpByDate),
 });

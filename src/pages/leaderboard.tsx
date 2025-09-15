@@ -126,7 +126,7 @@ const Leaderboard: NextPage = () => {
     }
   }, [loggedIn, router]);
 
-  const lessonsToUnlockLeaderboard = 10;
+  const lessonsToUnlockLeaderboard = 1;
   const lessonsRemainingToUnlockLeaderboard =
     lessonsToUnlockLeaderboard - lessonsCompleted;
   const leaderboardIsUnlocked = lessonsCompleted >= lessonsToUnlockLeaderboard;

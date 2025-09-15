@@ -58,6 +58,8 @@ const ProfileTopSection = () => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
   const name = useBoundStore((x) => x.name);
   const username = useBoundStore((x) => x.username);
+  const email = useBoundStore((x) => x.email);
+  const standard = useBoundStore((x) => x.standard);
   const joinedAt = useBoundStore((x) => x.joinedAt).format("MMMM YYYY");
   const followingCount = 0;
   const followersCount = 0;
@@ -79,6 +81,20 @@ const ProfileTopSection = () => {
           <div>
             <h1 className="text-2xl font-bold">{name}</h1>
             <div className="text-sm text-gray-400">{username}</div>
+          </div>
+          <div className="grid grid-cols-1 gap-2 text-gray-600 md:grid-cols-2">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-500">Email:</span>
+              <span className="text-sm">{email || "Not set"}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-500">Standard:</span>
+              <span className="text-sm">{standard || "Not set"}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-semibold text-gray-500">Language:</span>
+              <span className="text-sm">{language.name}</span>
+            </div>
           </div>
           <div className="flex items-center gap-3">
             <ProfileTimeJoinedSvg />
@@ -105,7 +121,7 @@ const ProfileTopSection = () => {
 
 const ProfileStatsSection = () => {
   const streak = useBoundStore((x) => x.streak);
-  const totalXp = 125;
+  const totalXp = useBoundStore((x) => x.xpAllTime());
   const league = "Bronze";
   const top3Finishes = 0;
 

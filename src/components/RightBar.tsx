@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import dayjs from "dayjs";
+import { useBoundStore } from "~/hooks/useBoundStore";
+import { fakeUsers } from "~/utils/fakeUsers";
 
 /**
  * Paste-ready RightBar.tsx
@@ -116,32 +118,23 @@ function GiftIcon({ className = "" }: { className?: string }) {
 
 // --- Main RightBar Component ---
 export default function RightBar() {
-  // Dummy/store values (replace with your store hooks if you want)
-  const loggedIn = true;
-  const lingots = 120;
-  const streak = 7;
-  const language = "Spanish";
-  const lessonsCompleted = 12;
-  const totalXp = 350; // This is now the single source of truth for the user's XP
-  const xpToReward = 150;
-  const xpGoal = totalXp + xpToReward;
-  const progress = Math.min((totalXp / xpGoal) * 100, 100);
+  // Live values from store
+  const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
+  const totalXp = useBoundStore((x) => x.xpAllTime());
+  const xpToday = useBoundStore((x) => x.xpToday());
+  const goalXp = useBoundStore((x) => x.goalXp);
 
-  // --- ⬇️ LEADERBOARD LOGIC UPDATED HERE ⬇️ ---
-  const currentUser = { name: "You", xp: totalXp };
-  const otherUsers = [
-    { name: "Alice", xp: 1200 },
-    { name: "Bob", xp: 950 },
-    { name: "Charlie", xp: 800 },
-  ];
+  const xpToReward = Math.max(goalXp - xpToday, 0);
+  const xpGoal = goalXp;
+  const progress = Math.min((xpToday / xpGoal) * 100, 100);
 
-  // Combine, sort, and find the user's rank
-  const leaderboardData = [...otherUsers, currentUser].sort(
-    (a, b) => b.xp - a.xp
-  );
-  const userRank =
-    leaderboardData.findIndex((user) => user.name === "You") + 1;
-  // --- ⬆️ END OF LEADERBOARD LOGIC UPDATE ⬆️ ---
+  // Leaderboard based on today's XP + motivating dummy users
+  const todaysXp = useBoundStore((x) => x.xpToday());
+  const currentUser = { name: "You", xp: todaysXp } as const;
+  const leaderboardData = [...fakeUsers, currentUser].sort((a, b) => b.xp - a.xp);
+  const userRank = leaderboardData.findIndex(u => u.name === "You") + 1;
+  const needsUnlock = lessonsCompleted < 1;
+  const lessonsRemainingToUnlockLeaderboard = Math.max(1 - lessonsCompleted, 0);
 
   // Component state
   const [showLogin, setShowLogin] = useState(false);
@@ -164,89 +157,85 @@ export default function RightBar() {
       </div>
 
       {/* Sidebar wrapper sitting above gradient */}
-      <aside className="relative z-20 hidden sm:flex w-96 flex-col gap-6 p-4">
+      <aside className="relative z-20 flex w-96 flex-col gap-6 p-4">
         
         {/* Leaderboard (white card, shadow, hover lift) */}
-        {loggedIn && lessonsCompleted >= 10 && (
-          <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-            <h2 className="mb-2 text-xl font-bold text-[#680B24]">
-              Leaderboard
-            </h2>
-            {/* --- ⬇️ RANK IS NOW DYNAMIC ⬇️ --- */}
-            <p className="text-sm text-gray-600">
-              You’re ranked <strong>#{userRank}</strong> this week. Keep going!
-            </p>
-            {/* --- ⬇️ LEADERBOARD MAPPING IS NOW DYNAMIC ⬇️ --- */}
-            <ul className="mt-4 flex flex-col gap-3">
-              {leaderboardData.map((user, i) => (
-                <li
-                  key={user.name}
-                  className={`flex items-center justify-between rounded-lg p-3 shadow-sm ${
-                    user.name === "You" ? "bg-amber-100" : "bg-white"
-                  }`} // Highlight current user
-                >
-                  <span className="font-medium text-gray-700">
-                    {i + 1}. {user.name}
-                  </span>
-                  <span className="text-sm font-semibold text-gray-600">
-                    {user.xp} XP
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </article>
-        )}
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+          <h2 className="mb-2 text-xl font-bold text-[#680B24]">Leaderboard</h2>
+          {needsUnlock ? (
+            <div className="text-sm text-gray-600">
+              Complete {lessonsRemainingToUnlockLeaderboard} more lesson
+              {lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock
+              the leaderboard.
+            </div>
+          ) : (
+            <>
+              <p className="text-sm text-gray-600">
+                You’re ranked <strong>#{userRank}</strong> today. Keep going!
+              </p>
+              <ul className="mt-4 flex flex-col gap-3">
+                {leaderboardData.map((user, i) => (
+                  <li
+                    key={`${user.name}-${i}`}
+                    className={`flex items-center justify-between rounded-lg p-3 shadow-sm ${
+                      user.name === "You" ? "bg-amber-100" : "bg-white"
+                    }`}
+                  >
+                    <span className="font-medium text-gray-700">
+                      {i + 1}. {user.name}
+                    </span>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {user.xp} XP
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </article>
 
         {/* Achievements (white card, shadow, hover lift) */}
-        {loggedIn && (
-          <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-            <h2 className="mb-4 text-xl font-bold text-[#680B24]">
-              Achievements & Rewards
-            </h2>
-            <div className="flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
-                <TrophyIcon />
-              </div>
-              <div>
-                <p className="text-sm text-gray-600">
-                  Total XP earned:{" "}
-                  {/* This value is reflected in the leaderboard */}
-                  <span className="font-semibold text-gray-800">{totalXp}</span>
-                </p>
-                <p className="text-sm text-gray-600">
-                  XP needed for next reward:{" "}
-                  <span className="font-semibold text-gray-800">
-                    {xpToReward}
-                  </span>
-                </p>
-              </div>
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+          <h2 className="mb-4 text-xl font-bold text-[#680B24]">Achievements & Rewards</h2>
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
+              <TrophyIcon />
             </div>
-            {/* golden animated progress bar */}
-            <div className="mt-4">
-              <div className="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
-                <div
-                  className="h-full rounded-full shiny-progress"
-                  style={{
-                    width: `${progress}%`,
-                    background:
-                      "linear-gradient(90deg, #FFD24D 0%, #F6C84C 30%, #FFD24D 60%, #FFE685 100%)",
-                  }}
-                />
-              </div>
-              <p className="mt-2 text-right text-sm font-semibold text-gray-600">
-                {Math.round(progress)}%
-              </p>
-            </div>
-            <div className="mt-6 flex items-center gap-4">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
-                <GiftIcon />
-              </div>
+            <div>
               <p className="text-sm text-gray-600">
-                Keep grinding to unlock new achievements and prizes!
+                Total XP earned: <span className="font-semibold text-gray-800">{totalXp}</span>
+              </p>
+              <p className="text-sm text-gray-600">
+                XP needed for today’s goal: {" "}
+                <span className="font-semibold text-gray-800">{xpToReward}</span>
               </p>
             </div>
-          </article>
-        )}
+          </div>
+          {/* golden animated progress bar */}
+          <div className="mt-4">
+            <div className="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
+              <div
+                className="h-full rounded-full shiny-progress"
+                style={{
+                  width: `${progress}%`,
+                  background:
+                    "linear-gradient(90deg, #FFD24D 0%, #F6C84C 30%, #FFD24D 60%, #FFE685 100%)",
+                }}
+              />
+            </div>
+            <p className="mt-2 text-right text-sm font-semibold text-gray-600">
+              {Math.round(progress)}%
+            </p>
+          </div>
+          <div className="mt-6 flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
+              <GiftIcon />
+            </div>
+            <p className="text-sm text-gray-600">
+              Keep grinding to unlock new achievements and prizes!
+            </p>
+          </div>
+        </article>
       </aside>
 
       {/* small login modal placeholder (kept simple) */}
