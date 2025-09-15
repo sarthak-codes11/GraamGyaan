@@ -21,8 +21,8 @@ export const units: readonly Unit[] = [
     unitNumber: 1,
     description: "Sorting Material Into Groups",
     backgroundColor: "bg-[#8B5E3C]",   // warm medium brown
-textColor: "text-[#556B2F]",       // soft beige for contrast
-borderColor: "border-[#6B4226]",   // darker brown for depth
+    textColor: "text-[#556B2F]",       // soft beige for contrast
+    borderColor: "border-[#6B4226]",   // darker brown for depth
 
     tiles: [
       {
@@ -31,11 +31,11 @@ borderColor: "border-[#6B4226]",   // darker brown for depth
       },
       {
         type: "book",
-        description: "Good morning",
+        description: "Objects and Materials",
       },
       {
         type: "star",
-        description: "Greet people",
+        description: "Properties of Materials",
       },
       { type: "treasure" },
       { type: "book", description: "A date" },

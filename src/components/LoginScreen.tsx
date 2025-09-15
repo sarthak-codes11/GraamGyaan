@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "../utils/supabaseClient";
-// ✅ import your supabase client
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
@@ -27,9 +26,9 @@ export const LoginScreen: React.FC<Props> = ({
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // sync with old API if parent controls it
+  // sync with parent
   useEffect(() => {
-    if (typeof loginScreenState === "undefined") return;
+    if (!loginScreenState) return;
     if (loginScreenState === "LOGIN") setScreen("login");
     else if (loginScreenState === "SIGNUP") setScreen("signup");
     else setScreen("start");
@@ -41,19 +40,42 @@ export const LoginScreen: React.FC<Props> = ({
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try {
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-    if (error) {
-      setError(error.message);
-    } else {
-      console.log("✅ Logged in:", data);
-      router.push("/selectsub"); // redirect after success
+      if (authError) {
+        setError(authError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!authData.user) {
+        setError("User not found.");
+        setLoading(false);
+        return;
+      }
+
+      // ✅ Update last_login safely (policy required in DB)
+      const { error: updateError } = await supabase
+        .from("users")
+        .update({ last_login: new Date().toISOString() })
+        .eq("id", authData.user.id);
+
+      if (updateError) {
+        console.warn("Could not update last_login:", updateError.message);
+      }
+
+      router.push("/selectsub");
+    } catch (err: any) {
+      console.error(err);
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   // 🆕 Handle Signup
@@ -62,19 +84,40 @@ export const LoginScreen: React.FC<Props> = ({
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    try {
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-    if (error) {
-      setError(error.message);
-    } else {
-      console.log("✅ Signed up:", data);
+      if (signUpError) {
+        setError(signUpError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (signUpData.user) {
+        // ✅ Insert user into "users" table only if not exists
+        const { error: insertError } = await supabase
+          .from("users")
+          .upsert([
+            { id: signUpData.user.id, email, last_login: new Date().toISOString() },
+          ])
+          .eq("id", signUpData.user.id);
+
+        if (insertError)
+          console.error("Failed to insert user:", insertError.message);
+        else console.log("User saved/updated in users table");
+      }
+
       router.push("/selectsub");
+    } catch (err: any) {
+      console.error(err);
+      setError("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const card = (
@@ -89,7 +132,6 @@ export const LoginScreen: React.FC<Props> = ({
             >
               I already have an account
             </button>
-
             <button
               onClick={() => setScreen("signup")}
               className="w-full rounded-lg border py-2 font-semibold"
@@ -123,7 +165,7 @@ export const LoginScreen: React.FC<Props> = ({
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
             {loading ? "Logging in..." : "Log in"}
@@ -143,7 +185,6 @@ export const LoginScreen: React.FC<Props> = ({
             className="w-full mb-2 px-3 py-2 border rounded-lg"
             required
           />
-
           <label className="block text-sm font-medium">Password</label>
           <input
             value={password}
@@ -152,11 +193,10 @@ export const LoginScreen: React.FC<Props> = ({
             className="w-full mb-4 px-3 py-2 border rounded-lg"
             required
           />
-
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
             {loading ? "Creating..." : "Create account"}
@@ -167,8 +207,8 @@ export const LoginScreen: React.FC<Props> = ({
     </div>
   );
 
-  // old compat API
-  if (typeof loginScreenState !== "undefined") {
+  // Compatibility with parent API
+  if (loginScreenState) {
     return (
       <article
         className={[
