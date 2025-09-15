@@ -8,7 +8,6 @@ import {
   BronzeLeagueSvg,
   FirstPlaceSvg,
   LeaderboardBannerSvg,
-  LeaderboardExplanationSvg,
   LockedLeaderboardSvg,
   LockedLeagueSvg,
   SecondPlaceSvg,
@@ -19,26 +18,7 @@ import { useRouter } from "next/router";
 import { useLeaderboardUsers } from "~/hooks/useLeaderboard";
 import Image from "next/image";
 
-const LeaderboardExplanationSection = () => {
-  return (
-    <article className="relative hidden h-fit w-96 shrink-0 gap-5 rounded-2xl border-2 border-gray-200 p-6 xl:flex">
-      <div className="flex flex-col gap-5">
-        <h2 className="font-bold uppercase text-gray-400">
-          What are leaderboards?
-        </h2>
-        <p className="font-bold text-gray-700">Do lessons. Earn XP. Compete.</p>
-        <p className="text-gray-400">
-          Earn XP through lessons, then compete with players in a weekly
-          leaderboard
-        </p>
-      </div>
-
-      <div className="w-10 shrink-0"></div>
-
-      <LeaderboardExplanationSvg />
-    </article>
-  );
-};
+// Explanation section removed
 
 type TimeLeftUnit = "days" | "hours" | "minutes";
 
@@ -119,19 +99,20 @@ const Leaderboard: NextPage = () => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
 
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
+  const extended = router.query.extended !== undefined;
 
   useEffect(() => {
-    if (!loggedIn) {
+    if (!extended && !loggedIn) {
       void router.push("/");
     }
-  }, [loggedIn, router]);
+  }, [extended, loggedIn, router]);
 
   const lessonsToUnlockLeaderboard = 1;
   const lessonsRemainingToUnlockLeaderboard =
     lessonsToUnlockLeaderboard - lessonsCompleted;
   const leaderboardIsUnlocked = lessonsCompleted >= lessonsToUnlockLeaderboard;
 
-  const leaderboardLeague = "Bronze League";
+  const leaderboardLeague = extended ? "Schools Leaderboard" : "Bronze League";
 
   const leaderboardUsers = useLeaderboardUsers();
 
@@ -198,7 +179,7 @@ const Leaderboard: NextPage = () => {
             </>
           )}
         </div>
-        {!leaderboardIsUnlocked && <LeaderboardExplanationSection />}
+        {/* Explanation section removed */}
       </div>
       <BottomBar selectedTab="Leaderboards" />
     </div>

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import type { Tab } from "./BottomBar";
 import { useBottomBarItems } from "./BottomBar";
 import LoginScreen from "./LoginScreen";
-import { GlobeIconSvg, PodcastIconSvg } from "./Svgs";
+import { GlobeIconSvg } from "./Svgs";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import { useRouter } from "next/router";
 
@@ -15,8 +15,8 @@ const LeftBarMoreMenuSvg = (props: ComponentProps<"svg">) => {
         cx="23"
         cy="23"
         r="19"
-        fill="#CE82FF"
-        stroke="#CE82FF"
+        fill="#598556"
+        stroke="#71896B"
         strokeWidth="2"
       />
       <circle cx="15" cy="23" r="2" fill="white" />
@@ -90,21 +90,10 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
               <div className="flex flex-col py-2">
                 <Link
                   className="flex items-center gap-4 px-5 py-2 text-left uppercase hover:bg-gray-100"
-                  href="https://schools.duolingo.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/leaderboard?extended=1"
                 >
                   <GlobeIconSvg className="h-10 w-10" />
-                  Schools
-                </Link>
-                <Link
-                  className="flex items-center gap-4 px-5 py-2 text-left uppercase hover:bg-gray-100"
-                  href="https://podcast.duolingo.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <PodcastIconSvg className="h-10 w-10" />
-                  Podcast
+                  School
                 </Link>
               </div>
               <div className="flex flex-col border-t-2 border-gray-300 py-2">
@@ -124,7 +113,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 </Link>
                 <Link
                   className="px-5 py-2 text-left uppercase hover:bg-gray-100"
-                  href="https://support.duolingo.com/hc/en-us"
+                  href="/help"
                 >
                   Help
                 </Link>

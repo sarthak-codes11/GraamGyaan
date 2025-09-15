@@ -123,6 +123,8 @@ export default function RightBar() {
   const totalXp = useBoundStore((x) => x.xpAllTime());
   const xpToday = useBoundStore((x) => x.xpToday());
   const goalXp = useBoundStore((x) => x.goalXp);
+  const streak = useBoundStore((x) => x.streak);
+  const addToday = useBoundStore((x) => x.addToday);
 
   const xpToReward = Math.max(goalXp - xpToday, 0);
   const xpGoal = goalXp;
@@ -159,6 +161,22 @@ export default function RightBar() {
       {/* Sidebar wrapper sitting above gradient */}
       <aside className="relative z-20 flex w-96 flex-col gap-6 p-4">
         
+        {/* Daily Streak card */}
+        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+          <h2 className="mb-2 text-xl font-bold text-[#680B24]">Daily Streak</h2>
+          <p className="text-sm text-gray-600">Keep your streak alive by logging in daily.</p>
+          <div className="mt-3 flex items-center justify-between">
+            <div className="text-3xl font-extrabold text-orange-500">{streak}</div>
+            <button
+              className="rounded-xl border-2 border-b-4 border-gray-200 bg-white px-4 py-2 text-sm font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
+
+              onClick={() => addToday()}
+            >
+              Mark today
+            </button>
+          </div>
+        </article>
+
         {/* Leaderboard (white card, shadow, hover lift) */}
         <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
           <h2 className="mb-2 text-xl font-bold text-[#680B24]">Leaderboard</h2>

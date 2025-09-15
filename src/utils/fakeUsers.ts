@@ -2,7 +2,7 @@ export const fakeUsers = [
   { name: "Ramesh", xp: 140, isCurrentUser: false },
   { name: "Sita", xp: 120, isCurrentUser: false },
   { name: "Lakshmi", xp: 110, isCurrentUser: false },
-  { name: "Mohan", xp: 105, isCurrentUser: false },
+  { name: "Gangi", xp: 105, isCurrentUser: false },
   { name: "Pooja", xp: 100, isCurrentUser: false },
   { name: "Gopal", xp: 95, isCurrentUser: false },
   { name: "Shanti", xp: 88, isCurrentUser: false },

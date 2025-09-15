@@ -2,18 +2,16 @@ import type { NextPage } from "next";
 import { BottomBar } from "~/components/BottomBar";
 import { LeftBar } from "~/components/LeftBar";
 import {
-  BronzeLeagueSvg,
   EditPencilSvg,
   EmptyFireSvg,
   FireSvg,
   LightningProgressSvg,
   EmptyMedalSvg,
-  ProfileFriendsSvg,
   ProfileTimeJoinedSvg,
   SettingsGearSvg,
 } from "~/components/Svgs";
 import Link from "next/link";
-import { Flag } from "~/components/Flag";
+// Removed country flag
 import { useBoundStore } from "~/hooks/useBoundStore";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -27,7 +25,7 @@ const Profile: NextPage = () => {
         <div className="flex w-full max-w-4xl flex-col gap-5 p-5">
           <ProfileTopSection />
           <ProfileStatsSection />
-          <ProfileFriendsSection />
+          {/* Friends section removed */}
         </div>
       </div>
       <div className="pt-[90px]"></div>
@@ -61,15 +59,8 @@ const ProfileTopSection = () => {
   const email = useBoundStore((x) => x.email);
   const standard = useBoundStore((x) => x.standard);
   const joinedAt = useBoundStore((x) => x.joinedAt).format("MMMM YYYY");
-  const followingCount = 0;
-  const followersCount = 0;
   const language = useBoundStore((x) => x.language);
 
-  useEffect(() => {
-    if (!loggedIn) {
-      void router.push("/");
-    }
-  }, [loggedIn, router]);
 
   return (
     <section className="flex flex-row-reverse border-b-2 border-gray-200 pb-8 md:flex-row md:gap-8">
@@ -100,13 +91,9 @@ const ProfileTopSection = () => {
             <ProfileTimeJoinedSvg />
             <span className="text-gray-500">{`Joined ${joinedAt}`}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <ProfileFriendsSvg />
-            <span className="text-gray-500">{`${followingCount} Following / ${followersCount} Followers`}</span>
-          </div>
+          {/* Removed following/followers line */}
         </div>
-
-        <Flag language={language} width={40} />
+        {/* Removed country flag */}
       </div>
       <Link
         href="/settings/account"
@@ -122,8 +109,7 @@ const ProfileTopSection = () => {
 const ProfileStatsSection = () => {
   const streak = useBoundStore((x) => x.streak);
   const totalXp = useBoundStore((x) => x.xpAllTime());
-  const league = "Bronze";
-  const top3Finishes = 0;
+  const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
 
   return (
     <section>
@@ -153,27 +139,11 @@ const ProfileStatsSection = () => {
           </div>
         </div>
         <div className="flex gap-2 rounded-2xl border-2 border-gray-200 p-2 md:gap-3 md:px-6 md:py-4">
-          <BronzeLeagueSvg width={25} height={35} />
+          <EmptyMedalSvg />
           <div className="flex flex-col">
-            <span className="text-xl font-bold">{league}</span>
+            <span className="text-xl font-bold">{lessonsCompleted}</span>
             <span className="text-sm text-gray-400 md:text-base">
-              Current league
-            </span>
-          </div>
-        </div>
-        <div className="flex gap-2 rounded-2xl border-2 border-gray-200 p-2 md:gap-3 md:px-6 md:py-4">
-          {top3Finishes === 0 ? <EmptyMedalSvg /> : <EmptyMedalSvg />}
-          <div className="flex flex-col">
-            <span
-              className={[
-                "text-xl font-bold",
-                top3Finishes === 0 ? "text-gray-400" : "",
-              ].join(" ")}
-            >
-              {top3Finishes}
-            </span>
-            <span className="text-sm text-gray-400 md:text-base">
-              Top 3 finishes
+              Milestones reached
             </span>
           </div>
         </div>
@@ -181,43 +151,4 @@ const ProfileStatsSection = () => {
     </section>
   );
 };
-
-const ProfileFriendsSection = () => {
-  const [state, setState] = useState<"FOLLOWING" | "FOLLOWERS">("FOLLOWING");
-  return (
-    <section>
-      <h2 className="mb-5 text-2xl font-bold">Friends</h2>
-      <div className="rounded-2xl border-2 border-gray-200">
-        <div className="flex">
-          <button
-            className={[
-              "flex w-1/2 items-center justify-center border-b-2 py-3 font-bold uppercase hover:border-blue-400 hover:text-blue-400",
-              state === "FOLLOWING"
-                ? "border-blue-400 text-blue-400"
-                : "border-gray-200 text-gray-400",
-            ].join(" ")}
-            onClick={() => setState("FOLLOWING")}
-          >
-            Following
-          </button>
-          <button
-            className={[
-              "flex w-1/2 items-center justify-center border-b-2 py-3 font-bold uppercase hover:border-blue-400 hover:text-blue-400",
-              state === "FOLLOWERS"
-                ? "border-blue-400 text-blue-400"
-                : "border-gray-200 text-gray-400",
-            ].join(" ")}
-            onClick={() => setState("FOLLOWERS")}
-          >
-            Followers
-          </button>
-        </div>
-        <div className="flex items-center justify-center py-10 text-center text-gray-500">
-          {state === "FOLLOWING"
-            ? "Not following anyone yet"
-            : "No followers yet"}
-        </div>
-      </div>
-    </section>
-  );
-};
+// Friends section removed
