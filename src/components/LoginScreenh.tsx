@@ -9,30 +9,23 @@ export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
 type Props = {
   loginScreenState?: LoginScreenState;
-  setLoginScreenState?: React.Dispatch<
-    React.SetStateAction<LoginScreenState>
-  >;
+  setLoginScreenState?: React.Dispatch<React.SetStateAction<LoginScreenState>>;
 };
 
-/**
- * Dual-mode LoginScreen:
- * - If loginScreenState prop is provided -> acts like the old full-screen modal (compat)
- * - If no prop -> renders as a card (perfect for embedding inside your own modal)
- */
-export const LoginScreen: React.FC<Props> = ({
-  loginScreenState,
-  setLoginScreenState,
-}) => {
+export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
   const router = useRouter();
   const [screen, setScreen] = useState<"start" | "login" | "signup">("start");
 
   // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // sync with old API if parent controls it
+  // sync with parent control if provided
   useEffect(() => {
     if (typeof loginScreenState === "undefined") return;
     if (loginScreenState === "LOGIN") setScreen("login");
@@ -40,48 +33,73 @@ export const LoginScreen: React.FC<Props> = ({
     else setScreen("start");
   }, [loginScreenState]);
 
-  // 🔑 Handle Login
+  // Login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    try {
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("उपयोगकर्ता नहीं मिला");
 
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      await supabase
+        .from("users")
+        .update({ last_login: new Date().toISOString() })
+        .eq("id", authData.user.id);
 
-    if (error) {
-      setError(error.message);
-    } else {
-      console.log("✅ Logged in:", data);
-      router.push("/selectsub"); // redirect after success
+      router.push("/selectsubh");
+    } catch (err: any) {
+      setError(err.message || "कुछ गलत हो गया, कृपया पुनः प्रयास करें");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
-  // 🆕 Handle Signup
+  // Signup
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      console.log("✅ Signed up:", data);
-      router.push("/selectsub");
+    if (password !== confirmPassword) {
+      setError("पासवर्ड मेल नहीं खाते");
+      setLoading(false);
+      return;
     }
+    try {
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (signUpError) throw signUpError;
 
-    setLoading(false);
+      if (signUpData.user) {
+        await supabase
+          .from("users")
+          .upsert([
+            {
+              id: signUpData.user.id,
+              email,
+              first_name: firstName,
+              last_name: lastName,
+              last_login: new Date().toISOString(),
+            },
+          ])
+          .eq("id", signUpData.user.id);
+      }
+
+      router.push("/selectsubh");
+    } catch (err: any) {
+      setError(err.message || "कुछ गलत हो गया, कृपया पुनः प्रयास करें");
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // ------------------- UI -------------------
   const card = (
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
       {screen === "start" && (
@@ -94,7 +112,6 @@ export const LoginScreen: React.FC<Props> = ({
             >
               मेरे पास पहले से खाता है
             </button>
-
             <button
               onClick={() => setScreen("signup")}
               className="w-full rounded-lg border py-2 font-semibold"
@@ -107,12 +124,7 @@ export const LoginScreen: React.FC<Props> = ({
       )}
 
       {screen === "login" && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void router.push("/selectsubh");
-          }}
-        >
+        <form onSubmit={handleLogin}>
           <h2 className="text-2xl font-bold mb-4 text-center">लॉग इन</h2>
           <label className="block text-sm font-medium">ईमेल</label>
           <input
@@ -132,66 +144,79 @@ export const LoginScreen: React.FC<Props> = ({
           />
           <button
             type="submit"
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            disabled={loading}
+            className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
-            लॉग इन
+            {loading ? "लॉग इन हो रहा है..." : "लॉग इन"}
           </button>
-
-          <p className="text-center mt-3 text-sm">
-            नए हैं?{" "}
-            <button
-              type="button"
-              onClick={() => void router.push("/selectsubh")}
-              className="text-blue-600 font-semibold"
-            >
-              साइन अप
-            </button>
-          </p>
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
       )}
 
       {screen === "signup" && (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void router.push("/selectsubh");
-          }}
-        >
+        <form onSubmit={handleSignup}>
           <h2 className="text-2xl font-bold mb-4 text-center">साइन अप</h2>
-          <label className="block text-sm font-medium">पूरा नाम</label>
-          <input className="w-full mb-2 px-3 py-2 border rounded-lg" required />
+
+          <label className="block text-sm font-medium">पहला नाम</label>
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
+
+          <label className="block text-sm font-medium">अंतिम नाम</label>
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            type="text"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
 
           <label className="block text-sm font-medium">ईमेल</label>
-          <input type="email" className="w-full mb-2 px-3 py-2 border rounded-lg" required />
+          <input
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            type="email"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
 
           <label className="block text-sm font-medium">पासवर्ड</label>
-          <input type="password" className="w-full mb-4 px-3 py-2 border rounded-lg" required />
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            type="password"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
+
+          <label className="block text-sm font-medium">पासवर्ड की पुष्टि करें</label>
+          <input
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            type="password"
+            className="w-full mb-4 px-3 py-2 border rounded-lg"
+            required
+          />
 
           <button
             type="submit"
-            className="w-full rounded-lg bg-green-600 text-white py-2 font-semibold"
+            disabled={loading}
+            className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
-            खाता बनाएँ
+            {loading ? "बना रहे हैं..." : "खाता बनाएँ"}
           </button>
-
-          <p className="text-center mt-3 text-sm">
-            पहले से खाता है?{" "}
-            <button
-              type="button"
-              onClick={() => void router.push("/selectsubh")}
-              className="text-blue-600 font-semibold"
-            >
-              लॉग इन
-            </button>
-          </p>
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
       )}
     </div>
   );
 
-  // If parent is using old API, render the full-screen container (compat)
   if (typeof loginScreenState !== "undefined") {
     return (
       <article
@@ -206,13 +231,11 @@ export const LoginScreen: React.FC<Props> = ({
     );
   }
 
-  // Default: return the card (for embedding in a modal)
   return card;
 };
 
 export default LoginScreen;
 
-// Backwards-compatible hook (small stub so old pages won't crash)
 export function useLoginScreen() {
   return {
     loginScreenState: "HIDDEN" as LoginScreenState,

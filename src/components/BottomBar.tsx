@@ -14,8 +14,8 @@ export const useBottomBarItems = () => {
 
   const bottomBarItems: BottomBarItem[] = [
     {
-      name: "Learn",
-      href: "/learn",
+      name: "Lab",
+      href: "/lab",
       icon: (
        
 
@@ -33,8 +33,8 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Lab",
-      href: "/lab",
+      name: "Learn",
+      href: "/learn",
       icon: (
     
 <svg width="50px" height="50px" viewBox="0 0 512 512" version="1.1"  xmlns="http://www.w3.org/2000/svg">
@@ -134,7 +134,7 @@ export const useBottomBarItems = () => {
   ];
 
   if (loggedIn) {
-    bottomBarItems.splice(1, 0, {
+    bottomBarItems.splice(2, 0, {
       name: "Leaderboards",
       href: "/leaderboard",
       icon: (
