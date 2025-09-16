@@ -8,56 +8,91 @@ import { TopBar } from "~/components/TopBar";
 
 type Video = { id: number; title: string; watched: boolean };
 
-// LeftBar must be rendered inside the component tree, not at the module top level.
-
-const units: {
-  id: number;
-  title: string;
-  videos: Video[];
-  quizzesAttempted?: number;
-  assignmentsDone?: number;
-  comingSoon?: boolean;
-}[] = [
+const units = [
   {
     id: 1,
     title: "Unit 1",
-    videos: [
-      { id: 1, title: "Germination of Seeds", watched: true },
-    ],
+    videos: [{ id: 1, title: "Germination of Seeds", watched: true }],
     quizzesAttempted: 0,
     assignmentsDone: 0,
+  },
+  { id: 2, title: "Unit 2", videos: [], comingSoon: true, quizzesAttempted: 0, assignmentsDone: 0 },
+  { id: 3, title: "Unit 3", videos: [], comingSoon: true, quizzesAttempted: 0, assignmentsDone: 0 },
+];
+
+const seasonalQuests = [
+  {
+    id: 1,
+    title: "Spring Quest 🌱",
+    description: "Grow a seed in a pot and upload a photo with 2–3 lines about your observation.",
+    reward: "50 XP + Green Thumb Badge",
   },
   {
     id: 2,
-    title: "Unit 2",
-    videos: [],
-    comingSoon: true,
-    quizzesAttempted: 0,
-    assignmentsDone: 0,
+    title: "Monsoon Quest ☔",
+    description: "Record a 30s video explaining why plants grow faster in monsoon.",
+    reward: "50 XP + Rain Lover Badge",
   },
   {
     id: 3,
-    title: "Unit 3",
-    videos: [],
-    comingSoon: true,
-    quizzesAttempted: 0,
-    assignmentsDone: 0,
+    title: "Winter Quest ❄️",
+    description: "Answer 5 MCQs about crops in winter.",
+    reward: "Double XP if all correct",
   },
 ];
 
-const LabIcon: React.FC<{ className?: string }> = ({ className }) => (
-  <svg viewBox="0 0 24 24" className={className} xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor">
-    <path d="M7 2a1 1 0 00-1 1v5.1a3 3 0 001.1 2.34L10 13v6a1 1 0 001 1h2a1 1 0 001-1v-6l2.9-2.56A3 3 0 0018 8.1V3a1 1 0 00-1-1H7z" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
+// ✅ Seasonal Quest Card Component
+const SeasonalQuestCard: React.FC<{ quest: { id: number; title: string; description: string; reward: string } }> = ({ quest }) => {
+  const [input, setInput] = useState("");
+  const [submittedText, setSubmittedText] = useState<string | null>(null);
+
+  const handleUpload = () => {
+    if (input.trim()) {
+      setSubmittedText(input);
+      setInput("");
+    }
+  };
+
+  return (
+    <div className="p-4 rounded-xl bg-yellow-50 border border-yellow-200 shadow-sm">
+      <h3 className="text-md font-semibold">{quest.title}</h3>
+      <p className="text-sm text-gray-600 mt-1">{quest.description}</p>
+      <p className="text-xs text-gray-500 mt-1">🏆 {quest.reward}</p>
+
+      {/* Writing bar + Upload button */}
+      <div className="mt-3 flex gap-2">
+        <textarea
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Write your answer here..."
+          className="flex-1 p-2 border rounded-lg text-sm focus:ring-2 focus:ring-green-400"
+          rows={2}
+        />
+        <button
+          onClick={handleUpload}
+          className="px-3 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors"
+        >
+          Upload
+        </button>
+      </div>
+
+      {/* Show uploaded text below */}
+      {submittedText && (
+        <p className="mt-3 text-sm text-gray-700 italic">
+          ✅ Your submission: "{submittedText}"
+        </p>
+      )}
+    </div>
+  );
+};
 
 const percent = (watched: number, total: number) =>
   total === 0 ? 0 : Math.round((watched / total) * 100);
 
 const LabDashboard: NextPage = () => {
   const [showVideo, setShowVideo] = useState(false);
-  
-  // simple aggregated totals for the top stats
+  const [showQuests, setShowQuests] = useState(false);
+
   const totalVideos = units.reduce((acc, u) => acc + u.videos.length, 0);
   const watchedVideos = units.reduce((acc, u) => acc + u.videos.filter(v => v.watched).length, 0);
   const totalQuizzes = units.reduce((acc, u) => acc + (u.quizzesAttempted || 0), 0);
@@ -73,7 +108,21 @@ const LabDashboard: NextPage = () => {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
               <div className="p-3 rounded-lg bg-green-100 text-green-800">
-                <LabIcon className="w-8 h-8" />
+                {/* Lab Icon */}
+                <svg
+                  viewBox="0 0 24 24"
+                  className="w-8 h-8"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <path
+                    d="M7 2a1 1 0 00-1 1v5.1a3 3 0 001.1 2.34L10 13v6a1 1 0 001 1h2a1 1 0 001-1v-6l2.9-2.56A3 3 0 0018 8.1V3a1 1 0 00-1-1H7z"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
               </div>
               <div>
                 <h1 className="text-2xl font-bold">Lab</h1>
@@ -120,18 +169,29 @@ const LabDashboard: NextPage = () => {
 
                     {!u.comingSoon && (
                       <div className="flex items-center gap-3">
-                        <button className="px-3 py-1 rounded-xl bg-green-600 text-white text-sm font-medium">Seasonal Quest</button>
-                        
+                        <button
+                          onClick={() => setShowQuests(!showQuests)}
+                          className="px-3 py-1 rounded-xl bg-green-600 text-white text-sm font-medium"
+                        >
+                          Seasonal Quest
+                        </button>
                       </div>
                     )}
                   </div>
 
+                  {/* Quests show/hide */}
+                  {showQuests && u.id === 1 && (
+                    <div className="mt-4 space-y-4">
+                      {seasonalQuests.map((quest) => (
+                        <SeasonalQuestCard key={quest.id} quest={quest} />
+                      ))}
+                    </div>
+                  )}
+
                   {/* progress + breakdown */}
-                  {u.comingSoon ? (
-                    <div className="py-6 text-center text-gray-500 italic">This unit will be available soon.</div>
-                  ) : (
+                  {!u.comingSoon && (
                     <>
-                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden mt-4">
                         <div
                           className="h-full bg-green-500 rounded-full"
                           style={{ width: `${pct}%` }}
@@ -143,7 +203,7 @@ const LabDashboard: NextPage = () => {
                         <div className="font-semibold">{pct}%</div>
                       </div>
 
-                      {/* small video list */}
+                      {/* video list */}
                       <ul className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {u.videos.map(v => (
                           <li key={v.id} className="flex items-center gap-3 p-2 rounded-lg bg-gray-50">
@@ -162,11 +222,7 @@ const LabDashboard: NextPage = () => {
                                 Play
                               </button>
                             ) : (
-                              <video
-                                controls
-                                autoPlay
-                                className="w-full rounded-lg"
-                              >
+                              <video controls autoPlay className="w-full rounded-lg">
                                 <source src="/Germination of seed.mp4" type="video/mp4" />
                                 Your browser does not support the video tag.
                               </video>
@@ -179,16 +235,13 @@ const LabDashboard: NextPage = () => {
                 </div>
               );
             })}
-
           </div>
         </div>
 
         <RightBar />
       </div>
-      
     </div>
   );
 };
-
 
 export default LabDashboard;
