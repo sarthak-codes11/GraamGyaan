@@ -1,140 +1,105 @@
+// src/components/LoginScreen.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { supabase } from "../utils/supabaseClient";
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
 type Props = {
   loginScreenState?: LoginScreenState;
-  setLoginScreenState?: React.Dispatch<
-    React.SetStateAction<LoginScreenState>
-  >;
+  setLoginScreenState?: React.Dispatch<React.SetStateAction<LoginScreenState>>;
 };
 
-export const LoginScreen: React.FC<Props> = ({
-  loginScreenState,
-  setLoginScreenState,
-}) => {
+export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
   const router = useRouter();
   const [screen, setScreen] = useState<"start" | "login" | "signup">("start");
 
   // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // sync with parent
+  // sync with parent control if provided
   useEffect(() => {
-    if (!loginScreenState) return;
+    if (typeof loginScreenState === "undefined") return;
     if (loginScreenState === "LOGIN") setScreen("login");
     else if (loginScreenState === "SIGNUP") setScreen("signup");
     else setScreen("start");
   }, [loginScreenState]);
 
-  // 🔑 Handle Login
+  // Login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
     try {
-      const { data: authData, error: authError } =
-        await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (authError) throw authError;
+      if (!authData.user) throw new Error("User not found");
 
-      if (authError) {
-        setError(authError.message);
-        setLoading(false);
-        return;
-      }
-
-      if (!authData.user) {
-        setError("User not found.");
-        setLoading(false);
-        return;
-      }
-
-      // ✅ Update last_login safely (policy required in DB)
-      const { error: updateError } = await supabase
+      await supabase
         .from("users")
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
-      if (updateError) {
-        console.warn("Could not update last_login:", updateError.message);
-      }
-
-      // after login, redirect based on persisted intent (localStorage)
-      if (typeof window !== "undefined") {
-        const intent = window.localStorage.getItem("loginRedirect");
-        const target = intent || "/learn";
-        window.localStorage.removeItem("loginRedirect");
-        void router.push(target);
-      } else {
-        void router.push("/learn");
-      }
+      router.push("/selectsubh");
     } catch (err: any) {
-      console.error(err);
-      setError("Something went wrong. Try again.");
+      setError(err.message || "Something went wrong, please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // 🆕 Handle Signup
+  // Signup
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      setLoading(false);
+      return;
+    }
     try {
-      const { data: signUpData, error: signUpError } =
-        await supabase.auth.signUp({
-          email,
-          password,
-        });
-
-      if (signUpError) {
-        setError(signUpError.message);
-        setLoading(false);
-        return;
-      }
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (signUpError) throw signUpError;
 
       if (signUpData.user) {
-        // ✅ Insert user into "users" table only if not exists
-        const { error: insertError } = await supabase
+        await supabase
           .from("users")
           .upsert([
-            { id: signUpData.user.id, email, last_login: new Date().toISOString() },
+            {
+              id: signUpData.user.id,
+              email,
+              first_name: firstName,
+              last_name: lastName,
+              last_login: new Date().toISOString(),
+            },
           ])
           .eq("id", signUpData.user.id);
-
-        if (insertError)
-          console.error("Failed to insert user:", insertError.message);
-        else console.log("User saved/updated in users table");
       }
 
-      if (typeof window !== "undefined") {
-        const intent = window.localStorage.getItem("loginRedirect");
-        const target = intent || "/learn";
-        window.localStorage.removeItem("loginRedirect");
-        void router.push(target);
-      } else {
-        void router.push("/learn");
-      }
+      router.push("/selectsubh");
     } catch (err: any) {
-      console.error(err);
-      setError("Something went wrong. Try again.");
+      setError(err.message || "Something went wrong, please try again.");
     } finally {
       setLoading(false);
     }
   };
 
+  // ------------------- UI -------------------
   const card = (
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
       {screen === "start" && (
@@ -152,7 +117,7 @@ export const LoginScreen: React.FC<Props> = ({
               className="w-full rounded-lg border py-2 font-semibold"
               style={{ borderColor: "#6F0E1B", color: "#6F0E1B" }}
             >
-              Create account
+              Create an account
             </button>
           </div>
         </>
@@ -183,7 +148,7 @@ export const LoginScreen: React.FC<Props> = ({
             className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
-            {loading ? "Logging in..." : "Log in"}
+            {loading ? "Logging in..." : "Login"}
           </button>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
@@ -192,6 +157,25 @@ export const LoginScreen: React.FC<Props> = ({
       {screen === "signup" && (
         <form onSubmit={handleSignup}>
           <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
+
+          <label className="block text-sm font-medium">First Name</label>
+          <input
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            type="text"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
+
+          <label className="block text-sm font-medium">Last Name</label>
+          <input
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            type="text"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
+
           <label className="block text-sm font-medium">Email</label>
           <input
             value={email}
@@ -200,21 +184,32 @@ export const LoginScreen: React.FC<Props> = ({
             className="w-full mb-2 px-3 py-2 border rounded-lg"
             required
           />
+
           <label className="block text-sm font-medium">Password</label>
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
+            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            required
+          />
+
+          <label className="block text-sm font-medium">Confirm Password</label>
+          <input
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            type="password"
             className="w-full mb-4 px-3 py-2 border rounded-lg"
             required
           />
+
           <button
             type="submit"
             disabled={loading}
             className="w-full rounded-lg text-white py-2 font-semibold"
             style={{ backgroundColor: "#7B3F00" }}
           >
-            {loading ? "Creating..." : "Create account"}
+            {loading ? "Creating..." : "Create Account"}
           </button>
           {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
@@ -222,15 +217,12 @@ export const LoginScreen: React.FC<Props> = ({
     </div>
   );
 
-  // Compatibility with parent API
-  if (loginScreenState) {
+  if (typeof loginScreenState !== "undefined") {
     return (
       <article
         className={[
           "fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 transition duration-200",
-          loginScreenState === "HIDDEN"
-            ? "pointer-events-none opacity-0"
-            : "opacity-100",
+          loginScreenState === "HIDDEN" ? "pointer-events-none opacity-0" : "opacity-100",
         ].join(" ")}
         aria-hidden={loginScreenState === "HIDDEN"}
       >
@@ -247,8 +239,6 @@ export default LoginScreen;
 export function useLoginScreen() {
   return {
     loginScreenState: "HIDDEN" as LoginScreenState,
-    setLoginScreenState: (() => {}) as React.Dispatch<
-      React.SetStateAction<LoginScreenState>
-    >,
+    setLoginScreenState: (() => {}) as React.Dispatch<React.SetStateAction<LoginScreenState>>,
   };
 }
