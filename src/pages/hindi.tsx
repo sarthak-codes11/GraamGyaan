@@ -117,6 +117,20 @@ const TileIcon = ({
       );
   }
 };
+// Localize select lesson titles for Hindi
+const translateLessonHi = (text: string): string => {
+  switch (text) {
+    case "Objects and Materials":
+      return "वस्तुएँ और सामग्री";
+    case "Properties of Materials":
+      return "सामग्री के गुण";
+    case "Grouping Materials Based on Properties":
+      return "सामग्री को उनके गुणों के आधार पर समूहबद्ध करना";
+    default:
+      return text;
+  }
+};
+
 
 const tileLeftClassNames = [
   "left-0",
@@ -439,11 +453,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     case "book":
                     case "dumbbell":
                     case "star":
-                      return tile.description;
+                      return translateLessonHi(tile.description);
                     case "fast-forward":
                       return status === "LOCKED"
                         ? "यहाँ कूदें?"
-                        : tile.description;
+                        : translateLessonHi(tile.description);
                     case "trophy":
                       return `इकाई ${unit.unitNumber} समीक्षा`;
                     case "treasure":

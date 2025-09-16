@@ -210,6 +210,88 @@ const objectsAndMaterialsProblems = [
   }
 ] as const;
 
+// Hindi: Objects and Materials
+const objectsAndMaterialsProblemsHi = [
+  {
+    type: "MCQ",
+    question: "वस्तु और सामग्री में मुख्य अंतर क्या है?",
+    answers: [
+      "वस्तु महंगी है, सामग्री सस्ती है",
+      "वस्तु सामग्री से बनी होती है",
+      "सामग्री हमेशा रंगीन होती है",
+      "वस्तु प्राकृतिक है, सामग्री कृत्रिम है",
+    ],
+    correctAnswer: 1,
+    explanation:
+      "सामग्री जैसे लकड़ी, धातु, प्लास्टिक पदार्थ हैं; वस्तुएँ (कुर्सी, मेज़, बोतल) इन्हीं से बनाई जाती हैं।",
+  },
+  {
+    type: "MCQ",
+    question: "पारदर्शी खिड़कियाँ बनाने के लिए किस सामग्री का उपयोग होता है?",
+    answers: ["लकड़ी", "काँच", "धातु", "रबर"],
+    correctAnswer: 1,
+    explanation:
+      "काँच पारदर्शी होता है इसलिए प्रकाश को गुजरने देता है, खिड़कियों के लिए उपयुक्त है।",
+  },
+  {
+    type: "MCQ",
+    question: "पेंसिल सामान्यतः किससे बनाई जाती है?",
+    answers: ["प्लास्टिक", "रबर", "लकड़ी", "धातु"],
+    correctAnswer: 2,
+    explanation:
+      "पेंसिल का बाहरी भाग लकड़ी का होता है जिससे नुकीला करना आसान होता है और ग्रेफाइट सुरक्षित रहता है।",
+  },
+  {
+    type: "MCQ",
+    question: "इनमें से किस सामग्री से कई वस्तुएँ बनाई जा सकती हैं?",
+    answers: ["सोना", "लकड़ी", "तेल", "नमक"],
+    correctAnswer: 1,
+    explanation:
+      "लकड़ी से फर्नीचर, पेंसिल, दरवाज़े, नाव आदि कई वस्तुएँ बनती हैं।",
+  },
+] as const;
+
+// Telugu: Objects and Materials
+const objectsAndMaterialsProblemsTe = [
+  {
+    type: "MCQ",
+    question: "వస్తువు మరియు పదార్థం మధ్య ప్రధాన తేడా ఏమిటి?",
+    answers: [
+      "వస్తువు ఖరీదు ఎక్కువ, పదార్థం చవక",
+      "వస్తువు పదార్థంతో తయారవుతుంది",
+      "పదార్థం ఎప్పుడూ రంగురంగులే",
+      "వస్తువు సహజ, పదార్థం కృత్రిమ",
+    ],
+    correctAnswer: 1,
+    explanation:
+      "చెక్క, లోహం, ప్లాస్టిక్ వంటి పదార్థాల నుంచే కుర్చీ, మెజ, సీసా వంటి వస్తువులు తయారవుతాయి।",
+  },
+  {
+    type: "MCQ",
+    question: "పారదర్శక కిటికీలు తయారు చేయడానికి సాధారణంగా ఏ పదార్థం వాడతారు?",
+    answers: ["చెక్క", "గాజు", "లోహం", "రబ్బరు"],
+    correctAnswer: 1,
+    explanation:
+      "గాజు పారదర్శకం కాబట్టి కాంతి దానిలోంచి వెళ్తుంది; అందుకే కిటికీలకు అనుకూలం।",
+  },
+  {
+    type: "MCQ",
+    question: "పెన్సిల్ సాధారణంగా దేనితో తయారవుతుంది?",
+    answers: ["ప్లాస్టిక్", "రబ్బరు", "చెక్క", "లోహం"],
+    correctAnswer: 2,
+    explanation:
+      "పెన్సిల్ బాడీ చెక్కతో ఉంటుంది; పదును పెట్టడం సులభం మరియు గ్రాఫైట్‌ను బలంగా ఉంచుతుంది।",
+  },
+  {
+    type: "MCQ",
+    question: "క్రిందివాటిలో ఏ పదార్థంతో అనేక వస్తువులు తయారు చేయవచ్చు?",
+    answers: ["బంగారం", "చెక్క", "నూనె", "ఉప్పు"],
+    correctAnswer: 1,
+    explanation:
+      "చెక్కతో ఫర్నిచర్, పెన్సిల్, తలుపులు, పడవలు మొదలైనవి తయారు చేస్తారు।",
+  },
+] as const;
+
 // Properties of Materials Lesson (Greet People)
 const propertiesOfMaterialsProblems = [
   {
@@ -310,6 +392,30 @@ const propertiesOfMaterialsProblems = [
   }
 ] as const;
 
+// Hindi: Properties of Materials
+const propertiesOfMaterialsProblemsHi = [
+  { type: "MCQ", question: "इनमें से कौन-सी कठोर सामग्री है?", answers: ["ऊन", "लोहा", "कपास", "रबर"], correctAnswer: 1, explanation: "लोहा कठोर धातु है, जबकि ऊन/कपास मुलायम होते हैं।" },
+  { type: "MCQ", question: "कौन-सी सामग्री पानी में घुलनशील है?", answers: ["पत्थर", "तेल", "चीनी", "प्लास्टिक"], correctAnswer: 2, explanation: "चीनी पानी में घुल जाती है; तेल/रेत नहीं।" },
+  { type: "MCQ", question: "जिस सामग्री से प्रकाश नहीं गुजरता उसे क्या कहते हैं?", answers: ["पारदर्शी", "अर्ध-पारदर्शी", "अपारदर्शी", "स्वच्छ"], correctAnswer: 2, explanation: "अपारदर्शी वस्तुएँ प्रकाश को रोकती हैं और छाया बनाती हैं।" },
+  { type: "MCQ", question: "कौन-सी सामग्री विद्युत की अच्छी चालक है?", answers: ["काँच", "प्लास्टिक", "लकड़ी", "तांबा"], correctAnswer: 3, explanation: "तांबा अच्छी चालक है; तार बनाने में प्रयोग होता है।" },
+  { type: "MCQ", question: "किस गुण के कारण कोई वस्तु पानी पर तैरती है?", answers: ["घनत्व", "रंग", "आकार", "आकार-प्रकार"], correctAnswer: 0, explanation: "पानी से कम घनत्व वाली वस्तु तैरेगी।" },
+  { type: "MCQ", question: "इनमें से कौन-सी सामग्री सबसे अधिक पारदर्शी है?", answers: ["लकड़ी", "धातु", "काँच", "मिट्टी"], correctAnswer: 2, explanation: "काँच पारदर्शी है; लकड़ी/धातु/मिट्टी अपारदर्शी।" },
+  { type: "MCQ", question: "अधिकांश धातुओं को गर्म करने पर क्या होता है?", answers: ["वे मुलायम हो जाती हैं", "वे फैलती हैं", "उनका रंग बदलता है", "वे चुम्बकीय बनती हैं"], correctAnswer: 1, explanation: "गर्म करने पर कणों की गति बढ़ने से धातु फैलती है।" },
+  { type: "MCQ", question: "टायर बनाने में रबर उपयोगी क्यों है?", answers: ["यह पारदर्शी है", "यह लचीला और प्रत्यास्थ है", "यह चुम्बकीय है", "यह विद्युत चालक है"], correctAnswer: 1, explanation: "रबर की लचीलापन/प्रत्यास्थता टायर के लिए उपयुक्त बनाती है।" },
+] as const;
+
+// Telugu: Properties of Materials
+const propertiesOfMaterialsProblemsTe = [
+  { type: "MCQ", question: "క్రిందివాటిలో దృఢమైన పదార్థం ఏది?", answers: ["ऊन/బూడిద", "ఇనుము", "పత్తి", "రబ్బరు"], correctAnswer: 1, explanation: "ఇనుము దృఢం; పత్తి/రబ్బరు మృదువైనవి." },
+  { type: "MCQ", question: "ఏ పదార్థం నీటిలో కరుగుతుంది?", answers: ["రాయి", "నూనె", "చక్కెర", "ప్లాస్టిక్"], correctAnswer: 2, explanation: "చక్కెర నీటిలో కరుగుతుంది; ఇసుక/నూనె కాదు." },
+  { type: "MCQ", question: "కాంతిని అనుమతించని పదార్థాన్ని ఏమంటారు?", answers: ["పారదర్శక", "అర్ధపారదర్శక", "అపారదర్శక", "స్పష్ట"], correctAnswer: 2, explanation: "అపారదర్శక పదార్థాలు కాంతిని అడ్డుకుంటాయి; నీడ ఏర్పడుతుంది." },
+  { type: "MCQ", question: "విద్యుత్‌కు మంచి వాహక పదార్థం ఏది?", answers: ["గాజు", "ప్లాస్టిక్", "చెక్క", "రాగి"], correctAnswer: 3, explanation: "రాగి మంచి విద్యుత్ వాహకము; తీగలలో వాడతారు." },
+  { type: "MCQ", question: "నీటిమీద తేలడానికి ప్రభావితం చేసే లక్షణం ఏది?", answers: ["సాంద్రత", "రంగు", "ఆకారం", "పరిమాణం"], correctAnswer: 0, explanation: "నీటికి కంటే తక్కువ సాంద్రత ఉన్నవి తేలుతాయి." },
+  { type: "MCQ", question: "ఇవాలో ఎక్కువగా పారదర్శకం ఏది?", answers: ["చెక్క", "లోహం", "గాజు", "మట్టి"], correctAnswer: 2, explanation: "గాజు పారదర్శకం; చెక్క/లోహం/మట్టి అపారదర్శకాలు." },
+  { type: "MCQ", question: "చాలా లోహాలను వేడిచేస్తే ఏమవుతుంది?", answers: ["మృదువవుతాయి", "విస్తరిస్తాయి", "రంగు మారుతుంది", "చుంబకాలు అవుతాయి"], correctAnswer: 1, explanation: "ఉష్ణంతో అణు చలనం పెరిగి లోహం విస్తరిస్తుంది." },
+  { type: "MCQ", question: "టైర్లు తయారీలో రబ్బరు ఎందుకు ఉపయోగిస్తారు?", answers: ["ఇది పారదర్శకం", "ఇది వశ్యత/ప్రత్యాశ్రయం కలిగి ఉంది", "ఇది చుంబకము", "ఇది విద్యుత్ వాహకము"], correctAnswer: 1, explanation: "రబ్బరు వశ్యత/ప్రత్యాశ్రయం టైర్లకు అనుకూలం." },
+] as const;
+
 // Grouping Materials Based on Properties Lesson
 const groupingMaterialsProblems = [
   {
@@ -360,6 +466,22 @@ const groupingMaterialsProblems = [
     correctAnswer: 3,
     explanation: "Sand does not dissolve in water and settles at the bottom."
   }
+] as const;
+
+// Hindi: Grouping Materials Based on Properties
+const groupingMaterialsProblemsHi = [
+  { type: "MCQ", question: "कौन-सी सामग्री पानी पर तैरने की अधिक संभावना है?", answers: ["पत्थर", "लोहे की कील", "प्लास्टिक की गेंद", "सोने का सिक्का"], correctAnswer: 2, explanation: "प्लास्टिक पानी से हल्का होता है, इसलिए तैरता है; पत्थर/लोहा डूबते हैं।" },
+  { type: "MCQ", question: "धातु के किस गुण के कारण उसे दर्पण और आभूषण बनाने में उपयोग करते हैं?", answers: ["यह मुलायम है", "यह चमकदार है", "यह रंगीन है", "यह फीका है"], correctAnswer: 1, explanation: "चाँदी/सोने जैसी धातुएँ दीप्तिमान (लस्टरस) होती हैं, इसलिए उपयोगी हैं।" },
+  { type: "MCQ", question: "इनमें से कौन-सी सामग्री अर्ध-पारदर्शी है?", answers: ["साफ़ काँच", "बटर पेपर", "लकड़ी", "धातु पत्र"], correctAnswer: 1, explanation: "अर्ध-पारदर्शी पदार्थ आंशिक प्रकाश पारित करते हैं; वस्तु धुंधली दिखती है।" },
+  { type: "MCQ", question: "इनमें से कौन-सा पदार्थ पानी में अघुलनशील है?", answers: ["नमक", "चीनी", "नींबू रस", "रेत"], correctAnswer: 3, explanation: "रेत पानी में नहीं घुलती और नीचे बैठ जाती है।" },
+] as const;
+
+// Telugu: Grouping Materials Based on Properties
+const groupingMaterialsProblemsTe = [
+  { type: "MCQ", question: "ఏ పదార్థం నీటిమీద తేలే అవకాశం ఎక్కువ?", answers: ["రాయి", "ఇనుప గోరు", "ప్లాస్టిక్ బంతి", "బంగారు నాణెం"], correctAnswer: 2, explanation: "ప్లాస్టిక్ నీటికి కంటే తక్కువ సాంద్రత కలిగి ఉండి తేలుతుంది; రాయి/ఇనుము మునుగుతాయి." },
+  { type: "MCQ", question: "దర్శన దర్పణాలు/నగల తయారీలో లోహాన్ని ఉపయోగించే లక్షణం ఏది?", answers: ["మృదుత్వం", "మెరుగు (లస్టర్)", "రంగు", "నిశ్ప్రభత"], correctAnswer: 1, explanation: "వెండి/బంగారం వంటి లోహాలకు మెరుగు ఉంటుంది, అందుకే వాడతారు." },
+  { type: "MCQ", question: "క్రిందివాటిలో అర్ధపారదర్శక పదార్థం ఏది?", answers: ["స్పష్ట గాజు", "బట్టర్ పేపర్", "చెక్క", "లోహ షీట్"], correctAnswer: 1, explanation: "అర్ధపారదర్శక పదార్థాలు భాగిక కాంతిని అనుమతిస్తాయి; వస్తువులు మసకగా కనిపిస్తాయి." },
+  { type: "MCQ", question: "క్రిందివాటిలో నీటిలో కరగని పదార్థం ఏది?", answers: ["ఉప్పు", "చక్కెర", "నిమ్మరసం", "ఇసుక"], correctAnswer: 3, explanation: "ఇసుక నీటిలో కరగదు; దిగువకు కూర్చుంటుంది." },
 ] as const;
 
 // Add this type definition after the problem arrays (around line 172)
@@ -710,9 +832,18 @@ const Lesson: NextPage = () => {
       title: "Importance of Sorting Materials",
       problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : lesson1Problems,
     },
-    "2": { title: "Objects and Materials", problems: objectsAndMaterialsProblems },
-    "3": { title: "Properties of Materials", problems: propertiesOfMaterialsProblems },
-    "4": { title: "Grouping Materials Based on Properties", problems: groupingMaterialsProblems },
+    "2": {
+      title: "Objects and Materials",
+      problems: isHindi ? objectsAndMaterialsProblemsHi : isTelugu ? objectsAndMaterialsProblemsTe : objectsAndMaterialsProblems,
+    },
+    "3": {
+      title: "Properties of Materials",
+      problems: isHindi ? propertiesOfMaterialsProblemsHi : isTelugu ? propertiesOfMaterialsProblemsTe : propertiesOfMaterialsProblems,
+    },
+    "4": {
+      title: "Grouping Materials Based on Properties",
+      problems: isHindi ? groupingMaterialsProblemsHi : isTelugu ? groupingMaterialsProblemsTe : groupingMaterialsProblems,
+    },
   };
 
   const slug = (s: string) => s.toLowerCase().replace(/\s+/g, "-");

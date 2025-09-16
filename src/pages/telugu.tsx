@@ -116,6 +116,20 @@ const TileIcon = ({
       );
   }
 };
+// Localize select lesson titles for Telugu
+const translateLessonTe = (text: string): string => {
+  switch (text) {
+    case "Objects and Materials":
+      return "వస్తువులు మరియు పదార్థాలు";
+    case "Properties of Materials":
+      return "పదార్థాల లక్షణాలు";
+    case "Grouping Materials Based on Properties":
+      return "లక్షణాల ఆధారంగా పదార్థాల సమూహీకరణ";
+    default:
+      return text;
+  }
+};
+
 
 const tileLeftClassNames = [
   "left-0",
@@ -430,11 +444,11 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                     case "book":
                     case "dumbbell":
                     case "star":
-                      return tile.description;
+                      return translateLessonTe(tile.description);
                     case "fast-forward":
                       return status === "LOCKED"
                         ? "ఇక్కడకు వెళ్లాలా?"
-                        : tile.description;
+                        : translateLessonTe(tile.description);
                     case "trophy":
                       return `యూనిట్ ${unit.unitNumber} సమీక్ష`;
                     case "treasure":
