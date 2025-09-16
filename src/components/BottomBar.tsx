@@ -11,6 +11,7 @@ export type Tab = "Learn" | "Lab" | "Profile" | "Leaderboards";
 
 export const useBottomBarItems = () => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
+  const language = useBoundStore((x) => x.language);
 
   const bottomBarItems: BottomBarItem[] = [
     {
@@ -136,7 +137,7 @@ export const useBottomBarItems = () => {
   if (loggedIn) {
     bottomBarItems.splice(1, 0, {
       name: "Leaderboards",
-      href: "/leaderboard",
+      href: `/leaderboard?lang=${encodeURIComponent(language.code)}`,
       icon: (
         <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
           <path
