@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
         width: "100%",
         height: "100%",
         background:
-          "linear-gradient(270deg, #f5f5dc, #fdfaf3, #e6d9b5, #fffaf0)",
+          "linear-gradient(270deg, #f5f5dc, #fdfaf3, #e6d9b5,rgb(255, 232, 185))",
         backgroundSize: "600% 600%",
         animation: "gradientShift 5s ease infinite",
       }}

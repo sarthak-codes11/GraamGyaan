@@ -38,16 +38,18 @@ export const units: readonly Unit[] = [
         description: "Properties of Materials",
       },
       { type: "treasure" },
-      { type: "book", description: "A date" },
+      { type: "book", description: "Grouping Materials Based on Properties" },
       { type: "trophy", description: "Unit 1 review" },
     ],
   },
   {
     unitNumber: 2,
-    description: "Get around in a city",
-    backgroundColor: "bg-[#ce82ff]",
-    textColor: "text-[#ce82ff]",
-    borderColor: "border-[#a568cc]",
+    description: "Getting to know Plants",
+    backgroundColor: "bg-[#4A7C59]", // muted forest green
+    textColor: "text-[#3B5D2A]",     // deep leafy green
+    borderColor: "border-[#8B5E3C]", // earthy brown
+
+
     tiles: [
       { type: "fast-forward", description: "Get around in a city" },
       { type: "dumbbell", description: "Personalized practice" },

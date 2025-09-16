@@ -39,7 +39,7 @@ import { units } from "~/utils/units";
 type TileStatus = "LOCKED" | "ACTIVE" | "COMPLETE";
 
 const tileStatus = (tile: Tile, lessonsCompleted: number): TileStatus => {
-  const lessonsPerTile = 4;
+  const lessonsPerTile = 1; // Each lesson completes its tile
   const tilesCompleted = Math.floor(lessonsCompleted / lessonsPerTile);
   const tiles = units.flatMap((unit) => unit.tiles);
   const tileIndex = tiles.findIndex((t) => t === tile);
@@ -256,7 +256,7 @@ const TileTooltip = ({
 
         {status === "ACTIVE" ? (
           <Link
-            href="/lesson"
+            href={`/lesson?lesson=${encodeURIComponent(description)}`}
             className={[
               "flex w-full items-center justify-center rounded-xl border-b-4 border-gray-200 bg-white p-3 uppercase",
               activeTextColor,
@@ -273,7 +273,7 @@ const TileTooltip = ({
           </button>
         ) : (
           <Link
-            href="/lesson"
+            href={`/lesson?lesson=${encodeURIComponent(description)}`}
             className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
           >
             Practice +5 XP

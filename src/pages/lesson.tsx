@@ -122,6 +122,54 @@ const objectsAndMaterialsProblems = [
 const propertiesOfMaterialsProblems = [
   {
     type: "MCQ",
+    question: "Which of the following is a hard material?",
+    answers: [
+      "Wool",
+      "Iron",
+      "Cotton",
+      "Rubber"
+    ],
+    correctAnswer: 1,
+    explanation: "Iron is a hard metal, unlike wool or cotton, which are soft."
+  },
+  {
+    type: "MCQ",
+    question: "Which material is soluble in water?",
+    answers: [
+      "Stone",
+      "Oil",
+      "Sugar",
+      "Plastic"
+    ],
+    correctAnswer: 2,
+    explanation: "Sugar dissolves completely in water, unlike sand or oil."
+  },
+  {
+    type: "MCQ",
+    question: "What do we call a material that does not allow light to pass through?",
+    answers: [
+      "Transparent",
+      "Translucent",
+      "Opaque",
+      "Clear"
+    ],
+    correctAnswer: 2,
+    explanation: "Opaque objects block light completely and form a shadow, like wood or metal."
+  },
+  {
+    type: "MCQ",
+    question: "Which material is a good conductor of electricity?",
+    answers: [
+      "Glass",
+      "Plastic",
+      "Wood",
+      "Copper"
+    ],
+    correctAnswer: 3,
+    explanation: "Copper conducts electricity well and is used to make electrical wires."
+  },
+  {
+    type: "MCQ",
     question: "What property makes a material float on water?",
     answers: [
       "Density",
@@ -170,6 +218,58 @@ const propertiesOfMaterialsProblems = [
   }
 ] as const;
 
+// Grouping Materials Based on Properties Lesson
+const groupingMaterialsProblems = [
+  {
+    type: "MCQ",
+    question: "Which material is likely to float on water?",
+    answers: [
+      "Stone",
+      "Iron nail",
+      "Plastic ball",
+      "Gold coin"
+    ],
+    correctAnswer: 2,
+    explanation: "Plastic is lighter than water, so it floats. Stones and iron sink because they are heavier."
+  },
+  {
+    type: "MCQ",
+    question: "What is the property of metal that makes it useful for making mirrors and ornaments?",
+    answers: [
+      "It is soft",
+      "It is shiny",
+      "It is colourful",
+      "It is dull"
+    ],
+    correctAnswer: 1,
+    explanation: "Metals like silver and gold are lustrous (shiny), which is why they are used for ornaments and mirrors."
+  },
+  {
+    type: "MCQ",
+    question: "Which of the following materials is translucent?",
+    answers: [
+      "Clear glass",
+      "Butter paper",
+      "Wood",
+      "Metal sheet"
+    ],
+    correctAnswer: 1,
+    explanation: "Translucent materials allow partial light to pass through, so objects appear blurred (like butter paper)."
+  },
+  {
+    type: "MCQ",
+    question: "Which is an insoluble substance in water?",
+    answers: [
+      "Salt",
+      "Sugar",
+      "Lemon juice",
+      "Sand"
+    ],
+    correctAnswer: 3,
+    explanation: "Sand does not dissolve in water and settles at the bottom."
+  }
+] as const;
+
 // Add this type definition after the problem arrays (around line 172)
 type LessonData = {
   problems: readonly any[];
@@ -184,19 +284,25 @@ const lessonData: Record<string, LessonData> = {
     problems: lesson1Problems, 
     title: "Sorting Materials Into Groups",
     nextUnlock: "Objects and Materials",
-    xpRequired: 4
+    xpRequired: 25
   },
   "Objects and Materials": { 
     problems: objectsAndMaterialsProblems, 
     title: "Objects and Materials",
     nextUnlock: "Properties of Materials",
-    xpRequired: 8
+    xpRequired: 25
   },
   "Properties of Materials": { 
     problems: propertiesOfMaterialsProblems, 
     title: "Properties of Materials",
-    nextUnlock: null,
-    xpRequired: 12
+    nextUnlock: "Grouping Materials Based on Properties",
+    xpRequired: 25
+  },
+  "Grouping Materials Based on Properties": { 
+    problems: groupingMaterialsProblems, 
+    title: "Grouping Materials Based on Properties",
+    nextUnlock: "Unit 1 review",
+    xpRequired: 25
   }
 };
 
@@ -301,7 +407,6 @@ const LessonComplete = ({
   incorrectAnswerCount,
   xpGained,
   isPerfect,
-  nextUnlock,
   lessonsCompleted,
   totalTimeMs,
 }: {
@@ -309,7 +414,6 @@ const LessonComplete = ({
   incorrectAnswerCount: number;
   xpGained: number;
   isPerfect: boolean;
-  nextUnlock: string | null;
   lessonsCompleted: number;
   totalTimeMs: number;
 }) => {
@@ -338,19 +442,6 @@ const LessonComplete = ({
             <p className="text-lg text-yellow-600 font-semibold">
               Perfect Score! ⭐
             </p>
-          )}
-          {nextUnlock && (
-            <div className="flex flex-col items-center gap-3">
-              <p className="text-lg text-purple-600 font-semibold">
-                🚀 "{nextUnlock}" lesson unlocked!
-              </p>
-              <Link
-                href={`/lesson?lesson=${encodeURIComponent(nextUnlock)}`}
-                className="underline text-blue-600"
-              >
-                Start "{nextUnlock}"
-              </Link>
-            </div>
           )}
         </div>
         <FancyButton>
@@ -498,7 +589,6 @@ const Lesson: NextPage = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const [showSummary, setShowSummary] = useState(false);
   const [xpGained, setXpGained] = useState(0);
-  const [nextUnlock, setNextUnlock] = useState<string | null>(null);
   const [lessonStartTime] = useState(Date.now());
   const [totalTimeMs, setTotalTimeMs] = useState(0);
 
@@ -508,11 +598,12 @@ const Lesson: NextPage = () => {
   const lessonsCompleted = useBoundStore((state) => state.lessonsCompleted);
 
   // near the top, after problem arrays
-  type LessonKey = "1" | "2" | "3";
+  type LessonKey = "1" | "2" | "3" | "4";
   const lessons: Record<LessonKey, { title: string; problems: readonly any[] }> = {
     "1": { title: "Importance of Sorting Materials", problems: lesson1Problems },
     "2": { title: "Objects and Materials", problems: objectsAndMaterialsProblems },
-    "3": { title: "Properties of Materials", problems: [] }, // temp
+    "3": { title: "Properties of Materials", problems: propertiesOfMaterialsProblems },
+    "4": { title: "Grouping Materials Based on Properties", problems: groupingMaterialsProblems },
   };
 
   const slug = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
@@ -520,20 +611,23 @@ const Lesson: NextPage = () => {
   const resolveLessonKey = (q?: string): LessonKey => {
     if (!q) return "1";
     // direct numeric
-    if (q === "1" || q === "2" || q === "3") return q;
+    if (q === "1" || q === "2" || q === "3" || q === "4") return q;
     // known aliases
     if (q === "objects" || q === "good-morning") return "2";
     if (q === "properties" || q === "greet-people") return "3";
+    if (q === "grouping" || q === "grouping-materials") return "4";
     // titles or slugs
     const byTitle =
       q === "Importance of Sorting Materials" ? "1" :
       q === "Objects and Materials" ? "2" :
-      q === "Properties of Materials" ? "3" : undefined;
+      q === "Properties of Materials" ? "3" :
+      q === "Grouping Materials Based on Properties" ? "4" : undefined;
     if (byTitle) return byTitle;
     const bySlug =
       q === slug("Importance of Sorting Materials") ? "1" :
       q === slug("Objects and Materials") ? "2" :
-      q === slug("Properties of Materials") ? "3" : undefined;
+      q === slug("Properties of Materials") ? "3" :
+      q === slug("Grouping Materials Based on Properties") ? "4" : undefined;
     return (bySlug as LessonKey) ?? "1";
   };
 
@@ -602,7 +696,6 @@ const Lesson: NextPage = () => {
           incorrectAnswerCount={incorrectAnswerCount}
           xpGained={xpGained}
           isPerfect={isPerfect}
-          nextUnlock={nextUnlock}
           lessonsCompleted={lessonsCompleted}
           totalTimeMs={totalTimeMs}
         />
@@ -637,13 +730,19 @@ const Lesson: NextPage = () => {
       setCorrectAnswerShown(false);
       setTimer(TIMER_DURATION_MS);
     } else {
-      // Lesson completed: +25 XP, mark completed, go back to main
+      // Lesson completed: +25 XP, mark completed
       const endTime = Date.now();
       setTotalTimeMs(endTime - lessonStartTime);
       increaseXp(25);
       increaseLessonsCompleted(1);
       setShowSummary(true);
     }
+  };
+
+  // Function to handle chest open event
+  const handleChestOpen = () => {
+    // Assuming increaseLessonsCompleted updates the milestone count in the store
+    increaseLessonsCompleted(1);
   };
 
   switch (problem.type) {
