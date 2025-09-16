@@ -30,12 +30,11 @@ const HomePage: React.FC = () => {
   const { lang } = router.query;
   const [showLogin, setShowLogin] = useState(false);
   const [showLanguages, setShowLanguages] = useState(false);
-  // role-based redirect intent is handled via localStorage to avoid URL coupling
+  const [showChoices, setShowChoices] = useState(false); // toggle for student/teacher
 
   // Default language English
   const currentLang = typeof lang === "string" ? lang : "en";
   const t = translations[currentLang] || translations["en"];
-  // no URL-coupled modal opening; rely on local state
 
   const ActiveLogin =
     currentLang === "hi"
@@ -56,7 +55,10 @@ const HomePage: React.FC = () => {
         animation: "gradientShift 5s ease infinite",
       }}
     >
-      <div className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36" style={{ color: "#0B3D0B" }}>
+      <div
+        className="flex w-full flex-col items-center justify-center gap-3 px-4 py-16 md:flex-row md:gap-36"
+        style={{ color: "#0B3D0B" }}
+      >
         {/* Logo */}
         <GlobeSvg
           className="h-fit w-7/12 md:w-[350px]"
@@ -71,37 +73,50 @@ const HomePage: React.FC = () => {
 
           {/* Continue as selector */}
           <div className="mb-6 flex flex-col items-center gap-3 md:gap-4">
-            <span className="text-base md:text-lg font-extrabold text-[#5C4033] uppercase tracking-wider">
-              Continue as
-            </span>
-            <div className="flex items-center gap-4 md:gap-6">
+            {/* Removed the external "Continue as" text */}
+
+            {/* Show "Continue as" button first */}
+            {!showChoices && (
               <button
+                onClick={() => setShowChoices(true)}
                 className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 md:px-7 md:py-3.5 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200"
-                onClick={() => {
-                  try {
-                    if (typeof window !== "undefined") {
-                      window.localStorage.setItem("loginRedirect", "/learn");
-                    }
-                  } catch {}
-                  setShowLogin(true);
-                }}
               >
-                <span className="text-sm md:text-base">Student</span>
+                <span className="text-sm md:text-base">Continue as</span>
               </button>
-              <button
-                className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-white px-6 py-3 md:px-7 md:py-3.5 text-[#7B3F00] font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:bg-[#F5E6D3] hover:scale-[1.03] transition-transform duration-200"
-                onClick={() => {
-                  try {
-                    if (typeof window !== "undefined") {
-                      window.localStorage.setItem("loginRedirect", "/teacher");
-                    }
-                  } catch {}
-                  setShowLogin(true);
-                }}
-              >
-                <span className="text-sm md:text-base">Teacher</span>
-              </button>
-            </div>
+            )}
+
+            {/* Student + Teacher buttons (appear after clicking Continue as) */}
+            {showChoices && (
+              <div className="flex items-center gap-4 md:gap-6 mt-4">
+                <button
+                  className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 md:px-7 md:py-3.5 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200"
+                  onClick={() => {
+                    try {
+                      if (typeof window !== "undefined") {
+                        window.localStorage.setItem("loginRedirect", "/learn");
+                      }
+                    } catch {}
+                    setShowLogin(true);
+                  }}
+                >
+                  <span className="text-sm md:text-base">Student</span>
+                </button>
+
+                <button
+                  className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-white px-6 py-3 md:px-7 md:py-3.5 text-[#7B3F00] font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:bg-[#F5E6D3] hover:scale-[1.03] transition-transform duration-200"
+                  onClick={() => {
+                    try {
+                      if (typeof window !== "undefined") {
+                        window.localStorage.setItem("loginRedirect", "/teacher");
+                      }
+                    } catch {}
+                    setShowLogin(true);
+                  }}
+                >
+                  <span className="text-sm md:text-base">Teacher</span>
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Language dropdown */}
@@ -119,7 +134,8 @@ const HomePage: React.FC = () => {
               <div className="absolute left-0 mt-2 w-40 rounded-lg bg-white shadow-lg z-10">
                 <Link
                   href={{ pathname: "/", query: { lang: "en" } }}
-                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200">
+                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
+                >
                   English
                 </Link>
                 <Link
