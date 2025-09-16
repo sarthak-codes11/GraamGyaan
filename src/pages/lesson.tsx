@@ -66,6 +66,98 @@ const lesson1Problems = [
   }
 ] as const;
 
+// Hindi: Lesson 1
+const lesson1ProblemsHi = [
+  {
+    type: "MCQ",
+    question: "सामग्री को समूहों में बाँटना क्यों महत्वपूर्ण है?",
+    answers: [
+      "सब कुछ साफ-सुथरा दिखाने के लिए",
+      "वैज्ञानिकों को भ्रमित करने के लिए",
+      "सामग्री को आसानी से पढ़ने और सही तरीके से उपयोग करने के लिए",
+      "उन्हें महंगा बनाने के लिए",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "छंटाई करने से हम सामग्री की तुलना, अध्ययन और समझ बेहतर तरीके से कर पाते हैं। इससे किसी विशेष काम के लिए सही सामग्री चुनना आसान होता है।",
+  },
+  {
+    type: "MCQ",
+    question: "निम्न में से कौन-सा सामग्री की छंटाई का लाभ नहीं है?",
+    answers: [
+      "सामग्री के अध्ययन में मदद करता है",
+      "रीसाइक्लिंग को आसान बनाता है",
+      "अधिक समय बर्बाद करता है",
+      "सही सामग्री चुनने में मदद करता है",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "छंटाई वास्तव में सामग्री को व्यवस्थित करके समय और मेहनत बचाती है। यह समय बर्बाद नहीं करती।",
+  },
+  {
+    type: "MCQ",
+    question: "खाना पकाने के बर्तन मुख्य रूप से धातु के क्यों बनाए जाते हैं?",
+    answers: ["क्योंकि वे चमकदार दिखते हैं", "क्योंकि वे रंगीन होते हैं", "क्योंकि वे गर्मी का अच्छा संचार करते हैं", "क्योंकि वे सस्ते होते हैं"],
+    correctAnswer: 2,
+    explanation:
+      "धातुएँ गर्मी की अच्छी चालक होती हैं, इसलिए उनसे बने बर्तनों में खाना समान रूप से पकता है।",
+  },
+  {
+    type: "MCQ",
+    question: "समान गुणों के आधार पर सामग्री को समूहों में बाँटना क्या कहलाता है?",
+    answers: ["पेंटिंग", "छंटाई", "मिलाना", "डिज़ाइनिंग"],
+    correctAnswer: 1,
+    explanation:
+      "छंटाई का अर्थ समान गुणों (जैसे दिखावट, कठोरता, घुलनशीलता) के आधार पर सामग्री को समूहों में बाँटना है।",
+  },
+] as const;
+
+// Telugu: Lesson 1
+const lesson1ProblemsTe = [
+  {
+    type: "MCQ",
+    question: "పదార్థాలను సమూహాలుగా వర్గీకరించడం ఎందుకు ముఖ్యం?",
+    answers: [
+      "అన్నీ బాగుగా కనిపించడానికి",
+      "శాస్త్రవేత్తలను గందరగోళానికి గురిచేయడానికి",
+      "పదార్థాలను సులభంగా అధ్యయనం చేసి సరిగ్గా ఉపయోగించడానికి",
+      "అవి ఖరీదుగా చేయడానికి",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "వర్గీకరణ వల్ల పదార్థాలను సరిపోల్చడం, అధ్యయనం చేయడం, అర్థం చేసుకోవడం సులభమవుతుంది. ఒక నిర్దిష్ట అవసరానికి సరైన పదార్థాన్ని ఎంచుకోవడంలో ఇది సహాయపడుతుంది.",
+  },
+  {
+    type: "MCQ",
+    question: "కిందివాటిలో వర్గీకరణ వల్ల కలిగే లాభం కానిది ఏది?",
+    answers: [
+      "పదార్థాల అధ్యయనానికి సహాయం",
+      "రీసైక్లింగ్ సులభం అవుతుంది",
+      "ఎక్కువ సమయం వృథా అవుతుంది",
+      "సరైన పదార్థాన్ని ఎంచుకోవడంలో సహాయం",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "వర్గీకరణ వాస్తవానికి పదార్థాలను సక్రమంగా అమర్చడం ద్వారా సమయం, శ్రమలను ఆదా చేస్తుంది. ఇది సమయాన్ని వృథా చేయదు.",
+  },
+  {
+    type: "MCQ",
+    question: "వంట పాత్రలు సాధారణంగా లోహంతోనే ఎందుకు తయారు చేస్తారు?",
+    answers: ["అవి మెరిసి కనిపిస్తాయి", "అవి రంగులుగా ఉంటాయి", "వేడి బాగా పారవేస్తాయి", "అవి చవకగా ఉంటాయి"],
+    correctAnswer: 2,
+    explanation:
+      "లోహాలు వేడి యొక్క మంచి వాహకాలు. అందువల్ల వాటితో చేసిన పాత్రల్లో ఆహారం సమంగా వండబడుతుంది.",
+  },
+  {
+    type: "MCQ",
+    question: "సమాన లక్షణాల ఆధారంగా పదార్థాలను సమూహాలుగా చేయడాన్ని ఏమంటారు?",
+    answers: ["పెయింటింగ్", "వర్గీకరణ", "కలపడం", "డిజైనింగ్"],
+    correctAnswer: 1,
+    explanation:
+      "వర్గీకరణ అంటే రూపం, కఠినత్వం, ద్రావణీయత వంటి లక్షణాల ఆధారంగా పదార్థాలను సమూహాలుగా చేయడం.",
+  },
+] as const;
+
 // Objects and Materials Lesson (Good Morning)
 const objectsAndMaterialsProblems = [
   {
@@ -371,7 +463,7 @@ const FancyButton = ({
 
 // STYLED END SCREENS ---------------------------------------------------------
 
-const LessonFastForwardEndFail = ({ unitNumber }: { unitNumber: number }) => (
+const LessonFastForwardEndFail = ({ unitNumber, backHref, backLabel }: { unitNumber: number; backHref: string; backLabel: string }) => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
     <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl flex flex-col items-center gap-6 max-w-md">
       <LessonFastForwardEndFailSvg width={96} height={96} />
@@ -379,13 +471,13 @@ const LessonFastForwardEndFail = ({ unitNumber }: { unitNumber: number }) => (
         Did not unlock the next part.
       </h1>
       <FancyButton>
-        <Link href="/learn">Back to main</Link>
+        <Link href={backHref}>{backLabel}</Link>
       </FancyButton>
     </div>
   </div>
 );
 
-const LessonFastForwardEndPass = ({ nextUnlock }: { nextUnlock: string }) => (
+const LessonFastForwardEndPass = ({ nextUnlock, backHref, backLabel }: { nextUnlock: string; backHref: string; backLabel: string }) => (
   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
     <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl flex flex-col items-center gap-6 max-w-md">
       <LessonFastForwardEndPassSvg width={96} height={96} />
@@ -396,7 +488,7 @@ const LessonFastForwardEndPass = ({ nextUnlock }: { nextUnlock: string }) => (
         You've successfully completed all questions and unlocked the next lesson!
       </p>
       <FancyButton>
-        <Link href="/learn">Back to main</Link>
+        <Link href={backHref}>{backLabel}</Link>
       </FancyButton>
     </div>
   </div>
@@ -409,6 +501,8 @@ const LessonComplete = ({
   isPerfect,
   lessonsCompleted,
   totalTimeMs,
+  backHref,
+  backLabel,
 }: {
   correctAnswerCount: number;
   incorrectAnswerCount: number;
@@ -416,6 +510,8 @@ const LessonComplete = ({
   isPerfect: boolean;
   lessonsCompleted: number;
   totalTimeMs: number;
+  backHref: string;
+  backLabel: string;
 }) => {
   const formatTotalTime = (ms: number): string => {
     const totalSeconds = Math.floor(ms / 1000);
@@ -445,7 +541,7 @@ const LessonComplete = ({
           )}
         </div>
         <FancyButton>
-          <Link href="/learn">Back to main</Link>
+          <Link href={backHref}>{backLabel}</Link>
         </FancyButton>
       </div>
     </div>
@@ -466,6 +562,8 @@ const ProblemMCQ = ({
   timer,
   problemIndex,
   totalQuestions,
+  labels,
+  backHref,
 }: any) => {
   const { question, answers, correctAnswer, explanation } = problem;
   
@@ -475,10 +573,10 @@ const ProblemMCQ = ({
         <div className="flex items-center justify-between">
           <ProgressBar hearts={hearts} timer={timer} />
           <FancyButton>
-            <Link href="/learn">Quit</Link>
+            <Link href={backHref}>{labels.quit}</Link>
           </FancyButton>
         </div>
-        <div className="text-center text-sm font-semibold text-gray-600">Question {problemIndex + 1} of {totalQuestions}</div>
+        <div className="text-center text-sm font-semibold text-gray-600">{labels.question} {problemIndex + 1} {labels.of} {totalQuestions}</div>
         <h2 className="text-2xl font-bold text-gray-800 text-center">{question}</h2>
         
         <div className="grid grid-cols-1 gap-3">
@@ -523,10 +621,10 @@ const ProblemMCQ = ({
         
         {!correctAnswerShown ? (
           <FancyButton onClick={onCheckAnswer} disabled={selectedAnswer === null}>
-            Check Answer
+            {labels.checkAnswer}
           </FancyButton>
         ) : (
-          <FancyButton onClick={onFinish}>Continue</FancyButton>
+          <FancyButton onClick={onFinish}>{labels.continue}</FancyButton>
         )}
         
         {correctAnswerShown && (
@@ -536,14 +634,14 @@ const ProblemMCQ = ({
                 isAnswerCorrect ? "text-green-600" : "text-red-600"
               }`}
             >
-              {isAnswerCorrect ? "✅ Correct!" : "❌ Incorrect"}
+              {isAnswerCorrect ? labels.correct : labels.incorrect}
             </div>
             
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <div className="flex items-start gap-2">
                 <span className="text-blue-600 font-bold text-lg">💡</span>
                 <div>
-                  <p className="font-semibold text-blue-800 mb-1">Explanation:</p>
+                  <p className="font-semibold text-blue-800 mb-1">{labels.explanation}</p>
                   <p className="text-blue-700">{explanation}</p>
                 </div>
               </div>
@@ -604,8 +702,14 @@ const Lesson: NextPage = () => {
 
   // near the top, after problem arrays
   type LessonKey = "1" | "2" | "3" | "4";
+  const isHindi = router.pathname.startsWith("/hindi");
+  const isTelugu = router.pathname.startsWith("/telugu");
+
   const lessons: Record<LessonKey, { title: string; problems: readonly any[] }> = {
-    "1": { title: "Importance of Sorting Materials", problems: lesson1Problems },
+    "1": {
+      title: "Importance of Sorting Materials",
+      problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : lesson1Problems,
+    },
     "2": { title: "Objects and Materials", problems: objectsAndMaterialsProblems },
     "3": { title: "Properties of Materials", problems: propertiesOfMaterialsProblems },
     "4": { title: "Grouping Materials Based on Properties", problems: groupingMaterialsProblems },
@@ -688,7 +792,7 @@ const Lesson: NextPage = () => {
   if (lives <= 0) return (
     <>
       <AnimatedGradientBackground />
-      <LessonFastForwardEndFail unitNumber={1} />
+      <LessonFastForwardEndFail unitNumber={1} backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"} backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"} />
     </>
   );
   if (showSummary) {
@@ -703,6 +807,8 @@ const Lesson: NextPage = () => {
           isPerfect={isPerfect}
           lessonsCompleted={lessonsCompleted}
           totalTimeMs={totalTimeMs}
+          backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
+          backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"}
         />
       </>
     );
@@ -752,6 +858,38 @@ const Lesson: NextPage = () => {
 
   switch (problem.type) {
     case "MCQ":
+      const labels = isHindi
+        ? {
+            quit: "बाहर निकलें",
+            question: "प्रश्न",
+            of: "में से",
+            checkAnswer: "उत्तर जाँचें",
+            continue: "आगे बढ़ें",
+            correct: "✅ सही!",
+            incorrect: "❌ गलत",
+            explanation: "व्याख्या:",
+          }
+        : isTelugu
+        ? {
+            quit: "వెనక్కి వెళ్ళండి",
+            question: "ప్రశ్న",
+            of: "లో",
+            checkAnswer: "సమాధానం చెక్ చేయండి",
+            continue: "తరువాత",
+            correct: "✅ సరైంది!",
+            incorrect: "❌ తప్పు",
+            explanation: "వివరణ:",
+          }
+        : {
+            quit: "Quit",
+            question: "Question",
+            of: "of",
+            checkAnswer: "Check Answer",
+            continue: "Continue",
+            correct: "✅ Correct!",
+            incorrect: "❌ Incorrect",
+            explanation: "Explanation:",
+          };
       return (
         <>
           <AnimatedGradientBackground />
@@ -767,6 +905,8 @@ const Lesson: NextPage = () => {
             timer={timer}
             problemIndex={problemIdx}
             totalQuestions={problems.length}
+            labels={labels}
+            backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
           />
         </>
       );

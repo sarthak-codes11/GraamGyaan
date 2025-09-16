@@ -270,7 +270,7 @@ const TileTooltip = ({
 
         {status === "ACTIVE" ? (
           <Link
-            href={`/lesson?lesson=${encodeURIComponent(description)}`}
+            href={`/hindi/lesson?lesson=${encodeURIComponent(description)}`}
             className={[
               "flex w-full items-center justify-center rounded-xl border-b-4 border-gray-200 bg-white p-3 uppercase",
               activeTextColor,
@@ -287,7 +287,7 @@ const TileTooltip = ({
           </button>
         ) : (
           <Link
-            href={`/lesson?lesson=${encodeURIComponent(description)}`}
+            href={`/hindi/lesson?lesson=${encodeURIComponent(description)}`}
             className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
           >
             अभ्यास +5 XP
@@ -553,7 +553,7 @@ const Learn: NextPage = () => {
 
           <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
             <Link
-              href="/lesson?practice"
+              href="/hindi/lesson?practice"
               className="absolute left-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:left-0"
             >
               <span className="sr-only">अभ्यास</span>
