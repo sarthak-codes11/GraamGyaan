@@ -97,19 +97,15 @@ const LeaderboardProfile = ({
 const Leaderboard: NextPage = () => {
   const router = useRouter();
   const loggedIn = useBoundStore((x) => x.loggedIn);
-  const language = useBoundStore((x) => x.language);
 
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
   const extended = router.query.extended !== undefined;
-  const langParam = (router.query.lang as string) || language?.code || "en";
 
   useEffect(() => {
     if (!extended && !loggedIn) {
-      // redirect to language-specific start page
-      const target = langParam === "hi" ? "/selectsubh" : langParam === "tl" || langParam === "te" ? "/selectsubt" : "/";
-      void router.push(target);
+      void router.push("/");
     }
-  }, [extended, loggedIn, router, langParam]);
+  }, [extended, loggedIn, router]);
 
   const lessonsToUnlockLeaderboard = 1;
   const lessonsRemainingToUnlockLeaderboard =

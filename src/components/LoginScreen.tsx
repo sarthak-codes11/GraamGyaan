@@ -51,7 +51,7 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
-      router.push("/selectsubh");
+      router.push("/selectsub");
     } catch (err: any) {
       setError(err.message || "Something went wrong, please try again.");
     } finally {
@@ -91,7 +91,7 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
           .eq("id", signUpData.user.id);
       }
 
-      router.push("/selectsubh");
+      router.push("/selectsub");
     } catch (err: any) {
       setError(err.message || "Something went wrong, please try again.");
     } finally {
