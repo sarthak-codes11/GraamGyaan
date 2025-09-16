@@ -300,6 +300,9 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   const increaseLessonsCompleted = useBoundStore(
     (x) => x.increaseLessonsCompleted
   );
+  const increaseMilestonesOpened = useBoundStore(
+    (x) => x.increaseMilestonesOpened
+  );
   const increaseLingots = useBoundStore((x) => x.increaseLingots);
 
   return (
@@ -385,6 +388,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         onClick={() => {
                           if (status === "ACTIVE") {
                             increaseLessonsCompleted(4);
+                            increaseMilestonesOpened(1);
                             increaseLingots(1);
                           }
                         }}
@@ -656,7 +660,7 @@ const UnitHeader = ({
           <GuidebookSvg />
           <span className="sr-only font-bold uppercase lg:not-sr-only">
             {" "}
-            Guidebook{" "}
+            class notes{" "}
           </span>
         </div>
       </header>

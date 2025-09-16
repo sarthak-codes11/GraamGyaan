@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
                   onClick={() => {
                     try {
                       if (typeof window !== "undefined") {
-                        window.localStorage.setItem("loginRedirect", "/learn");
+                        window.localStorage.setItem("loginRedirect", "/selectsub");
                       }
                     } catch {}
                     setShowLogin(true);

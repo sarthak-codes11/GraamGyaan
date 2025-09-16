@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import dayjs from "dayjs";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import { fakeUsers } from "~/utils/fakeUsers";
@@ -118,6 +119,9 @@ function GiftIcon({ className = "" }: { className?: string }) {
 
 // --- Main RightBar Component ---
 export default function RightBar() {
+  const router = useRouter();
+  const isHindi = router.pathname === "/hindi";
+
   // Live values from store
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
   const totalXp = useBoundStore((x) => x.xpAllTime());
@@ -163,8 +167,8 @@ export default function RightBar() {
         
         {/* Daily Streak card */}
         <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-2 text-xl font-bold text-[#680B24]">Daily Streak</h2>
-          <p className="text-sm text-gray-600">Keep your streak alive by logging in daily.</p>
+          <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "दैनिक स्ट्रीक" : "Daily Streak"}</h2>
+          <p className="text-sm text-gray-600">{isHindi ? "रोज़ लॉगिन करके अपनी स्ट्रीक बनाए रखें।" : "Keep your streak alive by logging in daily."}</p>
           <div className="mt-3 flex items-center justify-between">
             <div className="text-3xl font-extrabold text-orange-500">{streak}</div>
             <button
@@ -172,24 +176,26 @@ export default function RightBar() {
 
               onClick={() => addToday()}
             >
-              Mark today
+              {isHindi ? "आज चिन्हित करें" : "Mark today"}
             </button>
           </div>
         </article>
 
         {/* Leaderboard (white card, shadow, hover lift) */}
         <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-2 text-xl font-bold text-[#680B24]">Leaderboard</h2>
+          <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "लीडरबोर्ड" : "Leaderboard"}</h2>
           {needsUnlock ? (
             <div className="text-sm text-gray-600">
-              Complete {lessonsRemainingToUnlockLeaderboard} more lesson
-              {lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock
-              the leaderboard.
+              {isHindi
+                ? `लीडरबोर्ड अनलॉक करने के लिए ${lessonsRemainingToUnlockLeaderboard} और पाठ पूरे करें।`
+                : `Complete ${lessonsRemainingToUnlockLeaderboard} more lesson${lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock the leaderboard.`}
             </div>
           ) : (
             <>
               <p className="text-sm text-gray-600">
-                You’re ranked <strong>#{userRank}</strong> today. Keep going!
+                {isHindi
+                  ? <>आप आज <strong>#{userRank}</strong> रैंक पर हैं। इसी तरह आगे बढ़ते रहें!</>
+                  : <>You’re ranked <strong>#{userRank}</strong> today. Keep going!</>}
               </p>
               <ul className="mt-4 flex flex-col gap-3">
                 {leaderboardData.map((user, i) => (
@@ -203,7 +209,7 @@ export default function RightBar() {
                       {i + 1}. {user.name}
                     </span>
                     <span className="text-sm font-semibold text-gray-600">
-                      {user.xp} XP
+                      {user.xp} {isHindi ? "XP" : "XP"}
                     </span>
                   </li>
                 ))}
@@ -214,17 +220,17 @@ export default function RightBar() {
 
         {/* Achievements (white card, shadow, hover lift) */}
         <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-4 text-xl font-bold text-[#680B24]">Achievements & Rewards</h2>
+          <h2 className="mb-4 text-xl font-bold text-[#680B24]">{isHindi ? "उपलब्धियाँ और इनाम" : "Achievements & Rewards"}</h2>
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
               <TrophyIcon />
             </div>
             <div>
               <p className="text-sm text-gray-600">
-                Total XP earned: <span className="font-semibold text-gray-800">{totalXp}</span>
+                {isHindi ? "कुल अर्जित XP:" : "Total XP earned:"} <span className="font-semibold text-gray-800">{totalXp}</span>
               </p>
               <p className="text-sm text-gray-600">
-                XP needed for today’s goal: {" "}
+                {isHindi ? "आज के लक्ष्य के लिए आवश्यक XP:" : "XP needed for today’s goal:"} {" "}
                 <span className="font-semibold text-gray-800">{xpToReward}</span>
               </p>
             </div>
@@ -250,7 +256,7 @@ export default function RightBar() {
               <GiftIcon />
             </div>
             <p className="text-sm text-gray-600">
-              Keep grinding to unlock new achievements and prizes!
+              {isHindi ? "नई उपलब्धियाँ और पुरस्कार अनलॉक करने के लिए मेहनत जारी रखें!" : "Keep grinding to unlock new achievements and prizes!"}
             </p>
           </div>
         </article>

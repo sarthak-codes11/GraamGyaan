@@ -5,6 +5,7 @@ import { BottomBar } from "~/components/BottomBar";
 import { LeftBar } from "~/components/LeftBar";
 import RightBar from "~/components/RightBar";
 import { TopBar } from "~/components/TopBar";
+import { useBoundStore } from "~/hooks/useBoundStore";
 
 type Video = { id: number; title: string; watched: boolean };
 
@@ -92,6 +93,9 @@ const percent = (watched: number, total: number) =>
 const LabDashboard: NextPage = () => {
   const [showVideo, setShowVideo] = useState(false);
   const [showQuests, setShowQuests] = useState(false);
+  const increaseXp = useBoundStore((s) => s.increaseXp);
+  const addBadge = useBoundStore((s) => s.addBadge);
+  const hasBadge = useBoundStore((s) => s.hasBadge);
 
   const totalVideos = units.reduce((acc, u) => acc + u.videos.length, 0);
   const watchedVideos = units.reduce((acc, u) => acc + u.videos.filter(v => v.watched).length, 0);
@@ -183,7 +187,21 @@ const LabDashboard: NextPage = () => {
                   {showQuests && u.id === 1 && (
                     <div className="mt-4 space-y-4">
                       {seasonalQuests.map((quest) => (
-                        <SeasonalQuestCard key={quest.id} quest={quest} />
+                        <div key={quest.id} className="space-y-2">
+                          <SeasonalQuestCard quest={quest} />
+                          <button
+                            onClick={() => {
+                              // Grant XP and badge on submission
+                              increaseXp(50);
+                              if (quest.id === 1 && !hasBadge("Green Thumb Badge")) addBadge("Green Thumb Badge");
+                              if (quest.id === 2 && !hasBadge("Rain Lover Badge")) addBadge("Rain Lover Badge");
+                              if (quest.id === 3 && !hasBadge("Unit 1 Master")) addBadge("Unit 1 Master");
+                            }}
+                            className="px-3 py-2 bg-yellow-500 text-white text-xs rounded-lg hover:bg-yellow-600 transition-colors"
+                          >
+                            Mark Submitted (Grants XP + Badge)
+                          </button>
+                        </div>
                       ))}
                     </div>
                   )}
@@ -216,7 +234,12 @@ const LabDashboard: NextPage = () => {
                           <li className="flex flex-col items-start p-2 rounded-lg bg-gray-50 w-full">
                             {!showVideo ? (
                               <button
-                                onClick={() => setShowVideo(true)}
+                                onClick={() => {
+                                  setShowVideo(true);
+                                  // XP grant for watching a video once; also grant thematic badge
+                                  increaseXp(10);
+                                  if (!hasBadge("Green Thumb Badge")) addBadge("Green Thumb Badge");
+                                }}
                                 className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
                               >
                                 Play

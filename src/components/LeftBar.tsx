@@ -30,6 +30,23 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const loggedIn = useBoundStore((x) => x.loggedIn);
   const logOut = useBoundStore((x) => x.logOut);
   const router = useRouter();
+  const isHindi = router.pathname === "/hindi";
+
+  const translateTabName = (name: Tab): string => {
+    if (!isHindi) return name;
+    switch (name) {
+      case "Learn":
+        return "सीखें";
+      case "Lab":
+        return "प्रयोगशाला";
+      case "Profile":
+        return "प्रोफ़ाइल";
+      case "Leaderboards":
+        return "लीडरबोर्ड";
+      default:
+        return name;
+    }
+  };
 
   const [moreMenuShown, setMoreMenuShown] = useState(false);
   const [showLogin, setShowLogin] = useState(false);
@@ -40,13 +57,14 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
     <>
       <nav className="fixed bottom-0 left-0 top-0 hidden flex-col gap-5 border-r-2 border-[#e5e5e5] bg-white p-3 md:flex lg:w-64 lg:p-5">
         <Link
-          href="/learn"
+          href={isHindi ? "/hindi" : "/learn"}
           className="mb-5 ml-5 mt-5 hidden text-3xl font-bold text-[#654321] lg:block"
         >
           GraamGyaan
         </Link>
         <ul className="flex flex-col items-stretch gap-3">
           {bottomBarItems.map((item) => {
+            const displayName = translateTabName(item.name);
             return (
               <li key={item.href} className="flex flex-1">
                 {item.name === selectedTab ? (
@@ -55,7 +73,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                     className="flex grow items-center gap-3 rounded-xl border-2 border-[#84d8ff] bg-[#ddf4ff] px-2 py-1 text-sm font-bold uppercase text-blue-400"
                   >
                     {item.icon}{" "}
-                    <span className="sr-only lg:not-sr-only">{item.name}</span>
+                    <span className="sr-only lg:not-sr-only">{displayName}</span>
                   </Link>
                 ) : (
                   <Link
@@ -63,7 +81,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                     className="flex grow items-center gap-3 rounded-xl px-2 py-1 text-sm font-bold uppercase text-gray-400 hover:bg-gray-100"
                   >
                     {item.icon}{" "}
-                    <span className="sr-only lg:not-sr-only">{item.name}</span>
+                    <span className="sr-only lg:not-sr-only">{displayName}</span>
                   </Link>
                 )}
               </li>
@@ -80,7 +98,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
             tabIndex={0}
           >
             <LeftBarMoreMenuSvg />{" "}
-            <span className="hidden text-sm lg:inline">More</span>
+            <span className="hidden text-sm lg:inline">{isHindi ? "और" : "More"}</span>
             <div
               className={[
                 "absolute left-full top-[-10px] min-w-[300px] rounded-2xl border-2 border-gray-300 bg-white text-left text-gray-400",
@@ -93,7 +111,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                   href="/leaderboard?extended=1"
                 >
                   <GlobeIconSvg className="h-10 w-10" />
-                  School
+                  {isHindi ? "स्कूल" : "School"}
                 </Link>
               </div>
               <div className="flex flex-col border-t-2 border-gray-300 py-2">
@@ -102,27 +120,27 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                     onClick={() => setShowLogin(true)}
                   >
-                    Create a profile
+                    {isHindi ? "प्रोफ़ाइल बनाएँ" : "Create a profile"}
                   </button>
                 )}
                 <Link
                   className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                   href={loggedIn ? "/settings/account" : "/settings/sound"}
                 >
-                  Settings
+                  {isHindi ? "सेटिंग्स" : "Settings"}
                 </Link>
                 <Link
                   className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                   href="/help"
                 >
-                  Help
+                  {isHindi ? "सहायता" : "Help"}
                 </Link>
                 {!loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                     onClick={() => router.push("/")}
                   >
-                    Sign out
+                    {isHindi ? "साइन आउट" : "Sign out"}
                   </button>
                 )}
                 {loggedIn && (
@@ -133,7 +151,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                       router.push("/");
                     }}
                   >
-                    Sign out
+                    {isHindi ? "साइन आउट" : "Sign out"}
                   </button>
                 )}
               </div>

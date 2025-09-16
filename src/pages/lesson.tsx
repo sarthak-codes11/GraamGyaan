@@ -472,7 +472,12 @@ const ProblemMCQ = ({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-white via-beige-100 to-beige-200 animate-gradient">
       <div className="bg-white/70 backdrop-blur-lg p-8 rounded-2xl shadow-xl w-full max-w-2xl flex flex-col gap-6">
-        <ProgressBar hearts={hearts} timer={timer} />
+        <div className="flex items-center justify-between">
+          <ProgressBar hearts={hearts} timer={timer} />
+          <FancyButton>
+            <Link href="/learn">Quit</Link>
+          </FancyButton>
+        </div>
         <div className="text-center text-sm font-semibold text-gray-600">Question {problemIndex + 1} of {totalQuestions}</div>
         <h2 className="text-2xl font-bold text-gray-800 text-center">{question}</h2>
         

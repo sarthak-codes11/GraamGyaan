@@ -16,6 +16,8 @@
   import { createUserSlice } from "~/stores/createUserStore";
   import type { XpSlice } from "~/stores/createXpStore";
   import { createXpSlice } from "~/stores/createXpStore";
+  import type { BadgeSlice } from "~/stores/createBadgeStore";
+  import { createBadgeSlice } from "~/stores/createBadgeStore";
 
   type BoundState = GoalXpSlice &
     LanguageSlice &
@@ -24,7 +26,8 @@
     SoundSettingsSlice &
     StreakSlice &
     UserSlice &
-    XpSlice;
+    XpSlice &
+    BadgeSlice;
 
   export type BoundStateCreator<SliceState> = StateCreator<
     BoundState,
@@ -43,5 +46,6 @@
     ...createUserSlice(...args),
     ...createXpSlice(...args),
 
+    ...createBadgeSlice(...args),
     
   }));

@@ -45,7 +45,7 @@ import { units } from "~/utils/units";
 type TileStatus = "LOCKED" | "ACTIVE" | "COMPLETE";
 
 const tileStatus = (tile: Tile, lessonsCompleted: number): TileStatus => {
-  const lessonsPerTile = 4;
+  const lessonsPerTile = 1; // ప్రతి పాఠంతో ఒక టైల్ పూర్తి
   const tilesCompleted = Math.floor(lessonsCompleted / lessonsPerTile);
   const tiles = units.flatMap((unit) => unit.tiles);
   const tileIndex = tiles.findIndex((t) => t === tile);
@@ -139,14 +139,7 @@ const getTileLeftClassName = ({
   unitNumber: number;
   tilesLength: number;
 }): TileLeftClassName => {
-  if (index >= tilesLength - 1) {
-    return "left-0";
-  }
-  const classNames =
-    unitNumber % 2 === 1
-      ? tileLeftClassNames
-      : [...tileLeftClassNames.slice(4), ...tileLeftClassNames.slice(0, 4)];
-  return classNames[index % classNames.length] ?? "left-0";
+  return "left-0";
 };
 
 const tileTooltipLeftOffsets = [140, 95, 70, 95, 140, 185, 210, 185] as const;
@@ -162,17 +155,7 @@ const getTileTooltipLeftOffset = ({
   unitNumber: number;
   tilesLength: number;
 }): TileTooltipLeftOffset => {
-  if (index >= tilesLength - 1) {
-    return tileTooltipLeftOffsets[0];
-  }
-  const offsets =
-    unitNumber % 2 === 1
-      ? tileTooltipLeftOffsets
-      : [
-          ...tileTooltipLeftOffsets.slice(4),
-          ...tileTooltipLeftOffsets.slice(0, 4),
-        ];
-  return offsets[index % offsets.length] ?? tileTooltipLeftOffsets[0];
+  return 140;
 };
 
 const getTileColors = ({
@@ -278,13 +261,13 @@ const TileTooltip = ({
 
         {status === "ACTIVE" ? (
           <Link
-            href="/lesson"
+            href={`/lesson?lesson=${encodeURIComponent(description)}`}
             className={[
               "flex w-full items-center justify-center rounded-xl border-b-4 border-gray-200 bg-white p-3 uppercase",
               activeTextColor,
             ].join(" ")}
           >
-            ప్రారంభించండి! +10 XP
+            ప్రారంభించండి! +25 XP
           </Link>
         ) : status === "LOCKED" ? (
           <button
@@ -295,7 +278,7 @@ const TileTooltip = ({
           </button>
         ) : (
           <Link
-            href="/lesson"
+            href={`/lesson?lesson=${encodeURIComponent(description)}`}
             className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
           >
             ప్రాక్టీస్ +5 XP
@@ -321,6 +304,9 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
   const increaseLessonsCompleted = useBoundStore(
     (x) => x.increaseLessonsCompleted
+  );
+  const increaseMilestonesOpened = useBoundStore(
+    (x) => x.increaseMilestonesOpened
   );
   const increaseLingots = useBoundStore((x) => x.increaseLingots);
 
@@ -415,6 +401,7 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                         onClick={() => {
                           if (status === "ACTIVE") {
                             increaseLessonsCompleted(4);
+                            increaseMilestonesOpened(1);
                             increaseLingots(1);
                           }
                         }}

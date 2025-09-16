@@ -109,7 +109,8 @@ const ProfileTopSection = () => {
 const ProfileStatsSection = () => {
   const streak = useBoundStore((x) => x.streak);
   const totalXp = useBoundStore((x) => x.xpAllTime());
-  const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
+  const milestonesOpened = useBoundStore((x) => x.milestonesOpened);
+  const badges = useBoundStore((x) => x.badges);
 
   return (
     <section>
@@ -141,13 +142,23 @@ const ProfileStatsSection = () => {
         <div className="flex gap-2 rounded-2xl border-2 border-gray-200 p-2 md:gap-3 md:px-6 md:py-4">
           <EmptyMedalSvg />
           <div className="flex flex-col">
-            <span className="text-xl font-bold">{lessonsCompleted}</span>
+            <span className="text-xl font-bold">{milestonesOpened}</span>
             <span className="text-sm text-gray-400 md:text-base">
               Milestones reached
             </span>
           </div>
         </div>
       </div>
+      {badges.length > 0 && (
+        <div className="mt-5">
+          <h3 className="mb-2 text-xl font-bold">Badges</h3>
+          <div className="flex flex-wrap gap-2">
+            {badges.map((b) => (
+              <span key={b} className="rounded-full border-2 border-yellow-400 bg-yellow-100 px-3 py-1 text-sm font-semibold text-yellow-700">{b}</span>
+            ))}
+          </div>
+        </div>
+      )}
     </section>
   );
 };
