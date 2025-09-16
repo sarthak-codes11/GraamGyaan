@@ -14,8 +14,8 @@ const SelectSub: React.FC = () => {
     const router = useRouter();
     
     const handleSelect = (subject: string) => {
-        // push string URL with query
-        void router.push(`/learn?subject=${encodeURIComponent(subject)}`);
+        // push string URL with query to Telugu page
+        void router.push(`/telugu?subject=${encodeURIComponent(subject)}`);
     };
 
     return (

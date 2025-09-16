@@ -14,8 +14,8 @@ export const useBottomBarItems = () => {
 
   const bottomBarItems: BottomBarItem[] = [
     {
-      name: "Lab",
-      href: "/lab",
+      name: "Learn",
+      href: "/learn",
       icon: (
        
 
@@ -33,8 +33,8 @@ export const useBottomBarItems = () => {
       ),
     },
     {
-      name: "Learn",
-      href: "/learn",
+      name: "Lab",
+      href: "/lab",
       icon: (
     
 <svg width="50px" height="50px" viewBox="0 0 512 512" version="1.1"  xmlns="http://www.w3.org/2000/svg">
@@ -134,7 +134,7 @@ export const useBottomBarItems = () => {
   ];
 
   if (loggedIn) {
-    bottomBarItems.splice(2, 0, {
+    bottomBarItems.splice(1, 0, {
       name: "Leaderboards",
       href: "/leaderboard",
       icon: (
@@ -158,17 +158,34 @@ export const useBottomBarItems = () => {
 
 export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const bottomBarItems = useBottomBarItems();
+  const isHindi = typeof window !== "undefined" && window.location.pathname.startsWith("/hindi");
+  const isTelugu = typeof window !== "undefined" && window.location.pathname.startsWith("/telugu");
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-20 border-t-2 border-[#e5e5e5] bg-white md:hidden">
       <ul className="flex h-[88px]">
         {bottomBarItems.map((item) => {
+          const linkHref = (() => {
+            if (isHindi) {
+              if (item.href === "/learn") return "/hindi";
+              if (item.href === "/lab") return "/hindi/lab";
+              if (item.href === "/profile") return "/hindi/profile";
+              if (item.href === "/leaderboard") return "/hindi/leaderboard";
+            }
+            if (isTelugu) {
+              if (item.href === "/learn") return "/telugu";
+              if (item.href === "/lab") return "/telugu/lab";
+              if (item.href === "/profile") return "/telugu/profile";
+              if (item.href === "/leaderboard") return "/telugu/leaderboard";
+            }
+            return item.href;
+          })();
           return (
             <li
               key={item.href}
               className="flex flex-1 items-center justify-center"
             >
               <Link
-                href={item.href}
+                href={linkHref}
                 className={
                   item.name === selectedTab
                     ? "rounded-xl border-2 border-[#84d8ff] bg-[#ddf4ff] px-2 py-1"

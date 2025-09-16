@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { supabase } from "../utils/supabaseClient";
-import { useBoundStore } from "~/hooks/useBoundStore";
 
 export type LoginScreenState = "HIDDEN" | "LOGIN" | "SIGNUP";
 
@@ -24,17 +23,8 @@ export const LoginScreen: React.FC<Props> = ({
   // form state
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // store setters
-  const setStoreName = useBoundStore((s) => s.setName);
-  const setStoreUsername = useBoundStore((s) => s.setUsername);
-  const setStoreEmail = useBoundStore((s) => s.setEmail);
-  const logInStore = useBoundStore((s) => (s as any).logIn ?? (() => {}));
 
   // sync with parent
   useEffect(() => {
@@ -44,7 +34,7 @@ export const LoginScreen: React.FC<Props> = ({
     else setScreen("start");
   }, [loginScreenState]);
 
-  // 🔑 Handle Login (unchanged)
+  // 🔑 Handle Login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -69,7 +59,7 @@ export const LoginScreen: React.FC<Props> = ({
         return;
       }
 
-      // ✅ Update last_login safely
+      // ✅ Update last_login safely (policy required in DB)
       const { error: updateError } = await supabase
         .from("users")
         .update({ last_login: new Date().toISOString() })
@@ -79,25 +69,7 @@ export const LoginScreen: React.FC<Props> = ({
         console.warn("Could not update last_login:", updateError.message);
       }
 
-      // Fetch profile fields from users table to populate store
-      const { data: userRow } = await supabase
-        .from("users")
-        .select("first_name,last_name,email")
-        .eq("id", authData.user.id)
-        .single();
-
-      const fullName = userRow?.first_name || userRow?.last_name
-        ? `${userRow?.first_name ?? ""} ${userRow?.last_name ?? ""}`.trim()
-        : (authData.user.user_metadata?.full_name as string | undefined) ?? "";
-      const derivedUsername = (userRow?.email ?? authData.user.email ?? "")
-        .split("@")[0] ?? "";
-
-      setStoreName(fullName || derivedUsername || "");
-      setStoreUsername(derivedUsername);
-      setStoreEmail(userRow?.email ?? authData.user.email ?? "");
-      try { logInStore(); } catch {}
-
-      // Redirect
+      // after login, redirect based on persisted intent (localStorage)
       if (typeof window !== "undefined") {
         const intent = window.localStorage.getItem("loginRedirect");
         const target = intent || "/learn";
@@ -120,13 +92,6 @@ export const LoginScreen: React.FC<Props> = ({
     setLoading(true);
     setError(null);
 
-    // 🚨 Password confirmation check
-    if (password !== confirmPassword) {
-      setError("Passwords do not match!");
-      setLoading(false);
-      return;
-    }
-
     try {
       const { data: signUpData, error: signUpError } =
         await supabase.auth.signUp({
@@ -141,31 +106,17 @@ export const LoginScreen: React.FC<Props> = ({
       }
 
       if (signUpData.user) {
-        // ✅ Insert user details into "users" table
+        // ✅ Insert user into "users" table only if not exists
         const { error: insertError } = await supabase
           .from("users")
           .upsert([
-            {
-              id: signUpData.user.id,
-              email,
-              first_name: firstName,
-              last_name: lastName,
-              last_login: new Date().toISOString(),
-            },
+            { id: signUpData.user.id, email, last_login: new Date().toISOString() },
           ])
           .eq("id", signUpData.user.id);
 
         if (insertError)
           console.error("Failed to insert user:", insertError.message);
         else console.log("User saved/updated in users table");
-
-        // Populate store for Profile
-        const fullName = `${firstName} ${lastName}`.trim();
-        const derivedUsername = (email ?? "").split("@")[0] ?? "";
-        setStoreName(fullName || derivedUsername);
-        setStoreUsername(derivedUsername);
-        setStoreEmail(email);
-        try { logInStore(); } catch {}
       }
 
       if (typeof window !== "undefined") {
@@ -184,7 +135,6 @@ export const LoginScreen: React.FC<Props> = ({
     }
   };
 
-  // ------------------- UI -------------------
   const card = (
     <div className="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-gray-800">
       {screen === "start" && (
@@ -242,25 +192,6 @@ export const LoginScreen: React.FC<Props> = ({
       {screen === "signup" && (
         <form onSubmit={handleSignup}>
           <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
-
-          <label className="block text-sm font-medium">First Name</label>
-          <input
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            type="text"
-            className="w-full mb-2 px-3 py-2 border rounded-lg"
-            required
-          />
-
-          <label className="block text-sm font-medium">Last Name</label>
-          <input
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            type="text"
-            className="w-full mb-2 px-3 py-2 border rounded-lg"
-            required
-          />
-
           <label className="block text-sm font-medium">Email</label>
           <input
             value={email}
@@ -269,25 +200,14 @@ export const LoginScreen: React.FC<Props> = ({
             className="w-full mb-2 px-3 py-2 border rounded-lg"
             required
           />
-
           <label className="block text-sm font-medium">Password</label>
           <input
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            className="w-full mb-2 px-3 py-2 border rounded-lg"
-            required
-          />
-
-          <label className="block text-sm font-medium">Confirm Password</label>
-          <input
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            type="password"
             className="w-full mb-4 px-3 py-2 border rounded-lg"
             required
           />
-
           <button
             type="submit"
             disabled={loading}
@@ -302,6 +222,7 @@ export const LoginScreen: React.FC<Props> = ({
     </div>
   );
 
+  // Compatibility with parent API
   if (loginScreenState) {
     return (
       <article
