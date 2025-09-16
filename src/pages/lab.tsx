@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import React from "react";
+import React, { useState } from "react";
 
 import { BottomBar } from "~/components/BottomBar";
 import { LeftBar } from "~/components/LeftBar";
@@ -22,23 +22,16 @@ const units: {
     id: 1,
     title: "Unit 1",
     videos: [
-      { id: 1, title: "Intro to Lab", watched: true },
-      { id: 2, title: "Experiment Setup", watched: true },
-      { id: 3, title: "Run Trial", watched: true },
-      { id: 4, title: "Cleanup & Notes", watched: false },
+      { id: 1, title: "Germination of Seeds", watched: true },
     ],
-    quizzesAttempted: 1,
+    quizzesAttempted: 0,
     assignmentsDone: 0,
   },
   {
     id: 2,
     title: "Unit 2",
-    videos: [
-      { id: 1, title: "Concept A", watched: false },
-      { id: 2, title: "Concept B", watched: true },
-      { id: 3, title: "Demonstration", watched: false },
-      { id: 4, title: "Wrap-up", watched: false },
-    ],
+    videos: [],
+    comingSoon: true,
     quizzesAttempted: 0,
     assignmentsDone: 0,
   },
@@ -62,6 +55,8 @@ const percent = (watched: number, total: number) =>
   total === 0 ? 0 : Math.round((watched / total) * 100);
 
 const LabDashboard: NextPage = () => {
+  const [showVideo, setShowVideo] = useState(false);
+  
   // simple aggregated totals for the top stats
   const totalVideos = units.reduce((acc, u) => acc + u.videos.length, 0);
   const watchedVideos = units.reduce((acc, u) => acc + u.videos.filter(v => v.watched).length, 0);
@@ -125,8 +120,8 @@ const LabDashboard: NextPage = () => {
 
                     {!u.comingSoon && (
                       <div className="flex items-center gap-3">
-                        <button className="px-3 py-1 rounded-xl bg-green-600 text-white text-sm font-medium">Resume</button>
-                        <button className="px-3 py-1 rounded-xl border border-gray-200 text-sm">View</button>
+                        <button className="px-3 py-1 rounded-xl bg-green-600 text-white text-sm font-medium">Seasonal Quest</button>
+                        
                       </div>
                     )}
                   </div>
@@ -157,12 +152,34 @@ const LabDashboard: NextPage = () => {
                             <div className="ml-auto text-xs text-gray-400">{v.watched ? "Watched" : "Not watched"}</div>
                           </li>
                         ))}
+                        {u.id === 1 && (
+                          <li className="flex flex-col items-start p-2 rounded-lg bg-gray-50 w-full">
+                            {!showVideo ? (
+                              <button
+                                onClick={() => setShowVideo(true)}
+                                className="px-4 py-2 rounded-xl bg-green-600 text-white text-sm font-medium hover:bg-green-700 transition-colors"
+                              >
+                                Play
+                              </button>
+                            ) : (
+                              <video
+                                controls
+                                autoPlay
+                                className="w-full rounded-lg"
+                              >
+                                <source src="/Germination of seed.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                              </video>
+                            )}
+                          </li>
+                        )}
                       </ul>
                     </>
                   )}
                 </div>
               );
             })}
+
           </div>
         </div>
 
