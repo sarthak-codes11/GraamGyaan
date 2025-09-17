@@ -452,6 +452,93 @@ const getTopBarColors = (
 
 const Learn: NextPage = () => {
   const { loginScreenState, setLoginScreenState } = useLoginScreen();
+  const router = useRouter();
+  const { lang } = router.query as { lang?: string | string[] };
+  type Lang = "en" | "hi" | "te";
+  const supported = new Set<Lang>(["en", "hi", "te"]);
+  const pickedLang = Array.isArray(lang) ? lang[0] : lang;
+  const currentLang: Lang =
+    typeof pickedLang === "string" && supported.has(pickedLang as Lang)
+      ? (pickedLang as Lang)
+      : "en";
+
+  const dailyFacts: Record<Lang, string[]> = {
+    en: [
+      "Honey never spoils — archaeologists found 3,000-year-old honey that was still edible!",
+      "Octopuses have three hearts and blue blood.",
+      "Bananas are berries, but strawberries aren’t.",
+      "A day on Venus is longer than its year.",
+      "Your brain uses about 20% of your body’s total energy.",
+    ],
+    hi: [
+      "शहद कभी खराब नहीं होता — पुरातत्वविदों ने 3000 साल पुराना शहद खाने योग्य पाया!",
+      "ऑक्टोपस के तीन हृदय और नीला रक्त होता है।",
+      "केला एक बेरी है, लेकिन स्ट्रॉबेरी नहीं।",
+      "शुक्र ग्रह पर एक दिन, उसके एक वर्ष से भी लंबा होता है।",
+      "आपका मस्तिष्क आपके शरीर की कुल ऊर्जा का लगभग 20% उपयोग करता है।",
+    ],
+    te: [
+      "తేనె ఎప్పుడూ పాడవదు — 3,000 సంవత్సరాల పాత తేనెను కూడా తినగలిగారు!",
+      "ఆక్టోపస్‌కి మూడు గుండెలు, నీలి రక్తం ఉంటుంది.",
+      "అరటి పండు ఒక బెర్రీ, కానీ స్ట్రాబెర్రీ కాదు.",
+      "వీనస్‌పై ఒక రోజు అక్కడి సంవత్సరానికి కంటే ఎక్కువ ఉంటుంది.",
+      "మీ మెదడు మీ శరీర శక్తి లో సుమారు 20% వాడుతుంది.",
+    ],
+  };
+  const uiText: Record<Lang, { title: string; button: string }> = {
+    en: { title: "Your Daily Fact for Today", button: "Got it" },
+    hi: { title: "आज का रोचक तथ्य", button: "ठीक है" },
+    te: { title: "ఈరోజు ఆసక్తికరమైన విషయం", button: "సరే" },
+  };
+  function getDayOfYear(d = new Date()): number {
+    const start = new Date(d.getFullYear(), 0, 0);
+    const diff = d.getTime() - start.getTime();
+    const oneDay = 1000 * 60 * 60 * 24;
+    return Math.floor(diff / oneDay);
+  }
+  function randomInt(maxExclusive: number): number {
+    if (maxExclusive <= 1) return 0;
+    // Prefer crypto for better randomness if available
+    if (typeof window !== "undefined") {
+      const cryptoObj = window.crypto;
+      if (cryptoObj && typeof cryptoObj.getRandomValues === "function") {
+        const array = new Uint32Array(1);
+        cryptoObj.getRandomValues(array);
+        // With noUncheckedIndexedAccess, array[0] is number | undefined; but length is 1, so it's safe
+        return array[0]! % maxExclusive;
+      }
+    }
+    return Math.floor(Math.random() * maxExclusive);
+  }
+  function pickRandomDifferent(length: number, exclude: number | null): number {
+    if (length <= 1) return 0;
+    let idx = randomInt(length);
+    if (exclude === null) return idx;
+    // Ensure different from last; try a couple of times then fallback
+    if (idx === exclude) {
+      idx = (idx + 1) % length;
+    }
+    return idx;
+  }
+  const facts: string[] = dailyFacts[currentLang];
+  const text: { title: string; button: string } = uiText[currentLang];
+  const [showFact, setShowFact] = useState(false);
+  const [factIndex, setFactIndex] = useState<number | null>(null);
+  useEffect(() => {
+    // Choose a random fact every time the page is entered, avoid immediate repeat using localStorage
+    try {
+      const storageKey = `dailyFactLastIndex_${currentLang}`;
+      const lastIdxStr = typeof window !== "undefined" ? window.localStorage.getItem(storageKey) : null;
+      const lastIdx = lastIdxStr !== null ? Number(lastIdxStr) : null;
+      const nextIdx = pickRandomDifferent(facts.length, Number.isFinite(lastIdx ?? NaN) ? (lastIdx as number) : null);
+      setFactIndex(nextIdx);
+      if (typeof window !== "undefined") {
+        window.localStorage.setItem(storageKey, String(nextIdx));
+      }
+    } catch {}
+    setShowFact(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentLang]);
 
   const [scrollY, setScrollY] = useState(0);
   useEffect(() => {
@@ -498,6 +585,25 @@ const Learn: NextPage = () => {
         backgroundColor={topBarColors.backgroundColor}
         borderColor={topBarColors.borderColor}
       />
+
+      {showFact && factIndex !== null && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
+          <div className="mx-4 max-w-md rounded-2xl bg-white p-6 text-[#0B3D0B] shadow-2xl border-2 border-b-4 border-yellow-300">
+            <h3 className="mb-2 text-2xl font-extrabold">
+              {text.title}
+            </h3>
+            <p className="mb-4 text-base">{facts[factIndex]}</p>
+            <div className="flex justify-end">
+              <button
+                onClick={() => setShowFact(false)}
+                className="rounded-xl bg-[#A0522D] text-white px-4 py-2 font-semibold hover:brightness-110 hover:scale-[1.02] transition"
+              >
+                {text.button}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <LeftBar selectedTab="Learn" />
 
