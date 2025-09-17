@@ -4,14 +4,7 @@ import type { ComponentProps } from "react";
 import React, { useState } from "react";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import { Calendar } from "./Calendar";
-import {
-  FireSvg,
-  GemSvg,
-  GlobeIconSvg,
-  LingotsTreasureChestSvg,
-  MoreOptionsSvg,
-  PodcastIconSvg,
-} from "./Svgs";
+import { FireSvg, GlobeIconSvg, MoreOptionsSvg, PodcastIconSvg } from "./Svgs";
 
 const EmptyFireTopBarSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -28,20 +21,6 @@ const EmptyFireTopBarSvg = (props: ComponentProps<"svg">) => {
   );
 };
 
-const EmptyGemTopBarSvg = (props: ComponentProps<"svg">) => {
-  return (
-    <svg width="24" height="30" viewBox="0 0 24 30" fill="none" {...props}>
-      <g opacity="0.2">
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M3.63705 7.31556C2.62104 7.92872 2 9.02888 2 10.2156V19.8818C2 21.0685 2.62104 22.1687 3.63705 22.7819L10.1117 26.6893C11.1881 27.3389 12.5356 27.3389 13.612 26.6894L20.087 22.7818C21.1031 22.1687 21.7241 21.0685 21.7241 19.8818V10.2156C21.7241 9.0289 21.1031 7.92872 20.087 7.31557L13.612 3.40806C12.5356 2.7585 11.1881 2.75851 10.1117 3.40809L3.63705 7.31556ZM11.8902 6.37281C11.8902 5.52831 10.9645 5.01055 10.2449 5.45256L4.91163 8.72852C4.24944 9.13527 4.22068 10.0873 4.85711 10.5332L7.24315 12.2053C7.59354 12.4508 8.05585 12.4663 8.42194 12.2449L11.3692 10.462C11.6926 10.2664 11.8902 9.91591 11.8902 9.53794V6.37281Z"
-          fill="black"
-        />
-      </g>
-    </svg>
-  );
-};
 
 const AddLanguageSvg = (props: ComponentProps<"svg">) => {
   return (
@@ -61,7 +40,7 @@ const AddLanguageSvg = (props: ComponentProps<"svg">) => {
   );
 };
 
-type MenuState = "HIDDEN" | "LANGUAGES" | "STREAK" | "GEMS" | "MORE";
+type MenuState = "HIDDEN" | "LANGUAGES" | "STREAK" | "MORE";
 
 export const TopBar = ({
   backgroundColor = "bg-[#680B24]",
@@ -73,8 +52,6 @@ export const TopBar = ({
   const [menu, setMenu] = useState<MenuState>("HIDDEN");
   const [now, setNow] = useState(dayjs());
   const streak = useBoundStore((x) => x.streak);
-  const lingots = useBoundStore((x) => x.lingots);
-  const language = useBoundStore((x) => x.language);
   const toggleRightbarMobile = useBoundStore((x) => x.toggleRightbarMobile);
   return (
     <header className="fixed z-20 h-[58px] w-full safe-area-inset-top">
@@ -92,18 +69,7 @@ export const TopBar = ({
             {streak}
           </span>
         </button>
-        <button
-          className="flex items-center gap-1 xs:gap-2 font-bold btn-mobile"
-          onClick={() => setMenu((x) => (x === "GEMS" ? "HIDDEN" : "GEMS"))}
-          aria-label="Toggle lingot menu"
-        >
-          {lingots > 0 ? <GemSvg /> : <EmptyGemTopBarSvg />}{" "}
-          <span
-            className={`text-sm xs:text-base ${lingots > 0 ? "text-white" : "text-black opacity-20"}`}
-          >
-            {lingots}
-          </span>
-        </button>
+        {/* Lingots/Gems removed from top bar */}
         <MoreOptionsSvg
           onClick={() => toggleRightbarMobile()}
           role="button"
@@ -121,8 +87,7 @@ export const TopBar = ({
           {((): null | JSX.Element => {
             switch (menu) {
               case "LANGUAGES":
-                return null; // Flag/language menu removed
-
+                return null;
               case "STREAK":
                 return (
                   <div className="flex grow flex-col items-center gap-3 p-5">
@@ -132,26 +97,6 @@ export const TopBar = ({
                     </p>
                     <div className="self-stretch">
                       <Calendar now={now} setNow={setNow} />
-                    </div>
-                  </div>
-                );
-
-              case "GEMS":
-                return (
-                  <div className="flex grow items-center gap-3 p-5">
-                    <LingotsTreasureChestSvg className="h-24 w-24" />
-                    <div className="flex flex-col gap-3">
-                      <h2 className="text-xl font-bold text-black">Lingots</h2>
-                      <p className="text-sm font-normal text-gray-400">
-                        You have {lingots}{" "}
-                        {lingots === 1 ? "lingot" : "lingots"}.
-                      </p>
-                      <Link
-                        className="font-bold uppercase text-blue-400 transition hover:brightness-110"
-                        href="/lab"
-                      >
-                        Go to Lab
-                      </Link>
                     </div>
                   </div>
                 );
