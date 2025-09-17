@@ -317,7 +317,6 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
   const increaseMilestonesOpened = useBoundStore(
     (x) => x.increaseMilestonesOpened
   );
-  const increaseLingots = useBoundStore((x) => x.increaseLingots);
 
   return (
     <>
@@ -411,7 +410,6 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
                           if (status === "ACTIVE") {
                             increaseLessonsCompleted(4);
                             increaseMilestonesOpened(1);
-                            increaseLingots(1);
                           }
                         }}
                         role="button"
