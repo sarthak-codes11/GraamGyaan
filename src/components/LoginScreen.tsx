@@ -1,4 +1,3 @@
-// src/components/LoginScreen.tsx
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -11,6 +10,23 @@ type Props = {
   loginScreenState?: LoginScreenState;
   setLoginScreenState?: React.Dispatch<React.SetStateAction<LoginScreenState>>;
 };
+
+// 🔑 helper to safely get redirect path
+function getStoredRedirectPath() {
+  let redirectPath = "/selectsub";
+  try {
+    if (typeof window !== "undefined") {
+      const stored = window.localStorage.getItem("loginRedirect");
+      if (stored) {
+        redirectPath = stored;
+        window.localStorage.removeItem("loginRedirect");
+      }
+    }
+  } catch {
+    // ignore storage errors
+  }
+  return redirectPath;
+}
 
 export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
   const router = useRouter();
@@ -39,10 +55,11 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
     setLoading(true);
     setError(null);
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const { data: authData, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
       if (authError) throw authError;
       if (!authData.user) throw new Error("User not found");
 
@@ -51,7 +68,8 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
-      router.push("/selectsub");
+      const redirectPath = getStoredRedirectPath();
+      router.push(redirectPath);
     } catch (err: any) {
       setError(err.message || "Something went wrong, please try again.");
     } finally {
@@ -70,10 +88,11 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
       return;
     }
     try {
-      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email,
+          password,
+        });
       if (signUpError) throw signUpError;
 
       if (signUpData.user) {
@@ -91,7 +110,8 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
           .eq("id", signUpData.user.id);
       }
 
-      router.push("/selectsub");
+      const redirectPath = getStoredRedirectPath();
+      router.push(redirectPath);
     } catch (err: any) {
       setError(err.message || "Something went wrong, please try again.");
     } finally {
