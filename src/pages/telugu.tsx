@@ -33,6 +33,8 @@ import {
   PracticeExerciseSvg,
 } from "~/components/Svgs";
 import { TopBar } from "~/components/TopBar";
+import dynamic from "next/dynamic";
+const Chatbot = dynamic(() => import("~/components/Chatbot"), { ssr: false });
 import { BottomBar } from "~/components/BottomBar";
 import RightBar from "~/components/RightBar";
 import { LeftBar } from "~/components/LeftBar";
@@ -552,6 +554,9 @@ const Learn: NextPage = () => {
         loginScreenState={loginScreenState}
         setLoginScreenState={setLoginScreenState}
       />
+
+      {/* Tutor Chatbot */}
+      <Chatbot pageId="telugu" locale="te" docked />
     </>
   );
 };

@@ -38,20 +38,20 @@ const SelectGrade: React.FC = () => {
             background: "linear-gradient(to right, #fceabb, #BAB86C)" 
           }}
         >
-            <div className="flex justify-center mb-10">
-              <h2 className="text-7xl font-extrabold text-[#006400] tracking-wide drop-shadow-lg"  
-              style={{ fontFamily: "'Oswald', Oswald"}}>
+            <div className="flex justify-center mb-6 sm:mb-8 md:mb-10 px-4 text-center">
+              <h2 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold text-[#006400] tracking-wide drop-shadow-lg"  
+              style={{ fontFamily: "'Oswald', Oswald" }}>
                 Select Your Grade
               </h2>
             </div>    
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 w-full max-w-6xl mx-auto px-4 sm:px-6">
               {grades.map((grade) => (
                 <button 
                   key={grade.value}
                   onClick={() => handleSelect(grade.value)}
                   className={`
-                    w-full py-12 rounded-2xl font-extrabold text-4xl shadow-2xl tracking-wide
+                    w-full py-8 sm:py-10 md:py-12 rounded-2xl font-extrabold text-2xl sm:text-3xl md:text-4xl shadow-2xl tracking-wide
                     transition-all transform hover:scale-110 focus:outline-none
                     hover:shadow-[0_0_20px_#FFD700] border-2 border-transparent
                     ${
@@ -64,6 +64,7 @@ const SelectGrade: React.FC = () => {
                     fontFamily: "'Oswald', Oswald", 
                     backgroundColor: grade.value === "6" ? "#22C55E" : "#B3A285"
                   }}
+                  aria-label={`Choose ${grade.name}`}
                 >
                   {grade.name}
                   {grade.value === "6" && (
@@ -81,10 +82,10 @@ const SelectGrade: React.FC = () => {
             </div>
 
             {/* Back button */}
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <button
                 onClick={() => router.back()}
-                className="px-6 py-3 bg-white text-[#006400] font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105 border-2 border-[#006400]"
+                className="px-5 py-3 sm:px-6 bg-white text-[#006400] font-semibold rounded-lg shadow-md hover:shadow-lg transition-all hover:scale-105 border-2 border-[#006400]"
                 style={{ fontFamily: "'Oswald', Oswald" }}
               >
                 ← Back
