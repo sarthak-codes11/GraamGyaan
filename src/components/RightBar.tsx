@@ -156,7 +156,8 @@ export default function RightBar() {
 
   // Component state
   const [showLogin, setShowLogin] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const mobileOpen = useBoundStore((s) => s.rightbarMobileOpen);
+  const closeRightbarMobile = useBoundStore((s) => s.closeRightbarMobile);
 
   const sidebarContent = (
     <>
@@ -289,32 +290,13 @@ export default function RightBar() {
         {sidebarContent}
       </aside>
 
-      {/* Mobile toggle button */}
-      <button
-        className="fixed bottom-24 right-4 z-40 rounded-full bg-[#680B24] p-4 text-white shadow-lg md:hidden btn-mobile relative"
-        onClick={() => setMobileOpen(true)}
-        aria-label="Open right panel"
-      >
-        {/* Simple plus/menu icon */}
-        <span className="block h-5 w-5">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg>
-        </span>
-        {/* Badge with streak */}
-        <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] rounded-full bg-amber-500 px-1.5 text-[11px] leading-[20px] font-bold text-white text-center">
-          {streak}
-        </span>
-      </button>
 
       {/* Mobile drawer & overlay */}
       {mobileOpen && (
         <>
           <div
             className="fixed inset-0 z-30 bg-black/40 transition-opacity md:hidden opacity-100"
-            onClick={() => setMobileOpen(false)}
+            onClick={() => closeRightbarMobile()}
             aria-hidden={!mobileOpen}
           />
           <div
@@ -327,7 +309,7 @@ export default function RightBar() {
               <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : "Options"}</h3>
               <button
                 className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
-                onClick={() => setMobileOpen(false)}
+                onClick={() => closeRightbarMobile()}
                 aria-label="Close"
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

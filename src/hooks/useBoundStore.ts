@@ -19,6 +19,13 @@
   import type { BadgeSlice } from "~/stores/createBadgeStore";
   import { createBadgeSlice } from "~/stores/createBadgeStore";
 
+  type UISlice = {
+    rightbarMobileOpen: boolean;
+    openRightbarMobile: () => void;
+    closeRightbarMobile: () => void;
+    toggleRightbarMobile: () => void;
+  };
+
   type BoundState = GoalXpSlice &
     LanguageSlice &
     LessonSlice &
@@ -27,25 +34,25 @@
     StreakSlice &
     UserSlice &
     XpSlice &
-    BadgeSlice;
+    BadgeSlice &
+    UISlice;
 
-  export type BoundStateCreator<SliceState> = StateCreator<
-    BoundState,
-    [],
-    [],
-    SliceState
-  >;
+export const useBoundStore = create<BoundState>((...args) => ({
+  ...createGoalXpSlice(...args),
+  ...createLanguageSlice(...args),
+  ...createLessonSlice(...args),
+  ...createLingotSlice(...args),
+  ...createSoundSettingsSlice(...args),
+  ...createStreakSlice(...args),
+  ...createUserSlice(...args),
+  ...createXpSlice(...args),
 
-  export const useBoundStore = create<BoundState>((...args) => ({
-    ...createGoalXpSlice(...args),
-    ...createLanguageSlice(...args),
-    ...createLessonSlice(...args),
-    ...createLingotSlice(...args),
-    ...createSoundSettingsSlice(...args),
-    ...createStreakSlice(...args),
-    ...createUserSlice(...args),
-    ...createXpSlice(...args),
+  ...createBadgeSlice(...args),
 
-    ...createBadgeSlice(...args),
-    
-  }));
+  // UI: Mobile RightBar control
+  rightbarMobileOpen: false,
+  openRightbarMobile: () => (args[0] as any)((state: any) => ({ rightbarMobileOpen: true })),
+  closeRightbarMobile: () => (args[0] as any)((state: any) => ({ rightbarMobileOpen: false })),
+  toggleRightbarMobile: () =>
+    (args[0] as any)((state: any) => ({ rightbarMobileOpen: !state.rightbarMobileOpen })),
+}));

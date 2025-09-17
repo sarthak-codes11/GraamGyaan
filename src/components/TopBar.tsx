@@ -76,6 +76,7 @@ export const TopBar = ({
   const streak = useBoundStore((x) => x.streak);
   const lingots = useBoundStore((x) => x.lingots);
   const language = useBoundStore((x) => x.language);
+  const toggleRightbarMobile = useBoundStore((x) => x.toggleRightbarMobile);
   return (
     <header className="fixed z-20 h-[58px] w-full safe-area-inset-top">
       <div
@@ -113,10 +114,10 @@ export const TopBar = ({
           </span>
         </button>
         <MoreOptionsSvg
-          onClick={() => setMenu((x) => (x === "MORE" ? "HIDDEN" : "MORE"))}
+          onClick={() => toggleRightbarMobile()}
           role="button"
           tabIndex={0}
-          aria-label="Toggle more menu"
+          aria-label="Open right panel"
         />
 
         <div

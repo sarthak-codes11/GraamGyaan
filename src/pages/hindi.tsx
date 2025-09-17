@@ -525,12 +525,10 @@ const Learn: NextPage = () => {
       </div>
       {/* ========== page content ========== */}
 
-      <div className="hidden md:block">
-        <TopBar
-          backgroundColor={topBarColors.backgroundColor}
-          borderColor={topBarColors.borderColor}
-        />
-      </div>
+      <TopBar
+        backgroundColor={topBarColors.backgroundColor}
+        borderColor={topBarColors.borderColor}
+      />
 
       <LeftBar selectedTab="Learn" />
 
