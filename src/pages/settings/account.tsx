@@ -31,7 +31,9 @@ const Account: NextPage = () => {
             Account
           </h1>
           <button
-            className="rounded-2xl border-b-4 border-green-600 bg-green-500 px-5 py-3 font-bold uppercase text-white transition hover:brightness-110 disabled:border-b-0 disabled:bg-gray-200 disabled:text-gray-400 disabled:hover:brightness-100"
+            className="hidden items-center gap-2 self-start rounded-2xl border-b-4 border-[#704214] bg-[#C19A6B] px-5 py-3 font-bold uppercase text-white transition hover:brightness-110 md:flex"
+
+
             onClick={() => {
               setName(localName);
               setUsername(localUsername);

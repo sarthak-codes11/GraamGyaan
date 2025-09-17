@@ -82,10 +82,6 @@ const ProfileTopSection = () => {
               <span className="text-sm font-semibold text-gray-500">Standard:</span>
               <span className="text-sm">{standard || "Not set"}</span>
             </div>
-            <div className="flex items-center gap-3">
-              <span className="text-sm font-semibold text-gray-500">Language:</span>
-              <span className="text-sm">{language.name}</span>
-            </div>
           </div>
           <div className="flex items-center gap-3">
             <ProfileTimeJoinedSvg />
@@ -97,7 +93,8 @@ const ProfileTopSection = () => {
       </div>
       <Link
         href="/settings/account"
-        className="hidden items-center gap-2 self-start rounded-2xl border-b-4 border-blue-500 bg-blue-400 px-5 py-3 font-bold uppercase text-white transition hover:brightness-110 md:flex"
+        className="hidden items-center gap-2 self-start rounded-2xl border-b-4 border-[#8B5E3C] bg-[#A67853] px-5 py-3 font-bold uppercase text-white transition hover:brightness-110 md:flex"
+
       >
         <EditPencilSvg />
         Edit profile
