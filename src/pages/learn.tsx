@@ -510,13 +510,22 @@ const Learn: NextPage = () => {
           ))}
 
           <div className="sticky bottom-28 xs:bottom-32 left-0 right-0 flex items-end justify-between px-2">
-            <Link
-              href="/lesson?practice"
-              className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 btn-mobile shadow-lg"
-            >
-              <span className="sr-only">Practice exercise</span>
-              <PracticeExerciseSvg className="h-6 w-6 xs:h-8 xs:w-8" />
-            </Link>
+            <div className="flex flex-col items-center gap-2">
+              <Link
+                href="/games"
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">Play sorting game</span>
+                <span aria-hidden className="text-2xl">🎮</span>
+              </Link>
+              <Link
+                href="/lesson?practice"
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">Practice exercise</span>
+                <PracticeExerciseSvg className="h-6 w-6 xs:h-8 xs:w-8" />
+              </Link>
+            </div>
 
             {scrollY > 100 && (
               <button
