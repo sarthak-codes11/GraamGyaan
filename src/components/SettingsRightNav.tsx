@@ -19,7 +19,7 @@ const useSettingsPages = () => {
 export const SettingsRightNav = ({
   selectedTab,
 }: {
-  selectedTab: SettingsTitle;
+  selectedTab: String;
 }) => {
   const settingsPages = useSettingsPages();
   return (
