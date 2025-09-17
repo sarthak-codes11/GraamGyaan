@@ -4,7 +4,6 @@ import type { ComponentProps } from "react";
 import React, { useState } from "react";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import { Calendar } from "./Calendar";
-import { Flag } from "./Flag";
 import {
   FireSvg,
   GemSvg,
@@ -82,15 +81,7 @@ export const TopBar = ({
       <div
         className={`relative flex h-full w-full items-center justify-between border-b-2 px-3 xs:px-4 transition duration-500 sm:hidden ${borderColor} ${backgroundColor}`}
       >
-        <button
-          onClick={() =>
-            setMenu((x) => (x === "LANGUAGES" ? "HIDDEN" : "LANGUAGES"))
-          }
-        >
-          <Flag language={language} width={45} />
-          <span className="sr-only">See languages</span>
-        </button>
-
+        {/* Removed language flag button for a cleaner top bar */}
         <button
           className="flex items-center gap-1 xs:gap-2 font-bold text-white btn-mobile"
           onClick={() => setMenu((x) => (x === "STREAK" ? "HIDDEN" : "STREAK"))}
@@ -130,25 +121,7 @@ export const TopBar = ({
           {((): null | JSX.Element => {
             switch (menu) {
               case "LANGUAGES":
-                return (
-                  <div className="flex gap-5 p-5">
-                    <div className="flex flex-col items-center justify-between gap-2">
-                      <div className="rounded-2xl border-4 border-blue-400">
-                        <Flag language={language} width={80} />
-                      </div>
-                      <span className="font-bold">{language.name}</span>
-                    </div>
-                    <Link
-                      className="flex flex-col items-center justify-between gap-2"
-                      href="/register"
-                    >
-                      <div className="rounded-2xl border-4 border-white">
-                        <AddLanguageSvg className="h-16 w-20" />
-                      </div>
-                      <span className="font-bold text-gray-400">Courses</span>
-                    </Link>
-                  </div>
-                );
+                return null; // Flag/language menu removed
 
               case "STREAK":
                 return (
