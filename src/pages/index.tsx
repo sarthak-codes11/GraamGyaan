@@ -60,10 +60,12 @@ const HomePage: React.FC = () => {
         style={{ color: "#0B3D0B" }}
       >
         {/* Logo */}
-        <GlobeSvg
-          className="block h-fit w-7/12 md:w-[350px] mx-auto md:mx-0"
-          style={{ stroke: "none" }}
-        />
+        <div className="w-full flex justify-center md:justify-start">
+          <GlobeSvg
+            className="block h-fit w-7/12 md:w-[350px] translate-x-[6px] sm:translate-x-[4px] md:translate-x-0"
+            style={{ stroke: "none" }}
+          />
+        </div>
 
         {/* Text + Buttons */}
         <div className="flex flex-col items-center max-w-full">
