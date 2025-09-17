@@ -37,6 +37,13 @@
     BadgeSlice &
     UISlice;
 
+  export type BoundStateCreator<SliceState> = StateCreator<
+    BoundState,
+    [],
+    [],
+    SliceState
+  >;
+
 export const useBoundStore = create<BoundState>((...args) => ({
   ...createGoalXpSlice(...args),
   ...createLanguageSlice(...args),
