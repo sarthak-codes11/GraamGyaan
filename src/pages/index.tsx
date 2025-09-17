@@ -60,9 +60,9 @@ const HomePage: React.FC = () => {
         style={{ color: "#0B3D0B" }}
       >
         {/* Logo */}
-        <div className="w-full flex justify-center md:justify-start">
+        <div className="w-full grid place-items-center md:place-items-start">
           <GlobeSvg
-            className="block h-fit w-7/12 md:w-[350px] translate-x-[6px] sm:translate-x-[4px] md:translate-x-0"
+            className="inline-block h-auto w-7/12 md:w-[350px]"
             style={{ stroke: "none" }}
           />
         </div>

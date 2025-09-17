@@ -1,7 +1,11 @@
 import type { ComponentProps } from "react";
 import React from "react";
 
-export const GlobeSvg = (props: ComponentProps<"svg">) => {
+export const GlobeSvg = (props: ComponentProps<"svg"> & { nudgeX?: number }) => {
+  const { nudgeX = 0, style, ...rest } = props;
+  const computedTransform = nudgeX !== 0
+    ? `translateX(${nudgeX}px)`
+    : `translateX(var(--gg-nudge-x, 0px))`;
   return (
     <svg
       version="1.1"
@@ -12,7 +16,8 @@ export const GlobeSvg = (props: ComponentProps<"svg">) => {
       viewBox="0 0 800 1000"
       preserveAspectRatio="xMidYMid meet"
       overflow="hidden"
-      {...props}
+      style={{ transform: computedTransform, ...style }}
+      {...rest}
     >
 <path fill="#013220" opacity="1.000000" stroke="none" 
 	d="
