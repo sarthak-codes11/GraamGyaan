@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useBoundStore } from "~/hooks/useBoundStore";
 
 type BottomBarItem = {
@@ -158,6 +160,10 @@ export const useBottomBarItems = () => {
 
 export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const bottomBarItems = useBottomBarItems();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const router = useRouter();
+  const loggedIn = useBoundStore((x) => x.loggedIn);
+  const logOut = useBoundStore((x) => x.logOut);
   const isHindi = typeof window !== "undefined" && window.location.pathname.startsWith("/hindi");
   const isTelugu = typeof window !== "undefined" && window.location.pathname.startsWith("/telugu");
   return (
@@ -198,6 +204,74 @@ export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
             </li>
           );
         })}
+
+        {/* More menu trigger */}
+        <li className="flex flex-1 items-center justify-center relative">
+          <button
+            onClick={() => setMoreOpen((x) => !x)}
+            className="px-3 py-2 xs:px-4 xs:py-3 btn-mobile hover:bg-gray-100 rounded-xl transition-all duration-200 border border-gray-200"
+            aria-label={isHindi ? "और" : isTelugu ? "మరిన్ని" : "More"}
+          >
+            {/* Three dots icon */}
+            <svg width="32" height="32" viewBox="0 0 46 46" fill="none">
+              <circle cx="15" cy="23" r="3" fill="#555" />
+              <circle cx="23" cy="23" r="3" fill="#555" />
+              <circle cx="31" cy="23" r="3" fill="#555" />
+            </svg>
+            <span className="sr-only">{isHindi ? "और" : isTelugu ? "మరిన్ని" : "More"}</span>
+          </button>
+
+          {/* More menu panel */}
+          {moreOpen && (
+            <div className="absolute bottom-[110%] mb-2 left-1/2 -translate-x-1/2 min-w-[260px] rounded-2xl border-2 border-gray-300 bg-white shadow-xl">
+              <div className="flex flex-col py-2">
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href="/leaderboard?extended=1"
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "स्कूल" : isTelugu ? "పాఠశాల" : "School"}
+                </Link>
+              </div>
+              <div className="flex flex-col border-t-2 border-gray-300 py-2">
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href={loggedIn ? "/settings/account" : "/settings/sound"}
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "सेटिंग्स" : isTelugu ? "సెట్టింగ్స్" : "Settings"}
+                </Link>
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href="/help"
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "सहायता" : isTelugu ? "సహాయం" : "Help"}
+                </Link>
+                {loggedIn ? (
+                  <button
+                    className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                    onClick={() => {
+                      setMoreOpen(false);
+                      logOut();
+                      router.push("/");
+                    }}
+                  >
+                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : "Sign out"}
+                  </button>
+                ) : (
+                  <Link
+                    className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                    href="/register"
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    {isHindi ? "प्रोफ़ाइल बनाएँ" : isTelugu ? "ప్రొఫైల్ సృష్టించండి" : "Create a profile"}
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+        </li>
       </ul>
     </nav>
   );

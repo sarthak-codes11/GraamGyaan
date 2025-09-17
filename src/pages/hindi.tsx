@@ -462,23 +462,15 @@ const UnitSection = ({ unit }: { unit: Unit }): JSX.Element => {
 };
 
 const getTopBarColors = (
-  scrollY: number
+  _scrollY: number
 ): {
   backgroundColor: `bg-${string}`;
   borderColor: `border-${string}`;
 } => {
-  const defaultColors = {
-    backgroundColor: "bg-[#58cc02]",
-    borderColor: "border-[#46a302]",
+  return {
+    backgroundColor: "bg-[#680B24]",
+    borderColor: "border-[#4e071b]",
   } as const;
-
-  if (scrollY < 680) {
-    return defaultColors;
-  } else if (scrollY < 1830) {
-    return units[1] ?? defaultColors;
-  } else {
-    return units[2] ?? defaultColors;
-  }
 };
 
 const Learn: NextPage = () => {
@@ -668,10 +660,17 @@ const UnitHeader = ({
             borderColor,
           ].join(" ")}
         >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            मार्गदर्शक
-          </span>
+          <a
+            href="/Notes/sorting-materials-into-groups.docx"
+            download
+            className="flex items-center gap-3"
+            aria-label="क्लास नोट्स डाउनलोड करें"
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              मार्गदर्शक
+            </span>
+          </a>
         </div>
       </header>
     </article>
