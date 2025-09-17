@@ -66,21 +66,23 @@ export const units: readonly Unit[] = [
   },
   {
     unitNumber: 3,
-    description: "Order food and drink",
-    backgroundColor: "bg-[#00cd9c]",
-    textColor: "text-[#00cd9c]",
-    borderColor: "border-[#00a47d]",
+    description: "Light, Shadows and Reflections",
+   backgroundColor: "bg-[#D9C4A7]", // soft earthy beige
+textColor: "text-[#5B4636]",     // deep brown for readability
+borderColor: "border-[#A68C6F]", // muted clay/brown for subtle border
+
+
     tiles: [
-      { type: "fast-forward", description: "Order food and drink" },
-      { type: "book", description: "The passport" },
-      { type: "star", description: "Order food and drinks" },
+      { type: "fast-forward", description: "Light, Shadows and Reflections" },
+      { type: "book", description: "What is Light?" },
+      { type: "star", description: "Transparent, Translucent, and Opaque Objects" },
       { type: "treasure" },
-      { type: "book", description: "The honeymoon" },
-      { type: "star", description: "Get around in a city" },
+      { type: "book", description: "The Formation of Shadows" },
+      { type: "star", description: "Characteristics of Shadows" },
       { type: "treasure" },
-      { type: "dumbbell", description: "Personalized practice" },
+      { type: "dumbbell", description: "Reflections and Mirrors" },
       { type: "book", description: "Doctor Eddy" },
-      { type: "trophy", description: "Unit 2 review" },
+      { type: "trophy", description: "Full Chapter Revision" },
     ],
   },
 ];
