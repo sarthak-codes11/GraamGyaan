@@ -660,10 +660,17 @@ const UnitHeader = ({
             borderColor,
           ].join(" ")}
         >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            मार्गदर्शक
-          </span>
+          <a
+            href="/Notes/sorting-materials-into-groups.docx"
+            download
+            className="flex items-center gap-3"
+            aria-label="क्लास नोट्स डाउनलोड करें"
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              मार्गदर्शक
+            </span>
+          </a>
         </div>
       </header>
     </article>

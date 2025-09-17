@@ -639,11 +639,17 @@ const UnitHeader = ({
             borderColor,
           ].join(" ")}
         >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            {" "}
-            class notes{" "}
-          </span>
+          <a
+            href="/Notes/sorting-materials-into-groups.docx"
+            download
+            className="flex items-center gap-3"
+            aria-label="Download class notes"
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              class notes
+            </span>
+          </a>
         </div>
       </header>
     </article>

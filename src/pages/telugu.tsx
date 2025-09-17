@@ -647,11 +647,17 @@ const UnitHeader = ({
             borderColor,
           ].join(" ")}
         >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            {" "}
-            మార్గదర్శిని{" "}
-          </span>
+          <a
+            href="/Notes/sorting-materials-into-groups.docx"
+            download
+            className="flex items-center gap-3"
+            aria-label="క్లాస్ నోట్స్ డౌన్‌లోడ్ చేయండి"
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              మార్గదర్శిని
+            </span>
+          </a>
         </div>
       </header>
     </article>

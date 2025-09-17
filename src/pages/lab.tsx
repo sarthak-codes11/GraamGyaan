@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { BottomBar } from "~/components/BottomBar";
 import { LeftBar } from "~/components/LeftBar";
 import RightBar from "~/components/RightBar";
+import { TopBar } from "~/components/TopBar";
 import { useBoundStore } from "~/hooks/useBoundStore";
 
 type Video = { id: number; title: string; watched: boolean };
@@ -103,8 +104,9 @@ const LabDashboard: NextPage = () => {
 
   return (
     <div>
+      <TopBar />
       <LeftBar selectedTab="Lab" />
-      <div className="flex justify-center gap-3 pt-6 sm:p-6 sm:pt-6 md:ml-24 lg:ml-64 lg:gap-12">
+      <div className="flex justify-center gap-3 pt-14 px-2 xs:px-4 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="px-4 pb-20 w-full max-w-4xl">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
@@ -261,6 +263,7 @@ const LabDashboard: NextPage = () => {
 
         <RightBar />
       </div>
+      <BottomBar selectedTab="Lab" />
     </div>
   );
 };
