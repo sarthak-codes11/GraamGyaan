@@ -161,8 +161,8 @@ export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const isHindi = typeof window !== "undefined" && window.location.pathname.startsWith("/hindi");
   const isTelugu = typeof window !== "undefined" && window.location.pathname.startsWith("/telugu");
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t-2 border-[#e5e5e5] bg-white md:hidden">
-      <ul className="flex h-[88px]">
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t-2 border-[#e5e5e5] bg-white md:hidden safe-area-inset-bottom">
+      <ul className="flex h-[88px] xs:h-[96px]">
         {bottomBarItems.map((item) => {
           const linkHref = (() => {
             if (isHindi) {
@@ -188,8 +188,8 @@ export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 href={linkHref}
                 className={
                   item.name === selectedTab
-                    ? "rounded-xl border-2 border-[#84d8ff] bg-[#ddf4ff] px-2 py-1"
-                    : "px-2 py-1"
+                    ? "rounded-xl border-2 border-[#84d8ff] bg-[#ddf4ff] px-3 py-2 xs:px-4 xs:py-3 btn-mobile transition-all duration-200"
+                    : "px-3 py-2 xs:px-4 xs:py-3 btn-mobile hover:bg-gray-100 rounded-xl transition-all duration-200"
                 }
               >
                 {item.icon}

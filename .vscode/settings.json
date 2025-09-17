@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "src/styles/globals.css": "tailwindcss"
+  },
+  "tailwindCSS.experimental.configFile": "tailwind.config.ts",
+  "editor.quickSuggestions": {
+    "strings": true
+  },
+  "css.lint.unknownAtRules": "ignore",
+  "scss.lint.unknownAtRules": "ignore",
+  "less.lint.unknownAtRules": "ignore"
+}

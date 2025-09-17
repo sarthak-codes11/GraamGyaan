@@ -1,11 +1,15 @@
 {
-  "name": "React Duolingo Clone",
-  "short_name": "Duoclone",
+  "name": "GraamGyaan - Learn Languages",
+  "short_name": "GraamGyaan",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0A0",
-  "theme_color": "#0A0",
-  "description": "A React Duolingo clone web app written with React, TypeScript, Next.js, TailwindCSS, and Zustand.",
+  "background_color": "#58cc02",
+  "theme_color": "#58cc02",
+  "description": "Learn languages with GraamGyaan - Interactive language learning platform optimized for mobile and desktop.",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "categories": ["education", "productivity"],
   "icons": [
     {
       "src": "/favicon-16x16.png",
