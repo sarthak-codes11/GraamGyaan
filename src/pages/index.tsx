@@ -61,7 +61,7 @@ const HomePage: React.FC = () => {
       >
         {/* Logo */}
         <GlobeSvg
-          className="h-fit w-10/12 xs:w-9/12 sm:w-8/12 max-w-[420px] md:w-[350px]"
+          className="block h-auto w-[90vw] sm:w-[80vw] md:w-[420px] max-w-[560px]"
           style={{ stroke: "none" }}
         />
 

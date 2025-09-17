@@ -3,14 +3,17 @@ import React from "react";
 
 export const GlobeSvg = (props: ComponentProps<"svg">) => {
   return (
-    <svg version="1.1" id="Layer_1"
-     xmlns="http://www.w3.org/2000/svg"
-     x="0px" y="0px"
-     height='500'
-     width="25%"
-     viewBox="0 0 800 1000"
-     preserveAspectRatio="xMidYMid meet"
-     overflow="visible">
+    <svg
+      version="1.1"
+      id="Layer_1"
+      xmlns="http://www.w3.org/2000/svg"
+      x="0px"
+      y="0px"
+      viewBox="0 0 800 1000"
+      preserveAspectRatio="xMidYMid meet"
+      overflow="visible"
+      {...props}
+    >
 <path fill="#013220" opacity="1.000000" stroke="none" 
 	d="
 M708.311218,416.784363 
