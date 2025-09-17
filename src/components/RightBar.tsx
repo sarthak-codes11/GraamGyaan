@@ -156,6 +156,116 @@ export default function RightBar() {
 
   // Component state
   const [showLogin, setShowLogin] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const sidebarContent = (
+    <>
+      {/* Daily Streak card */}
+      <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "दैनिक स्ट्रीक" : isTelugu ? "దైనందిన స్ట్రీక్" : "Daily Streak"}</h2>
+        <p className="text-sm text-gray-600">{isHindi ? "रोज़ लॉगिन करके अपनी स्ट्रीक बनाए रखें।" : isTelugu ? "ప్రతి రోజు లాగిన్ అయి మీ స్ట్రీక్ కొనసాగించండి." : "Keep your streak alive by logging in daily."}</p>
+        <div className="mt-3 flex items-center justify-between">
+          <div className="text-3xl font-extrabold text-orange-500">{streak}</div>
+          <button
+            className="rounded-xl border-2 border-b-4 border-gray-200 bg-white px-4 py-2 text-sm font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
+            onClick={() => addToday()}
+          >
+            {isHindi ? "आज चिन्हित करें" : isTelugu ? "ఈ రోజు గుర్తించండి" : "Mark today"}
+          </button>
+        </div>
+      </article>
+
+      {/* Leaderboard (white card, shadow, hover lift) */}
+      <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "लीडरबोर्ड" : isTelugu ? "లీడర్‌బోర్డ్" : "Leaderboard"}</h2>
+        {needsUnlock ? (
+          <div className="text-sm text-gray-600">
+            {isHindi
+              ? `लीडरबोर्ड अनलॉक करने के लिए ${lessonsRemainingToUnlockLeaderboard} और पाठ पूरे करें।`
+              : isTelugu
+              ? `లీడర్‌బోర్డ్‌ను అన్‌లాక్ చేయడానికి ఇంకో ${lessonsRemainingToUnlockLeaderboard} పాఠం(లు) పూర్తి చేయండి.`
+              : `Complete ${lessonsRemainingToUnlockLeaderboard} more lesson${lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock the leaderboard.`}
+          </div>
+        ) : (
+          <>
+            <p className="text-sm text-gray-600">
+              {isHindi
+                ? <>आप आज <strong>#{userRank}</strong> रैंक पर हैं। इसी तरह आगे बढ़ते रहें!</>
+                : isTelugu
+                ? <>మీరు ఈ రోజు <strong>#{userRank}</strong> ర్యాంక్‌లో ఉన్నారు. అలాగే కొనసాగండి!</>
+                : <>You’re ranked <strong>#{userRank}</strong> today. Keep going!</>}
+            </p>
+            <button
+              className="mt-2 rounded-xl border-2 border-b-4 border-gray-200 bg-white px-3 py-1 text-xs font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
+              onClick={goToLearn}
+            >
+              {isHindi ? "सीखने पर जाएँ" : isTelugu ? "నేర్చుకోవడానికి వెళ్ళండి" : "Go to Learn"}
+            </button>
+            <ul className="mt-4 flex flex-col gap-3">
+              {leaderboardData.map((user, i) => (
+                <li
+                  key={`${user.name}-${i}`}
+                  className={`flex items-center justify-between rounded-lg p-3 shadow-sm ${
+                    user.name === "You" ? "bg-amber-100" : "bg-white"
+                  }`}
+                >
+                  <span className="font-medium text-gray-700">
+                    {i + 1}. {user.name}
+                  </span>
+                  <span className="text-sm font-semibold text-gray-600">
+                    {user.xp} {isHindi ? "XP" : isTelugu ? "XP" : "XP"}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </article>
+
+      {/* Achievements (white card, shadow, hover lift) */}
+      <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
+        <h2 className="mb-4 text-xl font-bold text-[#680B24]">{isHindi ? "उपलब्धियाँ और इनाम" : isTelugu ? "సాధనలు & బహుమతులు" : "Achievements & Rewards"}</h2>
+        <div className="flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
+            <TrophyIcon />
+          </div>
+          <div>
+            <p className="text-sm text-gray-600">
+              {isHindi ? "कुल अर्जित XP:" : isTelugu ? "మొత్తం సంపాదించిన XP:" : "Total XP earned:"} <span className="font-semibold text-gray-800">{totalXp}</span>
+            </p>
+            <p className="text-sm text-gray-600">
+              {isHindi ? "आज के लक्ष्य के लिए आवश्यक XP:" : isTelugu ? "ఈ రోజు లక్ష్యం కోసం కావాల్సిన XP:" : "XP needed for today’s goal:"} {" "}
+              <span className="font-semibold text-gray-800">{xpToReward}</span>
+            </p>
+          </div>
+        </div>
+        {/* golden animated progress bar */}
+        <div className="mt-4">
+          <div className="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
+            <div
+              className="h-full rounded-full shiny-progress"
+              style={{
+                width: `${progress}%`,
+                background:
+                  "linear-gradient(90deg, #FFD24D 0%, #F6C84C 30%, #FFD24D 60%, #FFE685 100%)",
+              }}
+            />
+          </div>
+          <p className="mt-2 text-right text-sm font-semibold text-gray-600">
+            {Math.round(progress)}%
+          </p>
+        </div>
+        <div className="mt-6 flex items-center gap-4">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
+            <GiftIcon />
+          </div>
+          <p className="text-sm text-gray-600">
+            {isHindi ? "नई उपलब्धियाँ और पुरस्कार अनलॉक करने के लिए मेहनत जारी रखें!" : isTelugu ? "కొత్త సాధనలు మరియు బహుమతులను అన్‌లాక్ చేసేందుకు కృషి కొనసాగించండి!" : "Keep grinding to unlock new achievements and prizes!"}
+          </p>
+        </div>
+      </article>
+    </>
+  );
 
   return (
     <>
@@ -175,114 +285,59 @@ export default function RightBar() {
       </div>
 
       {/* Sidebar wrapper sitting above gradient */}
-      <aside className="relative z-20 flex w-96 flex-col gap-6 p-4">
-        
-        {/* Daily Streak card */}
-        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "दैनिक स्ट्रीक" : isTelugu ? "దైనందిన స్ట్రీక్" : "Daily Streak"}</h2>
-          <p className="text-sm text-gray-600">{isHindi ? "रोज़ लॉगिन करके अपनी स्ट्रीक बनाए रखें।" : isTelugu ? "ప్రతి రోజు లాగిన్ అయి మీ స్ట్రీక్ కొనసాగించండి." : "Keep your streak alive by logging in daily."}</p>
-          <div className="mt-3 flex items-center justify-between">
-            <div className="text-3xl font-extrabold text-orange-500">{streak}</div>
-            <button
-              className="rounded-xl border-2 border-b-4 border-gray-200 bg-white px-4 py-2 text-sm font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
-
-              onClick={() => addToday()}
-            >
-              {isHindi ? "आज चिन्हित करें" : isTelugu ? "ఈ రోజు గుర్తించండి" : "Mark today"}
-            </button>
-          </div>
-        </article>
-
-        {/* Leaderboard (white card, shadow, hover lift) */}
-        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "लीडरबोर्ड" : isTelugu ? "లీడర్‌బోర్డ్" : "Leaderboard"}</h2>
-          {needsUnlock ? (
-            <div className="text-sm text-gray-600">
-              {isHindi
-                ? `लीडरबोर्ड अनलॉक करने के लिए ${lessonsRemainingToUnlockLeaderboard} और पाठ पूरे करें।`
-                : isTelugu
-                ? `లీడర్‌బోర్డ్‌ను అన్‌లాక్ చేయడానికి ఇంకో ${lessonsRemainingToUnlockLeaderboard} పాఠం(లు) పూర్తి చేయండి.`
-                : `Complete ${lessonsRemainingToUnlockLeaderboard} more lesson${lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock the leaderboard.`}
-            </div>
-          ) : (
-            <>
-              <p className="text-sm text-gray-600">
-                {isHindi
-                  ? <>आप आज <strong>#{userRank}</strong> रैंक पर हैं। इसी तरह आगे बढ़ते रहें!</>
-                  : isTelugu
-                  ? <>మీరు ఈ రోజు <strong>#{userRank}</strong> ర్యాంక్‌లో ఉన్నారు. అలాగే కొనసాగండి!</>
-                  : <>You’re ranked <strong>#{userRank}</strong> today. Keep going!</>}
-              </p>
-              <button
-                className="mt-2 rounded-xl border-2 border-b-4 border-gray-200 bg-white px-3 py-1 text-xs font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
-                onClick={goToLearn}
-              >
-                {isHindi ? "सीखने पर जाएँ" : isTelugu ? "నేర్చుకోవడానికి వెళ్ళండి" : "Go to Learn"}
-              </button>
-              <ul className="mt-4 flex flex-col gap-3">
-                {leaderboardData.map((user, i) => (
-                  <li
-                    key={`${user.name}-${i}`}
-                    className={`flex items-center justify-between rounded-lg p-3 shadow-sm ${
-                      user.name === "You" ? "bg-amber-100" : "bg-white"
-                    }`}
-                  >
-                    <span className="font-medium text-gray-700">
-                      {i + 1}. {user.name}
-                    </span>
-                    <span className="text-sm font-semibold text-gray-600">
-                      {user.xp} {isHindi ? "XP" : isTelugu ? "XP" : "XP"}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </article>
-
-        {/* Achievements (white card, shadow, hover lift) */}
-        <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-          <h2 className="mb-4 text-xl font-bold text-[#680B24]">{isHindi ? "उपलब्धियाँ और इनाम" : isTelugu ? "సాధనలు & బహుమతులు" : "Achievements & Rewards"}</h2>
-          <div className="flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
-              <TrophyIcon />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">
-                {isHindi ? "कुल अर्जित XP:" : isTelugu ? "మొత్తం సంపాదించిన XP:" : "Total XP earned:"} <span className="font-semibold text-gray-800">{totalXp}</span>
-              </p>
-              <p className="text-sm text-gray-600">
-                {isHindi ? "आज के लक्ष्य के लिए आवश्यक XP:" : isTelugu ? "ఈ రోజు లక్ష్యం కోసం కావాల్సిన XP:" : "XP needed for today’s goal:"} {" "}
-                <span className="font-semibold text-gray-800">{xpToReward}</span>
-              </p>
-            </div>
-          </div>
-          {/* golden animated progress bar */}
-          <div className="mt-4">
-            <div className="relative w-full h-4 rounded-full bg-gray-200 overflow-hidden">
-              <div
-                className="h-full rounded-full shiny-progress"
-                style={{
-                  width: `${progress}%`,
-                  background:
-                    "linear-gradient(90deg, #FFD24D 0%, #F6C84C 30%, #FFD24D 60%, #FFE685 100%)",
-                }}
-              />
-            </div>
-            <p className="mt-2 text-right text-sm font-semibold text-gray-600">
-              {Math.round(progress)}%
-            </p>
-          </div>
-          <div className="mt-6 flex items-center gap-4">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
-              <GiftIcon />
-            </div>
-            <p className="text-sm text-gray-600">
-              {isHindi ? "नई उपलब्धियाँ और पुरस्कार अनलॉक करने के लिए मेहनत जारी रखें!" : isTelugu ? "కొత్త సాధనలు మరియు బహుమతులను అన్‌లాక్ చేసేందుకు కృషి కొనసాగించండి!" : "Keep grinding to unlock new achievements and prizes!"}
-            </p>
-          </div>
-        </article>
+      <aside className="relative z-20 hidden w-96 flex-col gap-6 p-4 md:flex">
+        {sidebarContent}
       </aside>
+
+      {/* Mobile toggle button */}
+      <button
+        className="fixed bottom-24 right-4 z-40 rounded-full bg-[#680B24] p-4 text-white shadow-lg md:hidden btn-mobile relative"
+        onClick={() => setMobileOpen(true)}
+        aria-label="Open right panel"
+      >
+        {/* Simple plus/menu icon */}
+        <span className="block h-5 w-5">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg>
+        </span>
+        {/* Badge with streak */}
+        <span className="absolute -top-1 -right-1 min-w-[20px] h-[20px] rounded-full bg-amber-500 px-1.5 text-[11px] leading-[20px] font-bold text-white text-center">
+          {streak}
+        </span>
+      </button>
+
+      {/* Mobile drawer & overlay */}
+      <div
+        className={`fixed inset-0 z-30 bg-black/40 transition-opacity md:hidden ${mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
+        onClick={() => setMobileOpen(false)}
+        aria-hidden={!mobileOpen}
+      />
+      <div
+        className={`fixed inset-y-0 right-0 z-40 w-80 max-w-[85vw] transform bg-white shadow-2xl transition-transform duration-300 md:hidden ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Right panel"
+      >
+        <div className="flex items-center justify-between border-b px-4 py-3">
+          <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : "Options"}</h3>
+          <button
+            className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
+            onClick={() => setMobileOpen(false)}
+            aria-label="Close"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
+          {sidebarContent}
+        </div>
+      </div>
 
       {/* small login modal placeholder (kept simple) */}
       {showLogin && (

@@ -65,8 +65,8 @@ const AddLanguageSvg = (props: ComponentProps<"svg">) => {
 type MenuState = "HIDDEN" | "LANGUAGES" | "STREAK" | "GEMS" | "MORE";
 
 export const TopBar = ({
-  backgroundColor = "bg-[#58cc02]",
-  borderColor = "border-[#46a302]",
+  backgroundColor = "bg-[#680B24]",
+  borderColor = "border-[#4e071b]",
 }: {
   backgroundColor?: `bg-${string}`;
   borderColor?: `border-${string}`;
