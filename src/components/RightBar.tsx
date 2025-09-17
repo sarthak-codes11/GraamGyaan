@@ -310,34 +310,38 @@ export default function RightBar() {
       </button>
 
       {/* Mobile drawer & overlay */}
-      <div
-        className={`fixed inset-0 z-30 bg-black/40 transition-opacity md:hidden ${mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"}`}
-        onClick={() => setMobileOpen(false)}
-        aria-hidden={!mobileOpen}
-      />
-      <div
-        className={`fixed inset-y-0 right-0 z-40 w-80 max-w-[85vw] transform bg-white shadow-2xl transition-transform duration-300 md:hidden ${mobileOpen ? "translate-x-0" : "translate-x-full"}`}
-        role="dialog"
-        aria-modal="true"
-        aria-label="Right panel"
-      >
-        <div className="flex items-center justify-between border-b px-4 py-3">
-          <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : "Options"}</h3>
-          <button
-            className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
+      {mobileOpen && (
+        <>
+          <div
+            className="fixed inset-0 z-30 bg-black/40 transition-opacity md:hidden opacity-100"
             onClick={() => setMobileOpen(false)}
-            aria-label="Close"
+            aria-hidden={!mobileOpen}
+          />
+          <div
+            className="fixed inset-y-0 right-0 z-40 w-80 max-w-[85vw] transform bg-white shadow-2xl transition-transform duration-300 md:hidden translate-x-0"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Right panel"
           >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </div>
-        <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
-          {sidebarContent}
-        </div>
-      </div>
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : "Options"}</h3>
+              <button
+                className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
+                onClick={() => setMobileOpen(false)}
+                aria-label="Close"
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
+              </button>
+            </div>
+            <div className="flex h-full flex-col gap-6 overflow-y-auto p-4">
+              {sidebarContent}
+            </div>
+          </div>
+        </>
+      )}
 
       {/* small login modal placeholder (kept simple) */}
       {showLogin && (
