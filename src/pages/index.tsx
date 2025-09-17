@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
 
   return (
     <main
-      className="flex min-h-screen-safe flex-col items-center justify-center bg-[#235390] text-white px-4 py-8 safe-area-inset-top safe-area-inset-bottom"
+      className="flex min-h-screen-safe flex-col items-center justify-center bg-[#235390] text-white px-4 pt-10 pb-8 safe-area-inset-top safe-area-inset-bottom"
       style={{
         width: "100%",
         height: "100%",
@@ -60,10 +60,12 @@ const HomePage: React.FC = () => {
         style={{ color: "#0B3D0B" }}
       >
         {/* Logo */}
-        <GlobeSvg
-          className="block h-auto w-[90vw] sm:w-[80vw] md:w-[420px] max-w-[560px]"
-          style={{ stroke: "none" }}
-        />
+        <div className="w-full flex justify-center">
+          <GlobeSvg
+            className="block h-auto w-[85vw] xs:w-[80vw] sm:w-[70vw] md:w-[420px] max-w-[480px]"
+            style={{ stroke: "none" }}
+          />
+        </div>
 
         {/* Text + Buttons */}
         <div className="flex flex-col items-center max-w-full">

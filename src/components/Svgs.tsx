@@ -11,7 +11,7 @@ export const GlobeSvg = (props: ComponentProps<"svg">) => {
       y="0px"
       viewBox="0 0 800 1000"
       preserveAspectRatio="xMidYMid meet"
-      overflow="visible"
+      overflow="hidden"
       {...props}
     >
 <path fill="#013220" opacity="1.000000" stroke="none" 
