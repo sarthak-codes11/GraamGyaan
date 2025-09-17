@@ -45,7 +45,7 @@ const HomePage: React.FC = () => {
 
   return (
     <main
-      className="flex min-h-screen flex-col items-center justify-center bg-[#235390] text-white"
+      className="flex min-h-screen-safe flex-col items-center justify-center bg-[#235390] text-white px-4 py-8 safe-area-inset-top safe-area-inset-bottom"
       style={{
         width: "100%",
         height: "100%",
@@ -66,8 +66,8 @@ const HomePage: React.FC = () => {
         />
 
         {/* Text + Buttons */}
-        <div className="flex flex-col items-center">
-          <p className="mb-6 max-w-[600px] text-center text-4xl md:text-5xl font-extrabold tracking-wide md:mb-12 bg-gradient-to-r from-[#7B3F00] via-[#A0522D] to-[#D2B48C] bg-clip-text text-transparent drop-shadow-md">
+        <div className="flex flex-col items-center max-w-full">
+          <p className="mb-6 max-w-[600px] text-center text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-wide md:mb-12 bg-gradient-to-r from-[#7B3F00] via-[#A0522D] to-[#D2B48C] bg-clip-text text-transparent drop-shadow-md px-2">
             {t.welcome}
           </p>
 
@@ -79,17 +79,17 @@ const HomePage: React.FC = () => {
             {!showChoices && (
               <button
                 onClick={() => setShowChoices(true)}
-                className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 md:px-7 md:py-3.5 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200"
+                className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 xs:px-7 xs:py-3.5 md:px-8 md:py-4 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200 btn-mobile"
               >
-                <span className="text-sm md:text-base">Continue as</span>
+                <span className="text-sm xs:text-base md:text-lg">Continue as</span>
               </button>
             )}
 
             {/* Student + Teacher buttons (appear after clicking Continue as) */}
             {showChoices && (
-              <div className="flex items-center gap-4 md:gap-6 mt-4">
+              <div className="flex flex-col xs:flex-row items-center gap-3 xs:gap-4 md:gap-6 mt-4 w-full max-w-sm">
                 <button
-                  className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 md:px-7 md:py-3.5 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200"
+                  className="w-full xs:w-auto rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-gradient-to-br from-[#A0522D] to-[#7B3F00] px-6 py-3 xs:px-7 xs:py-3.5 md:px-8 md:py-4 text-white font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:brightness-110 hover:scale-[1.03] hover:border-[#5C4033] transition-transform duration-200 btn-mobile"
                   onClick={() => {
                     try {
                       if (typeof window !== "undefined") {
@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
                 </button>
 
                 <button
-                  className="rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-white px-6 py-3 md:px-7 md:py-3.5 text-[#7B3F00] font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:bg-[#F5E6D3] hover:scale-[1.03] transition-transform duration-200"
+                  className="w-full xs:w-auto rounded-3xl border-2 border-b-4 border-[#7B3F00] bg-white px-6 py-3 xs:px-7 xs:py-3.5 md:px-8 md:py-4 text-[#7B3F00] font-extrabold uppercase tracking-wide shadow-md hover:shadow-lg hover:bg-[#F5E6D3] hover:scale-[1.03] transition-transform duration-200 btn-mobile"
                   onClick={() => {
                     try {
                       if (typeof window !== "undefined") {

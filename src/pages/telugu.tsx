@@ -483,13 +483,7 @@ const Learn: NextPage = () => {
 
   return (
     <>
-      {/* EDIT 1 of 2: This style block forces the mobile sidebar to be visible */}
       <style jsx global>{`
-        @media (max-width: 1023px) {
-          #mobile-sidebar-container > div {
-            display: block !important;
-          }
-        }
         @keyframes gradientShift {
           0% {
             background-position: 0% 50%;
@@ -527,10 +521,7 @@ const Learn: NextPage = () => {
       <LeftBar selectedTab="Learn" />
       <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="flex max-w-2xl grow flex-col">
-          {/* EDIT 2 of 2: The mobile-only RightBar is here, with a special ID */}
-          <div id="mobile-sidebar-container" className="mb-8 block lg:hidden">
-            <RightBar />
-          </div>
+          {/* Mobile now uses the RightBar floating toggle; no inline RightBar here */}
 
           {units.map((unit) => (
             <UnitSection unit={unit} key={unit.unitNumber} />

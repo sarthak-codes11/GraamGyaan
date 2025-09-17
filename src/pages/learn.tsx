@@ -473,13 +473,7 @@ const Learn: NextPage = () => {
 
   return (
     <>
-      {/* EDIT 1 of 2: This style block forces the mobile sidebar to be visible */}
       <style jsx global>{`
-        @media (max-width: 1023px) {
-          #mobile-sidebar-container > div {
-            display: block !important;
-          }
-        }
         @keyframes gradientShift {
           0% {
             background-position: 0% 50%;
@@ -509,38 +503,33 @@ const Learn: NextPage = () => {
       </div>
       {/* ========== page content ========== */}
 
-      <div className="hidden md:block">
-        <TopBar
-          backgroundColor={topBarColors.backgroundColor}
-          borderColor={topBarColors.borderColor}
-        />
-      </div>
+      <TopBar
+        backgroundColor={topBarColors.backgroundColor}
+        borderColor={topBarColors.borderColor}
+      />
 
       <LeftBar selectedTab="Learn" />
 
-      <div className="flex justify-center gap-3 pt-14 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
-        <div className="flex max-w-2xl grow flex-col">
-          {/* EDIT 2 of 2: The mobile-only RightBar is here, with a special ID */}
-          <div id="mobile-sidebar-container" className="mb-8 block lg:hidden">
-            <RightBar />
-          </div>
+      <div className="flex justify-center gap-3 pt-14 px-2 xs:px-4 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
+        <div className="flex max-w-2xl grow flex-col w-full">
+          {/* Mobile now uses a floating toggle button within RightBar; no inline RightBar here */}
 
           {units.map((unit) => (
             <UnitSection unit={unit} key={unit.unitNumber} />
           ))}
 
-          <div className="sticky bottom-28 left-0 right-0 flex items-end justify-between">
+          <div className="sticky bottom-28 xs:bottom-32 left-0 right-0 flex items-end justify-between px-2">
             <Link
               href="/lesson?practice"
-              className="absolute left-4 flex h-16 w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:left-0"
+              className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 btn-mobile shadow-lg"
             >
               <span className="sr-only">Practice exercise</span>
-              <PracticeExerciseSvg className="h-8 w-8" />
+              <PracticeExerciseSvg className="h-6 w-6 xs:h-8 xs:w-8" />
             </Link>
 
             {scrollY > 100 && (
               <button
-                className="absolute right-4 flex h-14 w-14 items-center justify-center self-end rounded-2xl border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 md:right-0"
+                className="flex h-12 w-12 xs:h-14 xs:w-14 items-center justify-center self-end rounded-2xl border-2 border-b-4 border-gray-200 bg-white transition hover:bg-gray-50 hover:brightness-90 btn-mobile shadow-lg"
                 onClick={() => scrollTo(0, 0)}
               >
                 <span className="sr-only">Jump to top</span>

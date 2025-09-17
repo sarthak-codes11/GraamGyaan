@@ -65,8 +65,8 @@ const AddLanguageSvg = (props: ComponentProps<"svg">) => {
 type MenuState = "HIDDEN" | "LANGUAGES" | "STREAK" | "GEMS" | "MORE";
 
 export const TopBar = ({
-  backgroundColor = "bg-[#58cc02]",
-  borderColor = "border-[#46a302]",
+  backgroundColor = "bg-[#680B24]",
+  borderColor = "border-[#4e071b]",
 }: {
   backgroundColor?: `bg-${string}`;
   borderColor?: `border-${string}`;
@@ -76,10 +76,11 @@ export const TopBar = ({
   const streak = useBoundStore((x) => x.streak);
   const lingots = useBoundStore((x) => x.lingots);
   const language = useBoundStore((x) => x.language);
+  const toggleRightbarMobile = useBoundStore((x) => x.toggleRightbarMobile);
   return (
-    <header className="fixed z-20 h-[58px] w-full">
+    <header className="fixed z-20 h-[58px] w-full safe-area-inset-top">
       <div
-        className={`relative flex h-full w-full items-center justify-between border-b-2 px-[10px] transition duration-500 sm:hidden ${borderColor} ${backgroundColor}`}
+        className={`relative flex h-full w-full items-center justify-between border-b-2 px-3 xs:px-4 transition duration-500 sm:hidden ${borderColor} ${backgroundColor}`}
       >
         <button
           onClick={() =>
@@ -91,38 +92,38 @@ export const TopBar = ({
         </button>
 
         <button
-          className="flex items-center gap-2 font-bold text-white"
+          className="flex items-center gap-1 xs:gap-2 font-bold text-white btn-mobile"
           onClick={() => setMenu((x) => (x === "STREAK" ? "HIDDEN" : "STREAK"))}
           aria-label="Toggle streak menu"
         >
           {streak > 0 ? <FireSvg /> : <EmptyFireTopBarSvg />}{" "}
-          <span className={streak > 0 ? "text-white" : "text-black opacity-20"}>
+          <span className={`text-sm xs:text-base ${streak > 0 ? "text-white" : "text-black opacity-20"}`}>
             {streak}
           </span>
         </button>
         <button
-          className="flex items-center gap-2 font-bold"
+          className="flex items-center gap-1 xs:gap-2 font-bold btn-mobile"
           onClick={() => setMenu((x) => (x === "GEMS" ? "HIDDEN" : "GEMS"))}
           aria-label="Toggle lingot menu"
         >
           {lingots > 0 ? <GemSvg /> : <EmptyGemTopBarSvg />}{" "}
           <span
-            className={lingots > 0 ? "text-white" : "text-black opacity-20"}
+            className={`text-sm xs:text-base ${lingots > 0 ? "text-white" : "text-black opacity-20"}`}
           >
             {lingots}
           </span>
         </button>
         <MoreOptionsSvg
-          onClick={() => setMenu((x) => (x === "MORE" ? "HIDDEN" : "MORE"))}
+          onClick={() => toggleRightbarMobile()}
           role="button"
           tabIndex={0}
-          aria-label="Toggle more menu"
+          aria-label="Open right panel"
         />
 
         <div
           className={[
-            "absolute left-0 right-0 top-full bg-white transition duration-300",
-            menu === "HIDDEN" ? "opacity-0" : "opacity-100",
+            "absolute left-0 right-0 top-full bg-white transition-all duration-300 shadow-lg",
+            menu === "HIDDEN" ? "opacity-0 -translate-y-2 pointer-events-none" : "opacity-100 translate-y-0 slide-down",
           ].join(" ")}
           aria-hidden={menu === "HIDDEN"}
         >
