@@ -464,6 +464,10 @@ const Learn: NextPage = () => {
     typeof pickedLang === "string" && supported.has(pickedLang as Lang)
       ? (pickedLang as Lang)
       : "en";
+      
+  // Language detection for routing
+  const isHindi = router.pathname.startsWith("/hindi");
+  const isTelugu = router.pathname.startsWith("/telugu");
 
   const dailyFacts: Record<Lang, string[]> = {
     en: [
@@ -671,6 +675,13 @@ const Learn: NextPage = () => {
               >
                 <span className="sr-only">Practice exercise</span>
                 <PracticeExerciseSvg className="h-6 w-6 xs:h-8 xs:w-8" />
+              </Link>
+              <Link
+                href={isHindi ? "/hindi/purchased-courses" : isTelugu ? "/telugu/purchased-courses" : "/purchased-courses"}
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-purple-300 bg-purple-100 transition hover:bg-purple-200 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">My Purchased Courses</span>
+                <span aria-hidden className="text-2xl">📚</span>
               </Link>
             </div>
 
