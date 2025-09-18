@@ -163,12 +163,7 @@ export default function Chatbot({
 
   return (
     <div
-      className="fixed z-40"
-      style={{
-        right: "0.75rem",
-        bottom: `calc(0.75rem + env(safe-area-inset-bottom, 0px))`,
-        left: undefined,
-      }}
+      className="fixed z-40 right-3 bottom-[calc(7rem+env(safe-area-inset-bottom,0px))] sm:bottom-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
     >
       {open ? (
         <div className="mb-2 sm:mb-2 w-[calc(100vw-1.5rem)] sm:w-auto sm:max-w-none" style={{ maxWidth: "24rem" }}>
