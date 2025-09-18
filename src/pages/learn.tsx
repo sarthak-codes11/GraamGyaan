@@ -683,6 +683,13 @@ const Learn: NextPage = () => {
                 <span className="sr-only">My Purchased Courses</span>
                 <span aria-hidden className="text-2xl">📚</span>
               </Link>
+              <Link
+                href={isHindi ? "/hindi/daily-quiz" : isTelugu ? "/telugu/daily-quiz" : "/daily-quiz"}
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-orange-300 bg-orange-100 transition hover:bg-orange-200 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">Daily Quiz</span>
+                <span aria-hidden className="text-2xl">🧠</span>
+              </Link>
             </div>
 
             {scrollY > 100 && (

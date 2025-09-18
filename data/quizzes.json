@@ -1,0 +1,38 @@
+{
+  "quizzes": [
+    {
+      "id": "quiz_1758181449708",
+      "title": "hello",
+      "description": "",
+      "unitNumber": 1,
+      "questions": [
+        {
+          "id": "q1",
+          "question": "hello",
+          "options": [
+            "a",
+            "d",
+            "b",
+            "c"
+          ],
+          "correctAnswer": 0,
+          "explanation": "hiiii"
+        },
+        {
+          "id": "q2",
+          "question": "hello",
+          "options": [
+            "a",
+            "b",
+            "c",
+            "d"
+          ],
+          "correctAnswer": 0,
+          "explanation": "hiiii"
+        }
+      ],
+      "createdAt": "2025-09-18T07:44:09.708Z",
+      "isActive": true
+    }
+  ]
+}

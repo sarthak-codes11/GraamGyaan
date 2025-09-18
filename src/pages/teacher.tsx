@@ -84,6 +84,7 @@ const TeacherLanding: NextPage = () => {
   // ====== Upload state & effects ======
   const [notes, setNotes] = useState<UploadItem[]>([]);
   const [videos, setVideos] = useState<UploadItem[]>([]);
+  const [quizzes, setQuizzes] = useState<any[]>([]);
   const [noteFiles, setNoteFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [noteTitle, setNoteTitle] = useState("");
@@ -93,6 +94,24 @@ const TeacherLanding: NextPage = () => {
   const [noteUnitNumber, setNoteUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
   const [noteSuccess, setNoteSuccess] = useState<string | null>(null);
   const [videoSuccess, setVideoSuccess] = useState<string | null>(null);
+  
+  // Quiz state
+  const [quizTitle, setQuizTitle] = useState("");
+  const [quizDesc, setQuizDesc] = useState("");
+  const [quizUnitNumber, setQuizUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
+  const [quizSuccess, setQuizSuccess] = useState<string | null>(null);
+  const [showQuizForm, setShowQuizForm] = useState(false);
+  const [questions, setQuestions] = useState<{
+    question: string;
+    options: string[];
+    correctAnswer: number;
+    explanation: string;
+  }[]>([{
+    question: "",
+    options: ["", "", "", ""],
+    correctAnswer: 0,
+    explanation: ""
+  }]);
 
   const fetchNotes = async () => {
     const res = await fetch(`/api/manageUploads?type=note`);
@@ -104,10 +123,21 @@ const TeacherLanding: NextPage = () => {
     const data = await res.json();
     if (data?.items) setVideos(data.items as UploadItem[]);
   };
+  
+  const fetchQuizzes = async () => {
+    try {
+      const res = await fetch(`/api/quizzes`);
+      const data = await res.json();
+      if (data?.quizzes) setQuizzes(data.quizzes);
+    } catch (error) {
+      console.error('Failed to fetch quizzes:', error);
+    }
+  };
 
   useEffect(() => {
     void fetchNotes();
     void fetchVideos();
+    void fetchQuizzes();
   }, []);
 
   const uploadNote = async () => {
@@ -161,6 +191,137 @@ const TeacherLanding: NextPage = () => {
     });
     if (res.ok) {
       if (type === "note") void fetchNotes(); else void fetchVideos();
+    }
+  };
+
+  // Add new question
+  const addQuestion = () => {
+    setQuestions([...questions, {
+      question: "",
+      options: ["", "", "", ""],
+      correctAnswer: 0,
+      explanation: ""
+    }]);
+  };
+
+  // Remove question
+  const removeQuestion = (index: number) => {
+    if (questions.length > 1) {
+      setQuestions(questions.filter((_, i) => i !== index));
+    }
+  };
+
+  // Update question
+  const updateQuestion = (index: number, field: string, value: string | number) => {
+    const updatedQuestions = [...questions];
+    const currentQuestion = updatedQuestions[index];
+    if (!currentQuestion) return;
+    
+    if (field === 'question' || field === 'explanation') {
+      updatedQuestions[index] = { ...currentQuestion, [field]: value as string };
+    } else if (field === 'correctAnswer') {
+      updatedQuestions[index] = { ...currentQuestion, correctAnswer: value as number };
+    }
+    setQuestions(updatedQuestions);
+  };
+
+  // Update option
+  const updateOption = (questionIndex: number, optionIndex: number, value: string) => {
+    const updatedQuestions = [...questions];
+    const currentQuestion = updatedQuestions[questionIndex];
+    if (!currentQuestion) return;
+    
+    const newOptions = [...currentQuestion.options];
+    newOptions[optionIndex] = value;
+    updatedQuestions[questionIndex] = { ...currentQuestion, options: newOptions };
+    setQuestions(updatedQuestions);
+  };
+
+  // Create quiz with custom questions
+  const createQuiz = async () => {
+    if (!quizTitle.trim()) return;
+    
+    // Validate questions
+    const validQuestions = questions.filter(q => 
+      q.question.trim() && 
+      q.options.every(opt => opt.trim()) && 
+      q.explanation.trim()
+    );
+
+    if (validQuestions.length === 0) {
+      alert('Please add at least one complete question with all options and explanation.');
+      return;
+    }
+
+    const formattedQuestions = validQuestions.map((q, index) => ({
+      id: `q${index + 1}`,
+      question: q.question,
+      options: q.options,
+      correctAnswer: q.correctAnswer,
+      explanation: q.explanation
+    }));
+
+    const newQuiz = {
+      id: `quiz_${Date.now()}`,
+      title: quizTitle,
+      description: quizDesc,
+      unitNumber: quizUnitNumber,
+      questions: formattedQuestions,
+      createdAt: new Date().toISOString(),
+      isActive: true
+    };
+
+    try {
+      const res = await fetch('/api/quizzes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newQuiz)
+      });
+
+      if (res.ok) {
+        setQuizTitle("");
+        setQuizDesc("");
+        setQuestions([{
+          question: "",
+          options: ["", "", "", ""],
+          correctAnswer: 0,
+          explanation: ""
+        }]);
+        setShowQuizForm(false);
+        setQuizSuccess(`Quiz created successfully with ${formattedQuestions.length} questions!`);
+        setTimeout(() => setQuizSuccess(null), 3000);
+        void fetchQuizzes();
+      }
+    } catch (error) {
+      console.error('Failed to create quiz:', error);
+    }
+  };
+
+  const deleteQuiz = async (quizId: string) => {
+    try {
+      const res = await fetch(`/api/quizzes?id=${encodeURIComponent(quizId)}`, { 
+        method: 'DELETE' 
+      });
+      if (res.ok) {
+        void fetchQuizzes();
+      }
+    } catch (error) {
+      console.error('Failed to delete quiz:', error);
+    }
+  };
+
+  const toggleQuizActive = async (quizId: string, isActive: boolean) => {
+    try {
+      const res = await fetch('/api/quizzes', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: quizId, isActive })
+      });
+      if (res.ok) {
+        void fetchQuizzes();
+      }
+    } catch (error) {
+      console.error('Failed to update quiz:', error);
     }
   };
 
@@ -255,7 +416,7 @@ const TeacherLanding: NextPage = () => {
 
       {/* ====== Upload & Manage Section ====== */}
       <div className="mx-auto max-w-3xl p-6">
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+        <div className="mt-8 grid gap-6 lg:grid-cols-3 sm:grid-cols-2">
           {/* Upload Notes */}
           <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
             <h2 className="mb-3 text-xl font-bold">Upload Notes (PDF)</h2>
@@ -412,6 +573,206 @@ const TeacherLanding: NextPage = () => {
                   </li>
                 ))}
                 {videos.length === 0 && <li className="text-sm text-gray-500">No videos uploaded yet.</li>}
+              </ul>
+            </div>
+          </section>
+
+          {/* Quiz Management */}
+          <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
+            <h2 className="mb-3 text-xl font-bold">Quiz Management</h2>
+            
+            {!showQuizForm ? (
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => setShowQuizForm(true)}
+                  className="rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+                >
+                  Create New Quiz
+                </button>
+                {quizSuccess && (
+                  <div className="mt-2 rounded-lg bg-green-50 border border-green-200 text-green-800 px-3 py-2 text-sm">
+                    {quizSuccess}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <input
+                    type="text"
+                    placeholder="Quiz Title"
+                    value={quizTitle}
+                    onChange={(e) => setQuizTitle(e.target.value)}
+                    className="rounded-lg border p-2"
+                  />
+                  <textarea
+                    placeholder="Quiz Description"
+                    value={quizDesc}
+                    onChange={(e) => setQuizDesc(e.target.value)}
+                    className="rounded-lg border p-2"
+                    rows={2}
+                  />
+                  <div className="flex items-center gap-2">
+                    <label className="text-sm text-gray-700">Unit:</label>
+                    <select
+                      value={quizUnitNumber}
+                      onChange={(e) => setQuizUnitNumber(Number(e.target.value) || 1)}
+                      className="rounded-lg border p-2"
+                    >
+                      {units.map((u) => (
+                        <option key={u.unitNumber} value={u.unitNumber}>
+                          Unit {u.unitNumber}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
+                {/* Questions Section */}
+                <div className="border-t pt-4">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-lg font-semibold">Questions</h3>
+                    <button
+                      onClick={addQuestion}
+                      className="px-3 py-1 rounded-lg bg-blue-100 text-blue-700 text-sm hover:bg-blue-200"
+                    >
+                      Add Question
+                    </button>
+                  </div>
+
+                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                    {questions.map((question, qIndex) => (
+                      <div key={qIndex} className="border rounded-lg p-4 bg-gray-50">
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="font-medium text-gray-700">Question {qIndex + 1}</span>
+                          {questions.length > 1 && (
+                            <button
+                              onClick={() => removeQuestion(qIndex)}
+                              className="px-2 py-1 rounded text-sm bg-red-100 text-red-700 hover:bg-red-200"
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
+                        
+                        <div className="space-y-3">
+                          <textarea
+                            placeholder="Enter your question"
+                            value={question.question}
+                            onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
+                            className="w-full rounded-lg border p-2"
+                            rows={2}
+                          />
+                          
+                          <div className="grid grid-cols-2 gap-2">
+                            {question.options.map((option, oIndex) => (
+                              <div key={oIndex} className="flex items-center gap-2">
+                                <input
+                                  type="radio"
+                                  name={`correct-${qIndex}`}
+                                  checked={question.correctAnswer === oIndex}
+                                  onChange={() => updateQuestion(qIndex, 'correctAnswer', oIndex)}
+                                  className="text-green-600"
+                                />
+                                <input
+                                  type="text"
+                                  placeholder={`Option ${String.fromCharCode(65 + oIndex)}`}
+                                  value={option}
+                                  onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
+                                  className="flex-1 rounded-lg border p-2"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                          
+                          <textarea
+                            placeholder="Explanation for the correct answer"
+                            value={question.explanation}
+                            onChange={(e) => updateQuestion(qIndex, 'explanation', e.target.value)}
+                            className="w-full rounded-lg border p-2"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex gap-2 pt-4 border-t">
+                  <button
+                    onClick={createQuiz}
+                    className="flex-1 rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+                    disabled={!quizTitle.trim()}
+                  >
+                    Create Quiz
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowQuizForm(false);
+                      setQuizTitle("");
+                      setQuizDesc("");
+                      setQuestions([{
+                        question: "",
+                        options: ["", "", "", ""],
+                        correctAnswer: 0,
+                        explanation: ""
+                      }]);
+                    }}
+                    className="px-4 py-2 rounded-xl border-2 border-gray-300 text-gray-600 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {/* List existing quizzes */}
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Existing Quizzes</h3>
+              <ul className="flex flex-col gap-2">
+                {quizzes.map((quiz) => (
+                  <li key={quiz.id} className="rounded-lg border p-3">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="font-semibold text-[#7B3F00]">{quiz.title}</div>
+                        <div className="text-xs text-gray-500 mb-1">{quiz.description}</div>
+                        <div className="text-xs text-gray-400">
+                          Unit {quiz.unitNumber} • {quiz.questions?.length || 0} questions
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            quiz.isActive 
+                              ? 'bg-green-100 text-green-800' 
+                              : 'bg-gray-100 text-gray-600'
+                          }`}>
+                            {quiz.isActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col gap-1 ml-2">
+                        <button
+                          onClick={() => toggleQuizActive(quiz.id, !quiz.isActive)}
+                          className={`px-3 py-1 rounded-lg text-sm ${
+                            quiz.isActive 
+                              ? 'bg-yellow-100 text-yellow-700' 
+                              : 'bg-green-100 text-green-700'
+                          }`}
+                        >
+                          {quiz.isActive ? 'Deactivate' : 'Activate'}
+                        </button>
+                        <button
+                          onClick={() => deleteQuiz(quiz.id)}
+                          className="px-3 py-1 rounded-lg text-sm bg-red-100 text-red-700"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+                {quizzes.length === 0 && (
+                  <li className="text-sm text-gray-500">No quizzes created yet.</li>
+                )}
               </ul>
             </div>
           </section>
