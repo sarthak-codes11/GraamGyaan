@@ -1,7 +1,9 @@
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useBoundStore } from "~/hooks/useBoundStore";
+import { units } from "~/utils/units";
+import type { UploadItem } from "~/types/uploads";
 
 type Student = {
   id: string;
@@ -78,6 +80,89 @@ const TeacherLanding: NextPage = () => {
       .sort((a, b) => b.xp - a.xp)
       .slice(0, 10);
   }, [selectedClass]);
+
+  // ====== Upload state & effects ======
+  const [notes, setNotes] = useState<UploadItem[]>([]);
+  const [videos, setVideos] = useState<UploadItem[]>([]);
+  const [noteFiles, setNoteFiles] = useState<File[]>([]);
+  const [videoFiles, setVideoFiles] = useState<File[]>([]);
+  const [noteTitle, setNoteTitle] = useState("");
+  const [noteDesc, setNoteDesc] = useState("");
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDesc, setVideoDesc] = useState("");
+  const [noteUnitNumber, setNoteUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
+  const [noteSuccess, setNoteSuccess] = useState<string | null>(null);
+  const [videoSuccess, setVideoSuccess] = useState<string | null>(null);
+
+  const fetchNotes = async () => {
+    const res = await fetch(`/api/manageUploads?type=note`);
+    const data = await res.json();
+    if (data?.items) setNotes(data.items as UploadItem[]);
+  };
+  const fetchVideos = async () => {
+    const res = await fetch(`/api/manageUploads?type=video`);
+    const data = await res.json();
+    if (data?.items) setVideos(data.items as UploadItem[]);
+  };
+
+  useEffect(() => {
+    void fetchNotes();
+    void fetchVideos();
+  }, []);
+
+  const uploadNote = async () => {
+    if (!noteFiles.length) return;
+    const fd = new FormData();
+    // Append multiple files under the same field name 'file'
+    for (const f of noteFiles) fd.append("file", f);
+    fd.append("title", noteTitle || noteFiles[0]!.name);
+    if (noteDesc) fd.append("description", noteDesc);
+    fd.append("unitNumber", String(noteUnitNumber));
+    const res = await fetch("/api/uploadNotes", { method: "POST", body: fd });
+    if (res.ok) {
+      setNoteFiles([]);
+      setNoteTitle("");
+      setNoteDesc("");
+      setNoteSuccess(`Material uploaded successfully (${noteFiles.length}).`);
+      setTimeout(() => setNoteSuccess(null), 3000);
+      void fetchNotes();
+    }
+  };
+
+  const uploadVideo = async () => {
+    if (!videoFiles.length) return;
+    const fd = new FormData();
+    for (const f of videoFiles) fd.append("file", f);
+    fd.append("title", videoTitle || videoFiles[0]!.name);
+    if (videoDesc) fd.append("description", videoDesc);
+    const res = await fetch("/api/uploadVideos", { method: "POST", body: fd });
+    if (res.ok) {
+      setVideoFiles([]);
+      setVideoTitle("");
+      setVideoDesc("");
+      setVideoSuccess(`Video uploaded successfully (${videoFiles.length}).`);
+      setTimeout(() => setVideoSuccess(null), 3000);
+      void fetchVideos();
+    }
+  };
+
+  const deleteItem = async (id: string, type: "note" | "video") => {
+    const res = await fetch(`/api/manageUploads?type=${type}&id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (res.ok) {
+      if (type === "note") void fetchNotes(); else void fetchVideos();
+    }
+  };
+
+  const saveItem = async (id: string, type: "note" | "video", title: string, description?: string) => {
+    const res = await fetch(`/api/manageUploads?type=${type}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, title, description }),
+    });
+    if (res.ok) {
+      if (type === "note") void fetchNotes(); else void fetchVideos();
+    }
+  };
 
   return (
     <main className="min-h-screen bg-white">
@@ -166,6 +251,180 @@ const TeacherLanding: NextPage = () => {
             Back to Home
           </Link>
         </div>
+      </div>
+
+      {/* ====== Upload & Manage Section ====== */}
+      <div className="mx-auto max-w-3xl p-6">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+          {/* Upload Notes */}
+          <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
+            <h2 className="mb-3 text-xl font-bold">Upload Notes (PDF)</h2>
+            <div className="flex flex-col gap-2">
+              <input
+                type="text"
+                placeholder="Title"
+                value={noteTitle}
+                onChange={(e) => setNoteTitle(e.target.value)}
+                className="rounded-lg border p-2"
+              />
+              <textarea
+                placeholder="Description"
+                value={noteDesc}
+                onChange={(e) => setNoteDesc(e.target.value)}
+                className="rounded-lg border p-2"
+                rows={2}
+              />
+              <input
+                type="file"
+                accept="application/pdf"
+                multiple
+                onChange={(e) => setNoteFiles(e.target.files ? Array.from(e.target.files) : [])}
+                className="rounded-lg border p-2"
+              />
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-700">Unit:</label>
+                <select
+                  value={noteUnitNumber}
+                  onChange={(e) => setNoteUnitNumber(Number(e.target.value) || 1)}
+                  className="rounded-lg border p-2"
+                >
+                  {units.map((u) => (
+                    <option key={u.unitNumber} value={u.unitNumber}>
+                      Unit {u.unitNumber}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <button
+                onClick={uploadNote}
+                className="rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+                disabled={!noteFiles.length}
+              >
+                Submit
+              </button>
+              {noteSuccess && (
+                <div className="mt-2 rounded-lg bg-green-50 border border-green-200 text-green-800 px-3 py-2 text-sm">
+                  {noteSuccess}
+                </div>
+              )}
+            </div>
+            {/* List notes */}
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Existing Notes</h3>
+              <ul className="flex flex-col gap-2">
+                {notes.map((n) => (
+                  <li key={n.id} className="rounded-lg border p-3 flex items-center gap-2">
+                    <a href={n.relativePath} target="_blank" rel="noreferrer" className="text-[#7B3F00] font-semibold underline truncate">
+                      {n.title}
+                    </a>
+                    <span className="text-xs text-gray-500 ml-2 truncate">{n.description}</span>
+                    <div className="ml-auto flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const title = prompt("Edit title", n.title) ?? n.title;
+                          const description = prompt("Edit description", n.description ?? "") ?? n.description;
+                          void saveItem(n.id, "note", title, description ?? undefined);
+                        }}
+                        className="px-3 py-1 rounded-lg text-sm border"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => void deleteItem(n.id, "note")}
+                        className="px-3 py-1 rounded-lg text-sm bg-red-100 text-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+                {notes.length === 0 && <li className="text-sm text-gray-500">No notes uploaded yet.</li>}
+              </ul>
+            </div>
+          </section>
+
+          {/* Upload Videos */}
+          <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
+            <h2 className="mb-3 text-xl font-bold">Upload Videos</h2>
+            <div className="flex flex-col gap-2">
+              <input
+                type="text"
+                placeholder="Title"
+                value={videoTitle}
+                onChange={(e) => setVideoTitle(e.target.value)}
+                className="rounded-lg border p-2"
+              />
+              <textarea
+                placeholder="Description"
+                value={videoDesc}
+                onChange={(e) => setVideoDesc(e.target.value)}
+                className="rounded-lg border p-2"
+                rows={2}
+              />
+              <input
+                type="file"
+                accept="video/*"
+                multiple
+                onChange={(e) => setVideoFiles(e.target.files ? Array.from(e.target.files) : [])}
+                className="rounded-lg border p-2"
+              />
+              <button
+                onClick={uploadVideo}
+                className="rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+                disabled={!videoFiles.length}
+              >
+                Submit
+              </button>
+              {videoSuccess && (
+                <div className="mt-2 rounded-lg bg-green-50 border border-green-200 text-green-800 px-3 py-2 text-sm">
+                  {videoSuccess}
+                </div>
+              )}
+            </div>
+            {/* List videos */}
+            <div className="mt-4">
+              <h3 className="font-semibold mb-2">Existing Videos</h3>
+              <ul className="flex flex-col gap-2">
+                {videos.map((v) => (
+                  <li key={v.id} className="rounded-lg border p-3 flex items-center gap-2">
+                    <a href={v.relativePath} target="_blank" rel="noreferrer" className="text-[#7B3F00] font-semibold underline truncate">
+                      {v.title}
+                    </a>
+                    <span className="text-xs text-gray-500 ml-2 truncate">{v.description}</span>
+                    <div className="ml-auto flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const title = prompt("Edit title", v.title) ?? v.title;
+                          const description = prompt("Edit description", v.description ?? "") ?? v.description;
+                          void saveItem(v.id, "video", title, description ?? undefined);
+                        }}
+                        className="px-3 py-1 rounded-lg text-sm border"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => void deleteItem(v.id, "video")}
+                        className="px-3 py-1 rounded-lg text-sm bg-red-100 text-red-700"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </li>
+                ))}
+                {videos.length === 0 && <li className="text-sm text-gray-500">No videos uploaded yet.</li>}
+              </ul>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div className="mt-8">
+        <Link
+          href="/"
+          className="inline-block rounded-2xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-6 py-2 font-bold uppercase text-white transition hover:bg-[#5C4033] hover:border-[#5C4033]"
+        >
+          Back to Home
+        </Link>
       </div>
     </main>
   );

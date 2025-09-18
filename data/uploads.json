@@ -1,0 +1,25 @@
+{
+  "notes": [
+    {
+      "id": "1758177185262-0",
+      "type": "note",
+      "title": "unit 1 ",
+      "description": "notes uploaded",
+      "fileName": "1758177185257-0-FALL2025-26_MAT1003_TH_AP2025262000364_2025-08-30_Reference-Material-I.pdf",
+      "relativePath": "/uploads/notes/1758177185257-0-FALL2025-26_MAT1003_TH_AP2025262000364_2025-08-30_Reference-Material-I.pdf",
+      "uploadedAt": "2025-09-18T06:33:05.262Z",
+      "unitNumber": 1
+    }
+  ],
+  "videos": [
+    {
+      "id": "1758176497766",
+      "type": "video",
+      "title": "unit 1 ref vedio",
+      "description": "lab 1 vedio\r\n",
+      "fileName": "1758176497749-IMG_7155.MOV",
+      "relativePath": "/uploads/videos/1758176497749-IMG_7155.MOV",
+      "uploadedAt": "2025-09-18T06:21:37.766Z"
+    }
+  ]
+}

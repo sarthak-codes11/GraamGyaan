@@ -37,6 +37,7 @@ import LoginScreen, { useLoginScreen } from "~/components/LoginScreen";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import type { Tile, TileType, Unit } from "~/utils/units";
 import { units } from "~/utils/units";
+import type { UploadItem } from "~/types/uploads";
 
 type TileStatus = "LOCKED" | "ACTIVE" | "COMPLETE";
 
@@ -551,6 +552,19 @@ const Learn: NextPage = () => {
   }, []);
   const topBarColors = getTopBarColors(scrollY);
 
+  // ===== Uploaded Notes (Guidebook) =====
+  const [notes, setNotes] = useState<UploadItem[]>([]);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/manageUploads?type=note");
+        const data = await res.json();
+        if (data?.items) setNotes(data.items as UploadItem[]);
+      } catch {}
+    };
+    void load();
+  }, []);
+
   return (
     <>
       <style jsx global>{`
@@ -616,6 +630,31 @@ const Learn: NextPage = () => {
           {units.map((unit) => (
             <UnitSection unit={unit} key={unit.unitNumber} />
           ))}
+
+          {/* Guidebook: Uploaded Notes */}
+          <section className="mt-8 rounded-2xl border-2 border-gray-200 bg-white p-5">
+            <h2 className="mb-3 text-xl font-bold text-[#5C4033]">Guidebook</h2>
+            <ul className="flex flex-col gap-2">
+              {notes.map((n) => (
+                <li key={n.id} className="flex items-center gap-2">
+                  <a
+                    href={n.relativePath}
+                    className="text-[#7B3F00] font-semibold underline truncate"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {n.title}
+                  </a>
+                  {n.description && (
+                    <span className="text-xs text-gray-500 ml-2 truncate">{n.description}</span>
+                  )}
+                </li>
+              ))}
+              {notes.length === 0 && (
+                <li className="text-sm text-gray-500">No notes uploaded yet.</li>
+              )}
+            </ul>
+          </section>
 
           <div className="sticky bottom-28 xs:bottom-32 left-0 right-0 flex items-end justify-between px-2">
             <div className="flex flex-col items-center gap-2">
@@ -740,6 +779,41 @@ const UnitHeader = ({
   backgroundColor: `bg-${string}`;
   borderColor: `border-${string}`;
 }) => {
+  const [latestNoteUrl, setLatestNoteUrl] = useState<string | null>(null);
+  const [latestNoteTitle, setLatestNoteTitle] = useState<string>("Class notes");
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/manageUploads?type=note");
+        const data = await res.json();
+        if (!mounted) return;
+        type NoteLite = { relativePath: string; title?: string; uploadedAt?: string; unitNumber?: number };
+        const items = (data?.items ?? []) as NoteLite[];
+        if (items.length > 0) {
+          // Prefer notes that match this unit number
+          const forUnit = items.filter((it) => (it.unitNumber ?? -1) === unitNumber);
+          const pool = forUnit.length > 0 ? forUnit : items;
+          const sorted = pool
+            .slice()
+            .sort((a, b) => new Date(b.uploadedAt ?? 0).getTime() - new Date(a.uploadedAt ?? 0).getTime());
+          const latestItem = sorted[0]!;
+          setLatestNoteUrl(latestItem.relativePath);
+          setLatestNoteTitle(latestItem.title || "Class notes");
+        } else {
+          setLatestNoteUrl(null);
+        }
+      } catch {
+        setLatestNoteUrl(null);
+      }
+    };
+    void load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <article
       className={["max-w-2xl text-white sm:rounded-xl", backgroundColor].join(
@@ -752,20 +826,22 @@ const UnitHeader = ({
           <p className="text-lg">{description}</p>
         </div>
 
-        {/* ✅ Changed from div → a, added href+download */}
-        <a
-          href="/notes/sorting-materials-into-groups.docx"
-          download
-          className={[
-            "flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100",
-            borderColor,
-          ].join(" ")}
-        >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            class notes
-          </span>
-        </a>
+        {latestNoteUrl && (
+          <a
+            href={latestNoteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={[
+              "flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100",
+              borderColor,
+            ].join(" ")}
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              {latestNoteTitle}
+            </span>
+          </a>
+        )}
       </header>
     </article>
   );
