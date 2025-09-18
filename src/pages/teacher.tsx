@@ -51,10 +51,6 @@ const TeacherLanding: NextPage = () => {
         { id: "s-2", name: "Sita Devi", xp: 220, modulesCompleted: 6, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 88 }, { assignmentId: "a-2", status: "Submitted", score: 94 } ] },
         { id: "s-3", name: "Raju Kumar", xp: 140, modulesCompleted: 4, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 76 }, { assignmentId: "a-2", status: "Pending", score: null } ] },
         { id: "s-4", name: "Lakshmi", xp: 90, modulesCompleted: 3, submissions: [ { assignmentId: "a-1", status: "Pending", score: null }, { assignmentId: "a-2", status: "Pending", score: null } ] },
-        { id: "s-8", name: "Arjun Singh", xp: 160, modulesCompleted: 5, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 84 } ] },
-        { id: "s-9", name: "Meera Nair", xp: 200, modulesCompleted: 6, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 91 } ] },
-        { id: "s-10", name: "Karan Patel", xp: 115, modulesCompleted: 3, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 72 } ] },
-        { id: "s-11", name: "Priya Sharma", xp: 245, modulesCompleted: 7, submissions: [ { assignmentId: "a-1", status: "Submitted", score: 96 } ] },
       ],
     };
     const classB: ClassRoom = {
@@ -66,9 +62,6 @@ const TeacherLanding: NextPage = () => {
         { id: "s-5", name: "Pooja", xp: 255, modulesCompleted: 7, submissions: [ { assignmentId: "a-3", status: "Submitted", score: 96 } ] },
         { id: "s-6", name: "Vikram", xp: 130, modulesCompleted: 4, submissions: [ { assignmentId: "a-3", status: "Pending", score: null } ] },
         { id: "s-7", name: "Asha", xp: 180, modulesCompleted: 5, submissions: [ { assignmentId: "a-3", status: "Submitted", score: 81 } ] },
-        { id: "s-12", name: "Rohit Verma", xp: 175, modulesCompleted: 5, submissions: [ { assignmentId: "a-3", status: "Submitted", score: 89 } ] },
-        { id: "s-13", name: "Sneha Rao", xp: 210, modulesCompleted: 6, submissions: [ { assignmentId: "a-3", status: "Submitted", score: 93 } ] },
-        { id: "s-14", name: "Imran Khan", xp: 95, modulesCompleted: 2, submissions: [ { assignmentId: "a-3", status: "Pending", score: null } ] },
       ],
     };
     const assignments: Assignment[] = [
@@ -91,7 +84,6 @@ const TeacherLanding: NextPage = () => {
   // ====== Upload state & effects ======
   const [notes, setNotes] = useState<UploadItem[]>([]);
   const [videos, setVideos] = useState<UploadItem[]>([]);
-  const [quizzes, setQuizzes] = useState<any[]>([]);
   const [noteFiles, setNoteFiles] = useState<File[]>([]);
   const [videoFiles, setVideoFiles] = useState<File[]>([]);
   const [noteTitle, setNoteTitle] = useState("");
@@ -101,24 +93,6 @@ const TeacherLanding: NextPage = () => {
   const [noteUnitNumber, setNoteUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
   const [noteSuccess, setNoteSuccess] = useState<string | null>(null);
   const [videoSuccess, setVideoSuccess] = useState<string | null>(null);
-  
-  // Quiz state
-  const [quizTitle, setQuizTitle] = useState("");
-  const [quizDesc, setQuizDesc] = useState("");
-  const [quizUnitNumber, setQuizUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
-  const [quizSuccess, setQuizSuccess] = useState<string | null>(null);
-  const [showQuizForm, setShowQuizForm] = useState(false);
-  const [questions, setQuestions] = useState<{
-    question: string;
-    options: string[];
-    correctAnswer: number;
-    explanation: string;
-  }[]>([{
-    question: "",
-    options: ["", "", "", ""],
-    correctAnswer: 0,
-    explanation: ""
-  }]);
 
   const fetchNotes = async () => {
     const res = await fetch(`/api/manageUploads?type=note`);
@@ -130,21 +104,10 @@ const TeacherLanding: NextPage = () => {
     const data = await res.json();
     if (data?.items) setVideos(data.items as UploadItem[]);
   };
-  
-  const fetchQuizzes = async () => {
-    try {
-      const res = await fetch(`/api/quizzes`);
-      const data = await res.json();
-      if (data?.quizzes) setQuizzes(data.quizzes);
-    } catch (error) {
-      console.error('Failed to fetch quizzes:', error);
-    }
-  };
 
   useEffect(() => {
     void fetchNotes();
     void fetchVideos();
-    void fetchQuizzes();
   }, []);
 
   const uploadNote = async () => {
@@ -199,6 +162,135 @@ const TeacherLanding: NextPage = () => {
     if (res.ok) {
       if (type === "note") void fetchNotes(); else void fetchVideos();
     }
+  };
+
+  // ====== Quizzes (Daily Quiz) State & API ======
+  type MCQ = { question: string; options: string[]; correctIndex: number };
+  type Quiz = { id: string; title: string; unitNumber?: number; questions: MCQ[]; createdAt: string };
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [quizTitle, setQuizTitle] = useState("");
+  const [quizUnitNumber, setQuizUnitNumber] = useState<number>(units[0]?.unitNumber ?? 1);
+  const [quizQuestions, setQuizQuestions] = useState<MCQ[]>([
+    { question: "", options: ["", "", "", ""], correctIndex: 0 },
+  ]);
+
+  const fetchQuizzes = async () => {
+    const res = await fetch("/api/manageQuizzes");
+    const data = await res.json();
+    if (data?.quizzes) setQuizzes(data.quizzes as Quiz[]);
+  };
+
+  useEffect(() => {
+    void fetchQuizzes();
+  }, []);
+
+  const addQuizQuestion = () => {
+    setQuizQuestions((prev) => [...prev, { question: "", options: ["", "", "", ""], correctIndex: 0 }]);
+  };
+  const removeQuizQuestion = (idx: number) => {
+    setQuizQuestions((prev) => prev.filter((_, i) => i !== idx));
+  };
+  const updateQuestionField = (idx: number, field: "question" | "correctIndex", value: string | number) => {
+    setQuizQuestions((prev) => prev.map((q, i) => (i === idx ? { ...q, [field]: value } : q)));
+  };
+  const updateOptionField = (qIdx: number, optIdx: number, value: string) => {
+    setQuizQuestions((prev) =>
+      prev.map((q, i) => {
+        if (i !== qIdx) return q;
+        const opts = q.options.slice();
+        opts[optIdx] = value;
+        return { ...q, options: opts };
+      })
+    );
+  };
+  const submitQuiz = async () => {
+    const payload = {
+      title: quizTitle || `Quiz ${new Date().toLocaleDateString()}`,
+      unitNumber: quizUnitNumber,
+      questions: quizQuestions,
+    };
+    const res = await fetch("/api/manageQuizzes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (res.ok) {
+      // Also publish to the student-facing quizzes API with expected schema
+      try {
+        const now = new Date();
+        const studentQuiz = {
+          id: `${now.getTime()}`,
+          title: payload.title,
+          description: "Daily quiz created by teacher",
+          unitNumber: payload.unitNumber,
+          questions: payload.questions.map((q, idx) => ({
+            id: `${now.getTime()}-${idx}`,
+            question: q.question,
+            options: q.options,
+            correctAnswer: typeof q.correctIndex === "number" ? q.correctIndex : 0,
+            explanation: "",
+          })),
+          createdAt: now.toISOString(),
+          isActive: true,
+        };
+        await fetch("/api/quizzes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(studentQuiz),
+        });
+      } catch {}
+      setQuizTitle("");
+      setQuizUnitNumber(units[0]?.unitNumber ?? 1);
+      setQuizQuestions([{ question: "", options: ["", "", "", ""], correctIndex: 0 }]);
+      void fetchQuizzes();
+    }
+  };
+  const deleteQuizById = async (id: string) => {
+    const res = await fetch(`/api/manageQuizzes?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+    if (res.ok) void fetchQuizzes();
+  };
+  const renameQuiz = async (id: string, current: string) => {
+    const title = prompt("Edit quiz title", current) ?? current;
+    const res = await fetch("/api/manageQuizzes", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, title }),
+    });
+    if (res.ok) void fetchQuizzes();
+  };
+
+  // Publish a manageQuizzes quiz to the student-facing /api/quizzes store
+  const publishQuizToStudents = async (q: Quiz) => {
+    const now = new Date();
+    const studentQuiz = {
+      id: q.id, // reuse id for idempotency
+      title: q.title,
+      description: "Daily quiz published by teacher",
+      unitNumber: q.unitNumber ?? (units[0]?.unitNumber ?? 1),
+      questions: q.questions.map((qq, idx) => ({
+        id: `${q.id}-${idx}`,
+        question: qq.question,
+        options: qq.options,
+        correctAnswer: typeof qq.correctIndex === "number" ? qq.correctIndex : 0,
+        explanation: "",
+      })),
+      createdAt: now.toISOString(),
+      isActive: true,
+    };
+    await fetch("/api/quizzes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(studentQuiz),
+    });
+    alert("Published to students. Open Daily Quiz to view.");
+  };
+
+  const setQuizActive = async (id: string, isActive: boolean) => {
+    await fetch("/api/quizzes", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, isActive }),
+    });
   };
 
   return (
@@ -326,14 +418,7 @@ const TeacherLanding: NextPage = () => {
               <h2 className="mb-3 text-xl font-bold">{selectedClass.name} · Students</h2>
               <div className="flex flex-col gap-2">
                 {selectedClass.students.map((s) => (
-                  <div
-                    key={s.id}
-                    className="flex items-center justify-between rounded-xl border-2 border-gray-200 p-3 hover:bg-emerald-50/60 cursor-pointer"
-                    onClick={() => setModalStudent(s)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyDown={(e) => { if (e.key === 'Enter') setModalStudent(s); }}
-                  >
+                  <div key={s.id} className="flex items-center justify-between rounded-xl border-2 border-gray-200 p-3">
                     <div>
                       <div className="font-bold">{s.name}</div>
                       <div className="text-sm text-gray-600">Modules: {s.modulesCompleted} · XP: {s.xp}</div>
@@ -368,8 +453,8 @@ const TeacherLanding: NextPage = () => {
       </div>
 
       {/* ====== Upload & Manage Section ====== */}
-      <div className="mx-auto max-w-3xl p-6">
-        <div className="mt-8 grid gap-6 sm:grid-cols-2">
+      <div className="mx-auto max-w-6xl p-6">
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {/* Upload Notes */}
           <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
             <h2 className="mb-3 text-xl font-bold">Upload Notes (PDF)</h2>
@@ -530,202 +615,106 @@ const TeacherLanding: NextPage = () => {
             </div>
           </section>
 
-          {/* Quiz Management */}
+          {/* Daily Quiz (MCQ) */}
           <section className="rounded-2xl border-2 border-gray-200 bg-white p-5">
-            <h2 className="mb-3 text-xl font-bold">Quiz Management</h2>
-            
-            {!showQuizForm ? (
-              <div className="flex flex-col gap-2">
-                <button
-                  onClick={() => setShowQuizForm(true)}
-                  className="rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+            <h2 className="mb-3 text-xl font-bold">Daily Quiz (MCQ)</h2>
+            <div className="flex flex-col gap-2">
+              <input
+                type="text"
+                placeholder="Quiz Title"
+                value={quizTitle}
+                onChange={(e) => setQuizTitle(e.target.value)}
+                className="rounded-lg border p-2"
+              />
+              <div className="flex items-center gap-2">
+                <label className="text-sm text-gray-700">Unit:</label>
+                <select
+                  value={quizUnitNumber}
+                  onChange={(e) => setQuizUnitNumber(Number(e.target.value) || 1)}
+                  className="rounded-lg border p-2"
                 >
-                  Create New Quiz
-                </button>
-                {quizSuccess && (
-                  <div className="mt-2 rounded-lg bg-green-50 border border-green-200 text-green-800 px-3 py-2 text-sm">
-                    {quizSuccess}
-                  </div>
-                )}
+                  {units.map((u) => (
+                    <option key={u.unitNumber} value={u.unitNumber}>
+                      Unit {u.unitNumber}
+                    </option>
+                  ))}
+                </select>
               </div>
-            ) : (
+              {/* Questions */}
               <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                  <input
-                    type="text"
-                    placeholder="Quiz Title"
-                    value={quizTitle}
-                    onChange={(e) => setQuizTitle(e.target.value)}
-                    className="rounded-lg border p-2"
-                  />
-                  <textarea
-                    placeholder="Quiz Description"
-                    value={quizDesc}
-                    onChange={(e) => setQuizDesc(e.target.value)}
-                    className="rounded-lg border p-2"
-                    rows={2}
-                  />
-                  <div className="flex items-center gap-2">
-                    <label className="text-sm text-gray-700">Unit:</label>
-                    <select
-                      value={quizUnitNumber}
-                      onChange={(e) => setQuizUnitNumber(Number(e.target.value) || 1)}
-                      className="rounded-lg border p-2"
-                    >
-                      {units.map((u) => (
-                        <option key={u.unitNumber} value={u.unitNumber}>
-                          Unit {u.unitNumber}
-                        </option>
+                {quizQuestions.map((q, qIdx) => (
+                  <div key={qIdx} className="rounded-lg border p-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold">Question {qIdx + 1}</h4>
+                      <button onClick={() => removeQuizQuestion(qIdx)} className="text-xs text-red-600">Remove</button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Enter question"
+                      value={q.question}
+                      onChange={(e) => updateQuestionField(qIdx, "question", e.target.value)}
+                      className="mt-2 w-full rounded-lg border p-2"
+                    />
+                    <div className="mt-2 grid grid-cols-1 gap-2">
+                      {q.options.map((opt, oIdx) => (
+                        <div key={oIdx} className="flex items-center gap-2">
+                          <label className="text-xs text-gray-600 w-14">Option {oIdx + 1}</label>
+                          <input
+                            type="text"
+                            value={opt}
+                            onChange={(e) => updateOptionField(qIdx, oIdx, e.target.value)}
+                            className="flex-1 rounded-lg border p-2"
+                          />
+                        </div>
                       ))}
-                    </select>
+                    </div>
+                    <div className="mt-2 flex items-center gap-2">
+                      <label className="text-sm text-gray-700">Correct:</label>
+                      <select
+                        value={q.correctIndex}
+                        onChange={(e) => updateQuestionField(qIdx, "correctIndex", Number(e.target.value))}
+                        className="rounded-lg border p-2"
+                      >
+                        {q.options.map((_, i) => (
+                          <option key={i} value={i}>Option {i + 1}</option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
-                </div>
-
-                {/* Questions Section */}
-                <div className="border-t pt-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-semibold">Questions</h3>
-                    <button
-                      onClick={addQuestion}
-                      className="px-3 py-1 rounded-lg bg-blue-100 text-blue-700 text-sm hover:bg-blue-200"
-                    >
-                      Add Question
-                    </button>
-                  </div>
-
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
-                    {questions.map((question, qIndex) => (
-                      <div key={qIndex} className="border rounded-lg p-4 bg-gray-50">
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="font-medium text-gray-700">Question {qIndex + 1}</span>
-                          {questions.length > 1 && (
-                            <button
-                              onClick={() => removeQuestion(qIndex)}
-                              className="px-2 py-1 rounded text-sm bg-red-100 text-red-700 hover:bg-red-200"
-                            >
-                              Remove
-                            </button>
-                          )}
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <textarea
-                            placeholder="Enter your question"
-                            value={question.question}
-                            onChange={(e) => updateQuestion(qIndex, 'question', e.target.value)}
-                            className="w-full rounded-lg border p-2"
-                            rows={2}
-                          />
-                          
-                          <div className="grid grid-cols-2 gap-2">
-                            {question.options.map((option, oIndex) => (
-                              <div key={oIndex} className="flex items-center gap-2">
-                                <input
-                                  type="radio"
-                                  name={`correct-${qIndex}`}
-                                  checked={question.correctAnswer === oIndex}
-                                  onChange={() => updateQuestion(qIndex, 'correctAnswer', oIndex)}
-                                  className="text-green-600"
-                                />
-                                <input
-                                  type="text"
-                                  placeholder={`Option ${String.fromCharCode(65 + oIndex)}`}
-                                  value={option}
-                                  onChange={(e) => updateOption(qIndex, oIndex, e.target.value)}
-                                  className="flex-1 rounded-lg border p-2"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                          
-                          <textarea
-                            placeholder="Explanation for the correct answer"
-                            value={question.explanation}
-                            onChange={(e) => updateQuestion(qIndex, 'explanation', e.target.value)}
-                            className="w-full rounded-lg border p-2"
-                            rows={2}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-4 border-t">
-                  <button
-                    onClick={createQuiz}
-                    className="flex-1 rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
-                    disabled={!quizTitle.trim()}
-                  >
-                    Create Quiz
-                  </button>
-                  <button
-                    onClick={() => {
-                      setShowQuizForm(false);
-                      setQuizTitle("");
-                      setQuizDesc("");
-                      setQuestions([{
-                        question: "",
-                        options: ["", "", "", ""],
-                        correctAnswer: 0,
-                        explanation: ""
-                      }]);
-                    }}
-                    className="px-4 py-2 rounded-xl border-2 border-gray-300 text-gray-600 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                </div>
+                ))}
+                <button onClick={addQuizQuestion} className="rounded-lg border px-3 py-2 text-sm hover:bg-gray-50">
+                  + Add Question
+                </button>
               </div>
-            )}
-            
-            {/* List existing quizzes */}
+              <button
+                onClick={submitQuiz}
+                className="rounded-xl border-2 border-b-4 border-[#7B3F00] bg-[#7B3F00] px-4 py-2 font-bold text-white hover:bg-[#5C4033]"
+              >
+                Create Quiz
+              </button>
+            </div>
+            {/* Quiz List */}
             <div className="mt-4">
               <h3 className="font-semibold mb-2">Existing Quizzes</h3>
               <ul className="flex flex-col gap-2">
-                {quizzes.map((quiz) => (
-                  <li key={quiz.id} className="rounded-lg border p-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <div className="font-semibold text-[#7B3F00]">{quiz.title}</div>
-                        <div className="text-xs text-gray-500 mb-1">{quiz.description}</div>
-                        <div className="text-xs text-gray-400">
-                          Unit {quiz.unitNumber} • {quiz.questions?.length || 0} questions
-                        </div>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            quiz.isActive 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-gray-100 text-gray-600'
-                          }`}>
-                            {quiz.isActive ? 'Active' : 'Inactive'}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-1 ml-2">
-                        <button
-                          onClick={() => toggleQuizActive(quiz.id, !quiz.isActive)}
-                          className={`px-3 py-1 rounded-lg text-sm ${
-                            quiz.isActive 
-                              ? 'bg-yellow-100 text-yellow-700' 
-                              : 'bg-green-100 text-green-700'
-                          }`}
-                        >
-                          {quiz.isActive ? 'Deactivate' : 'Activate'}
-                        </button>
-                        <button
-                          onClick={() => deleteQuiz(quiz.id)}
-                          className="px-3 py-1 rounded-lg text-sm bg-red-100 text-red-700"
-                        >
-                          Delete
-                        </button>
-                      </div>
+                {quizzes.map((q) => (
+                  <li key={q.id} className="rounded-lg border p-3">
+                    <div className="flex items-center gap-2">
+                      <div className="rounded-md bg-emerald-600 px-2 py-1 text-xs text-white">QUIZ</div>
+                      <div className="font-semibold truncate">{q.title}</div>
+                      <div className="ml-auto text-xs text-gray-500">{q.unitNumber ? `Unit ${q.unitNumber}` : ""}</div>
+                    </div>
+                    <div className="mt-2 text-xs text-gray-600">{q.questions.length} questions</div>
+                    <div className="mt-2 flex gap-2 flex-wrap">
+                      <button onClick={() => renameQuiz(q.id, q.title)} className="rounded border px-2 py-1 text-xs">Edit Title</button>
+                      <button onClick={() => deleteQuizById(q.id)} className="rounded bg-red-50 px-2 py-1 text-xs text-red-700 border border-red-200">Delete</button>
+                      <button onClick={() => publishQuizToStudents(q)} className="rounded bg-purple-600 px-2 py-1 text-xs text-white">Publish to Students</button>
+                      <button onClick={() => setQuizActive(q.id, true)} className="rounded border px-2 py-1 text-xs">Set Active</button>
+                      <button onClick={() => setQuizActive(q.id, false)} className="rounded border px-2 py-1 text-xs">Set Inactive</button>
                     </div>
                   </li>
                 ))}
-                {quizzes.length === 0 && (
-                  <li className="text-sm text-gray-500">No quizzes created yet.</li>
-                )}
+                {quizzes.length === 0 && <li className="text-sm text-gray-500">No quizzes created yet.</li>}
               </ul>
             </div>
           </section>
@@ -740,61 +729,11 @@ const TeacherLanding: NextPage = () => {
           Back to Home
         </Link>
       </div>
-
-      {/* Student Detail Modal */}
-      {modalStudent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => setModalStudent(null)}>
-          <div
-            className="w-full max-w-md rounded-2xl border-2 border-emerald-200 bg-white p-6 shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-3">
-              <div className="grid h-12 w-12 place-items-center rounded-full bg-emerald-600 text-white text-lg font-bold">
-                {modalStudent.name.split(' ').map(n => n[0]).join('').slice(0,2)}
-              </div>
-              <div className="flex flex-col">
-                <div className="text-lg font-extrabold text-emerald-900">{modalStudent.name}</div>
-                <div className="text-xs text-emerald-700/80">Class {selectedClass?.name} · Science</div>
-              </div>
-              <button className="ml-auto text-gray-500 hover:text-gray-700" onClick={() => setModalStudent(null)}>✕</button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
-                <div className="text-xs text-gray-500">Accuracy</div>
-                <div className="text-xl font-bold text-gray-800">{getAccuracy(modalStudent)}%</div>
-              </div>
-              <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
-                <div className="text-xs text-gray-500">Modules</div>
-                <div className="text-xl font-bold text-gray-800">{modalStudent.modulesCompleted}</div>
-              </div>
-              <div className="rounded-xl border border-gray-200 bg-gray-50 p-3 text-center">
-                <div className="text-xs text-gray-500">XP</div>
-                <div className="text-xl font-bold text-gray-800">{modalStudent.xp}</div>
-              </div>
-            </div>
-
-            <div className="mt-4">
-              <div className="text-sm font-semibold mb-2">Recent Scores</div>
-              <ul className="text-sm text-gray-700 list-disc pl-5 max-h-40 overflow-auto">
-                {modalStudent.submissions.map((sub) => (
-                  <li key={sub.assignmentId}>
-                    {sub.assignmentId}: {sub.status} {typeof sub.score === 'number' ? `· ${sub.score}%` : ''}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="mt-6 flex justify-end">
-              <button className="rounded-xl bg-emerald-600 px-4 py-2 text-white font-semibold hover:bg-emerald-700" onClick={() => setModalStudent(null)}>
-                Close
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </main>
   );
-}
+};
 
 export default TeacherLanding;
+
+
+
