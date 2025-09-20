@@ -131,7 +131,7 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             type="email"
-            className="w-full mb-2 px-3 py-2 border rounded-lg"
+            className="w-full mb-2 px-3 py-2 border rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
             required
           />
           <label className="block text.sm font-medium">పాస్‌వర్డ్</label>
@@ -139,7 +139,7 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             type="password"
-            className="w-full mb-4 px-3 py-2 border rounded-lg"
+            className="w-full mb-4 px-3 py-2 border rounded-lg bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
             required
           />
           <button

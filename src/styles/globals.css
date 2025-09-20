@@ -9,6 +9,7 @@
     -webkit-text-size-adjust: 100%;
     /* Smooth scrolling */
     scroll-behavior: smooth;
+    color-scheme: light dark;
   }
   
   body {
@@ -17,7 +18,14 @@
     /* Better font rendering on mobile */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    @apply bg-white text-gray-900;
   }
+  .dark body { @apply bg-gray-900 text-gray-100; }
+  
+  /* High-level defaults for headers/links in dark */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6 { @apply text-gray-100; }
+  .dark a { @apply text-blue-300; }
+  .dark a:hover { @apply text-blue-200; }
   
   /* Improve touch targets on mobile */
   button, [role="button"], input, select, textarea {
@@ -46,6 +54,51 @@
     }
   }
 }
+
+/* Dark mode class-based overrides for commonly used Tailwind utilities in the app */
+/* Backgrounds */
+.dark .bg-white { background-color: #111827 !important; } /* gray-900 */
+.dark .hover\:bg-gray-100:hover { background-color: #1f2937 !important; } /* gray-800 */
+.dark .hover\:bg-gray-300:hover { background-color: #374151 !important; } /* gray-700 */
+.dark .bg-yellow-100 { background-color: #3f3a15 !important; }
+
+/* Text */
+.dark .text-gray-400 { color: #d1d5db !important; } /* gray-300 */
+.dark .text-gray-500 { color: #e5e7eb !important; } /* gray-200 */
+.dark .text-gray-600 { color: #f3f4f6 !important; } /* gray-100 */
+
+/* Borders */
+.dark .border-gray-200 { border-color: #374151 !important; } /* gray-700 */
+.dark .border-gray-300 { border-color: #4b5563 !important; } /* gray-600 */
+.dark [class*="border-[#e5e5e5]"] { border-color: #374151 !important; }
+.dark .border-yellow-200 { border-color: #f59e0b !important; } /* amber-500 */
+
+/* Cards and containers with custom classes often using light bg */
+.dark .card-mobile { @apply bg-gray-800 border-gray-700; }
+.dark .nav-mobile { @apply bg-gray-900 border-gray-800; }
+
+/* Brand/custom text color mappings on dark */
+.dark [class*="text-[#0B3D0B]"] { color: #86efac !important; } /* emerald-300 */
+.dark [class*="text-[#5C4033]"] { color: #e5e7eb !important; } /* gray-200 */
+.dark [class*="text-[#7B3F00]"] { color: #fde68a !important; } /* amber-200 */
+.dark .text-yellow-700 { color: #facc15 !important; } /* yellow-400 */
+
+  /* Subtle light backgrounds to darker variants */
+  .dark [class*="bg-[#e5e5e5]"] { background-color: #1f2937 !important; } /* gray-800 */
+  .dark .bg-gray-100 { background-color: #111827 !important; } /* gray-900 */
+  .dark .bg-purple-100 { background-color: #3b0764 !important; } /* purple-950 */
+  .dark .bg-orange-100 { background-color: #7c2d12 !important; } /* orange-950 */
+  .dark .bg-gray-50 { background-color: #111827 !important; } /* gray-900 */
+  .dark [class*="bg-white/"] { background-color: #0b1220 !important; } /* near gray-950 for translucent cards */
+  .dark .bg-yellow-50 { background-color: #422006 !important; } /* amber-950 */
+  .dark .bg-gray-200 { background-color: #1f2937 !important; } /* gray-800 */
+  .dark .bg-green-100 { background-color: #052e16 !important; } /* green-950 */
+
+  /* More readable text mappings on dark */
+  .dark .text-gray-700 { color: #e5e7eb !important; }
+  .dark .text-yellow-600 { color: #facc15 !important; } /* yellow-400 */
+  .dark .text-green-800 { color: #86efac !important; } /* emerald-300 */
+  .dark .text-gray-400 { color: #d1d5db !important; }
 
 @layer components {
   /* Mobile-optimized button styles */

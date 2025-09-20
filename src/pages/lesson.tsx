@@ -442,7 +442,7 @@ const FancyButton = ({
   const baseClasses = "rounded-xl px-6 py-3 font-semibold shadow-md transform transition-all border";
   
   const variantClasses = {
-    default: "bg-gradient-to-br from-white to-beige-200 hover:from-beige-100 hover:to-white border-gray-300 hover:scale-105 hover:shadow-lg",
+    default: "bg-gradient-to-br from-white to-beige-200 hover:from-beige-100 hover:to-white border-gray-300 hover:scale-105 hover:shadow-lg text-gray-800 hover:text-white active:text-white focus:text-white dark:text-gray-100 dark:hover:text-black",
     selected: "bg-[#A3B18A] border-[#6B7D5B] text-white scale-105",
     correct: "bg-gradient-to-br from-green-100 to-green-200 border-green-400 text-green-800",
     incorrect: "bg-gradient-to-br from-red-100 to-red-200 border-red-400 text-red-800"
