@@ -8,6 +8,6 @@ export type ThemeSlice = {
 
 export const createThemeSlice: BoundStateCreator<ThemeSlice> = (set, get) => ({
   darkMode: false,
-  setDarkMode: (isDark: boolean) => set(() => ({ darkMode: isDark })),
+  setDarkMode: (isDark: boolean) => set({ darkMode: isDark }),
   toggleDarkMode: () => set((state: any) => ({ darkMode: !state.darkMode })),
 });

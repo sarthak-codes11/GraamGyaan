@@ -747,21 +747,7 @@ const Lesson: NextPage = () => {
     setCurrentLesson(resolveLessonKey(router.query.lesson as string | undefined));
   }, [router.isReady, router.query.lesson]);
 
-  // select problems; do NOT fall back to lesson1
-  const problems = lessons[currentLesson].problems;
-  if (!router.isReady) return null; // or a loader
-  if (problems.length === 0) {
-    return (
-      <>
-        <AnimatedGradientBackground />
-        <div className="min-h-screen flex items-center justify-center">Coming soon</div>
-      </>
-    );
-  }
-
-  const problem = problems[problemIdx];
-
-  // Timer effect
+  // Timer effect (placed before any early returns to keep hook order stable)
   useEffect(() => {
     if (timer > 0 && !correctAnswerShown) {
       timerRef.current = setTimeout(() => {
@@ -770,8 +756,8 @@ const Lesson: NextPage = () => {
     } else if (timer === 0 && !correctAnswerShown) {
       // Time's up - treat as wrong answer
       setCorrectAnswerShown(true);
-      setIncorrectAnswerCount(c => c + 1);
-      setLives(l => Math.max(0, l - 1));
+      setIncorrectAnswerCount((c) => c + 1);
+      setLives((l) => Math.max(0, l - 1));
     }
 
     return () => {
@@ -786,22 +772,16 @@ const Lesson: NextPage = () => {
     if (!correctAnswerShown) {
       setTimer(TIMER_DURATION_MS);
     }
-  }, [problemIdx]);
+  }, [problemIdx, correctAnswerShown]);
 
-  // Early exits
-  if (lives <= 0) return (
-    <>
-      <AnimatedGradientBackground />
-      <LessonFastForwardEndFail unitNumber={1} backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"} backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"} />
-    </>
-  );
-  if (showSummary) {
-    const isPerfect = incorrectAnswerCount === 0;
+  // select problems; do NOT fall back to lesson1
+  const problems = lessons[currentLesson].problems;
+  if (!router.isReady) return null; // or a loader
+  if (problems.length === 0) {
     return (
       <>
         <AnimatedGradientBackground />
-        <LessonComplete
-          correctAnswerCount={correctAnswerCount}
+        <div className="min-h-screen flex items-center justify-center">Coming soon</div>
           incorrectAnswerCount={incorrectAnswerCount}
           xpGained={xpGained}
           isPerfect={isPerfect}

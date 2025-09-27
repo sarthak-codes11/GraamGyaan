@@ -20,6 +20,8 @@
   import { createBadgeSlice } from "~/stores/createBadgeStore";
   import type { ShopSlice } from "~/stores/createShopStore";
   import { createShopSlice } from "~/stores/createShopStore";
+  import type { ThemeSlice } from "~/stores/createThemeStore";
+  import { createThemeSlice } from "~/stores/createThemeStore";
 
   type UISlice = {
     rightbarMobileOpen: boolean;
@@ -38,6 +40,7 @@
     XpSlice &
     BadgeSlice &
     ShopSlice &
+    ThemeSlice &
     UISlice;
 
   export type BoundStateCreator<SliceState> = StateCreator<
@@ -59,6 +62,7 @@ export const useBoundStore = create<BoundState>((...args) => ({
 
   ...createBadgeSlice(...args),
   ...createShopSlice(...args),
+  ...createThemeSlice(...args),
 
   // UI: Mobile RightBar control
   rightbarMobileOpen: false,
