@@ -464,13 +464,13 @@ const TeacherLanding: NextPage = () => {
                 placeholder="Title"
                 value={noteTitle}
                 onChange={(e) => setNoteTitle(e.target.value)}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
               />
               <textarea
                 placeholder="Description"
                 value={noteDesc}
                 onChange={(e) => setNoteDesc(e.target.value)}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                 rows={2}
               />
               <input
@@ -478,14 +478,14 @@ const TeacherLanding: NextPage = () => {
                 accept="application/pdf"
                 multiple
                 onChange={(e) => setNoteFiles(e.target.files ? Array.from(e.target.files) : [])}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
               />
               <div className="flex items-center gap-2">
                 <label className="text-sm text-gray-700">Unit:</label>
                 <select
                   value={noteUnitNumber}
                   onChange={(e) => setNoteUnitNumber(Number(e.target.value) || 1)}
-                  className="rounded-lg border p-2"
+                  className="rounded-lg border p-2 bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                 >
                   {units.map((u) => (
                     <option key={u.unitNumber} value={u.unitNumber}>
@@ -551,13 +551,13 @@ const TeacherLanding: NextPage = () => {
                 placeholder="Title"
                 value={videoTitle}
                 onChange={(e) => setVideoTitle(e.target.value)}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
               />
               <textarea
                 placeholder="Description"
                 value={videoDesc}
                 onChange={(e) => setVideoDesc(e.target.value)}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                 rows={2}
               />
               <input
@@ -565,7 +565,7 @@ const TeacherLanding: NextPage = () => {
                 accept="video/*"
                 multiple
                 onChange={(e) => setVideoFiles(e.target.files ? Array.from(e.target.files) : [])}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
               />
               <button
                 onClick={uploadVideo}
@@ -624,14 +624,14 @@ const TeacherLanding: NextPage = () => {
                 placeholder="Quiz Title"
                 value={quizTitle}
                 onChange={(e) => setQuizTitle(e.target.value)}
-                className="rounded-lg border p-2"
+                className="rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
               />
               <div className="flex items-center gap-2">
                 <label className="text-sm text-gray-700">Unit:</label>
                 <select
                   value={quizUnitNumber}
                   onChange={(e) => setQuizUnitNumber(Number(e.target.value) || 1)}
-                  className="rounded-lg border p-2"
+                  className="rounded-lg border p-2 bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                 >
                   {units.map((u) => (
                     <option key={u.unitNumber} value={u.unitNumber}>
@@ -653,7 +653,7 @@ const TeacherLanding: NextPage = () => {
                       placeholder="Enter question"
                       value={q.question}
                       onChange={(e) => updateQuestionField(qIdx, "question", e.target.value)}
-                      className="mt-2 w-full rounded-lg border p-2"
+                      className="mt-2 w-full rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                     />
                     <div className="mt-2 grid grid-cols-1 gap-2">
                       {q.options.map((opt, oIdx) => (
@@ -663,7 +663,7 @@ const TeacherLanding: NextPage = () => {
                             type="text"
                             value={opt}
                             onChange={(e) => updateOptionField(qIdx, oIdx, e.target.value)}
-                            className="flex-1 rounded-lg border p-2"
+                            className="flex-1 rounded-lg border p-2 bg-white text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                           />
                         </div>
                       ))}
@@ -673,7 +673,7 @@ const TeacherLanding: NextPage = () => {
                       <select
                         value={q.correctIndex}
                         onChange={(e) => updateQuestionField(qIdx, "correctIndex", Number(e.target.value))}
-                        className="rounded-lg border p-2"
+                        className="rounded-lg border p-2 bg-white text-black focus:outline-none focus:ring-2 focus:ring-[#7B3F00]"
                       >
                         {q.options.map((_, i) => (
                           <option key={i} value={i}>Option {i + 1}</option>
