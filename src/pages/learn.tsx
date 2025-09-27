@@ -252,7 +252,7 @@ const TileTooltip = ({
               ? "text-white group-hover:text-blue-100"
               : status === "LOCKED"
               ? "text-gray-400 group-hover:text-gray-300"
-              : "text-yellow-600 group-hover:text-yellow-400 dark:group-hover:text-amber-300",
+              : "text-yellow-600 group-hover:text-yellow-400",
           ].join(" ")}
         >
           {description}
@@ -263,7 +263,6 @@ const TileTooltip = ({
             href={`/lesson?lesson=${encodeURIComponent(description)}`}
             className={[
               "flex w-full items-center justify-center rounded-xl border-b-4 border-gray-200 bg-white p-3 uppercase",
-              "dark:bg-gray-800 dark:text-white dark:border-gray-600",
               activeTextColor,
             ].join(" ")}
           >
@@ -271,7 +270,7 @@ const TileTooltip = ({
           </Link>
         ) : status === "LOCKED" ? (
           <button
-            className="w-full rounded-xl bg-gray-200 p-3 uppercase text-gray-400 dark:bg-gray-800 dark:text-gray-500"
+            className="w-full rounded-xl bg-gray-200 p-3 uppercase text-gray-400"
             disabled
           >
             Locked
@@ -279,7 +278,7 @@ const TileTooltip = ({
         ) : (
           <Link
             href={`/lesson?lesson=${encodeURIComponent(description)}`}
-            className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400 dark:bg-gray-800 dark:text-amber-300 dark:border-yellow-500"
+            className="flex w-full items-center justify-center rounded-xl border-b-4 border-yellow-200 bg-white p-3 uppercase text-yellow-400"
           >
             Practice +5 XP
           </Link>
@@ -610,15 +609,15 @@ const Learn: NextPage = () => {
 
       {showFact && factIndex !== null && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50">
-          <div className="mx-4 max-w-md rounded-2xl bg-white dark:bg-gray-800 p-6 text-[#0B3D0B] dark:text-gray-100 shadow-2xl border-2 border-b-4 border-yellow-300 dark:border-yellow-500">
+          <div className="mx-4 max-w-md rounded-2xl bg-white p-6 text-[#0B3D0B] shadow-2xl border-2 border-b-4 border-yellow-300">
             <h3 className="mb-2 text-2xl font-extrabold">
               {text.title}
             </h3>
-            <p className="mb-4 text-base text-gray-700 dark:text-gray-200">{facts[factIndex]}</p>
+            <p className="mb-4 text-base text-gray-700">{facts[factIndex]}</p>
             <div className="flex justify-end">
               <button
                 onClick={() => setShowFact(false)}
-                className="rounded-xl bg-[#A0522D] text-white px-4 py-2 font-semibold hover:brightness-110 hover:scale-[1.02] transition dark:bg-amber-700"
+                className="rounded-xl bg-[#A0522D] text-white px-4 py-2 font-semibold hover:brightness-110 hover:scale-[1.02] transition"
               >
                 {text.button}
               </button>
@@ -633,12 +632,12 @@ const Learn: NextPage = () => {
         <div className="flex max-w-2xl grow flex-col w-full">
           {/* Mobile now uses a floating toggle button within RightBar; no inline RightBar here */}
           {/* Hero summary */}
-          <section className="mb-6 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5 shadow-sm">
-            <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-gray-100">Welcome back!</h1>
-            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">Start with the next active tile below or open your latest class notes in the Guidebook section.</p>
+          <section className="mb-6 rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-sm">
+            <h1 className="text-2xl font-bold mb-2 text-gray-900">Welcome back!</h1>
+            <p className="text-sm text-gray-600 mb-4">Start with the next active tile below or open your latest class notes in the Guidebook section.</p>
             <div className="flex flex-wrap gap-3">
-              <Link href="#units" className="rounded-xl border-2 border-b-4 border-blue-300 bg-white dark:bg-gray-800 dark:border-blue-500 px-4 py-2 font-semibold text-blue-600 dark:text-blue-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition">Go to Units</Link>
-              <Link href="#guidebook" className="rounded-xl border-2 border-b-4 border-emerald-300 bg-white dark:bg-gray-800 dark:border-emerald-500 px-4 py-2 font-semibold text-emerald-700 dark:text-emerald-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition">Open Guidebook</Link>
+              <Link href="#units" className="rounded-xl border-2 border-b-4 border-blue-300 bg-white px-4 py-2 font-semibold text-blue-600 hover:bg-gray-50 transition">Go to Units</Link>
+              <Link href="#guidebook" className="rounded-xl border-2 border-b-4 border-emerald-300 bg-white px-4 py-2 font-semibold text-emerald-700 hover:bg-gray-50 transition">Open Guidebook</Link>
             </div>
           </section>
 
@@ -647,26 +646,26 @@ const Learn: NextPage = () => {
           ))}
 
           {/* Guidebook: Uploaded Notes */}
-          <section id="guidebook" className="mt-8 rounded-2xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-5">
+          <section id="guidebook" className="mt-8 rounded-2xl border-2 border-gray-200 bg-white p-5">
             <h2 className="mb-3 text-xl font-bold text-[#5C4033]">Guidebook</h2>
             <ul className="flex flex-col gap-2">
               {notes.map((n) => (
                 <li key={n.id} className="flex items-center gap-2">
                   <a
                     href={n.relativePath}
-                    className="text-[#7B3F00] dark:text-amber-200 font-semibold underline truncate"
+                    className="text-[#7B3F00] font-semibold underline truncate"
                     target="_blank"
                     rel="noreferrer"
                   >
                     {n.title}
                   </a>
                   {n.description && (
-                    <span className="text-xs text-gray-500 dark:text-gray-300 ml-2 truncate">{n.description}</span>
+                    <span className="text-xs text-gray-500 ml-2 truncate">{n.description}</span>
                   )}
                 </li>
               ))}
               {notes.length === 0 && (
-                <li className="text-sm text-gray-500 dark:text-gray-300">No notes uploaded yet.</li>
+                <li className="text-sm text-gray-500">No notes uploaded yet.</li>
               )}
             </ul>
           </section>
