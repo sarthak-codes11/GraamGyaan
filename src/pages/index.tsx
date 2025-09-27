@@ -19,7 +19,7 @@ const translations: Record<string, any> = {
     changeLang: "🌐 भाषा बदलें",
   },
   te: {
-    welcome: "గ్రామజ్��ాన్ కి స్వాగతం!",
+    welcome: "గ్రామజ్�న్ కి స్వాగతం!",
     signin: "మిమ్మల్ని సైన్ ఇన్ చేద్దాం",
     changeLang: "🌐 భాష మార్చు",
   },
@@ -60,9 +60,9 @@ const HomePage: React.FC = () => {
         style={{ color: "#0B3D0B" }}
       >
         {/* Logo */}
-        <div className="w-full md:w-auto flex justify-center md:justify-start md:pl-16 lg:pl-24">
+        <div className="w-full md:w-auto flex justify-center items-center md:justify-start md:pl-16 lg:pl-24">
           <GlobeSvg
-            className="block h-fit w-10/12 xs:w-9/12 sm:w-8/12 md:w-[350px] translate-x-[6px] sm:translate-x-[4px] md:translate-x-0"
+            className="block h-fit w-10/12 xs:w-9/12 sm:w-8/12 md:w-[350px] mx-auto relative left-1 md:left-0"
             style={{ stroke: "none" }}
           />
         </div>

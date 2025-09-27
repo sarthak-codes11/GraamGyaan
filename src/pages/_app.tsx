@@ -1,40 +1,11 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
-import { useEffect } from "react";
 import { useRouter } from "next/router";
-import { useBoundStore } from "~/hooks/useBoundStore";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
-  const darkMode = useBoundStore((x) => x.darkMode);
-  const setDarkMode = useBoundStore((x) => x.setDarkMode);
-
-  // Initialize theme from localStorage and apply class
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("gg_theme");
-      if (stored === "dark") {
-        setDarkMode(true);
-      }
-    } catch {}
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  useEffect(() => {
-    if (typeof document === "undefined") return;
-    const root = document.documentElement;
-    const exemptRoutes = new Set(["/", "/hindi", "/telugu"]);
-    const isExempt = exemptRoutes.has(router.pathname);
-    if (darkMode && !isExempt) {
-      root.classList.add("dark");
-      try { localStorage.setItem("gg_theme", "dark"); } catch {}
-    } else {
-      root.classList.remove("dark");
-      try { localStorage.setItem("gg_theme", darkMode ? "dark" : "light"); } catch {}
-    }
-  }, [darkMode, router.pathname]);
   return (
     <>
       <Head>

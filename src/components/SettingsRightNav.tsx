@@ -10,11 +10,9 @@ const useSettingsPages = () => {
     ? ([
         { title: "Account", href: "/settings/account" },
         { title: "Sound", href: "/settings/sound" },
-        { title: "Appearance", href: "/settings/appearance" },
       ] as const)
     : ([
         { title: "Sound", href: "/settings/sound" },
-        { title: "Appearance", href: "/settings/appearance" },
       ] as const);
 };
 
