@@ -782,24 +782,11 @@ const Lesson: NextPage = () => {
       <>
         <AnimatedGradientBackground />
         <div className="min-h-screen flex items-center justify-center">Coming soon</div>
-          incorrectAnswerCount={incorrectAnswerCount}
-          xpGained={xpGained}
-          isPerfect={isPerfect}
-          lessonsCompleted={lessonsCompleted}
-          totalTimeMs={totalTimeMs}
-          backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
-          backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"}
-        />
       </>
     );
   }
 
-  if (!problem) return (
-    <>
-      <AnimatedGradientBackground />
-      <div>Unknown problem type</div>
-    </>
-  );
+  const problem = problems[problemIdx];
 
   const isAnswerCorrect = selectedAnswer === problem.correctAnswer;
 
