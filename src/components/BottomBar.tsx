@@ -1,0 +1,278 @@
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
+import { useBoundStore } from "~/hooks/useBoundStore";
+
+type BottomBarItem = {
+  name: Tab;
+  href: string;
+  icon: JSX.Element;
+};
+
+export type Tab = "Learn" | "Lab" | "Profile" | "Leaderboards";
+
+export const useBottomBarItems = () => {
+  const loggedIn = useBoundStore((x) => x.loggedIn);
+
+  const bottomBarItems: BottomBarItem[] = [
+    {
+      name: "Learn",
+      href: "/learn",
+      icon: (
+       
+
+
+<svg width="50px" height="50px" viewBox="0 0 24 24"  xmlns="http://www.w3.org/2000/svg" version="1.1" >
+ <g transform="translate(0 -1028.4)">
+  <path d="m3 8v2 1 3 1 5 1c0 1.105 0.8954 2 2 2h14c1.105 0 2-0.895 2-2v-1-5-4-3h-18z" transform="translate(0 1028.4)" fill="#16a085"/>
+  <path d="m3 1035.4v2 1 3 1 5 1c0 1.1 0.8954 2 2 2h14c1.105 0 2-0.9 2-2v-1-5-4-3h-18z" fill="#ecf0f1"/>
+  <path d="m3 1034.4v2 1 3 1 5 1c0 1.1 0.8954 2 2 2h14c1.105 0 2-0.9 2-2v-1-5-4-3h-18z" fill="#bdc3c7"/>
+  <path d="m3 1033.4v2 1 3 1 5 1c0 1.1 0.8954 2 2 2h14c1.105 0 2-0.9 2-2v-1-5-4-3h-18z" fill="#ecf0f1"/>
+  <path d="m5 1c-1.1046 0-2 0.8954-2 2v1 4 2 1 3 1 5 1c0 1.105 0.8954 2 2 2h2v-1h-1.5c-0.8284 0-1.5-0.672-1.5-1.5s0.6716-1.5 1.5-1.5h12.5 1c1.105 0 2-0.895 2-2v-1-5-4-3-1c0-1.1046-0.895-2-2-2h-4-10z" transform="translate(0 1028.4)" fill="#16a085"/>
+  <path d="m8 1v18h1 9 1c1.105 0 2-0.895 2-2v-1-5-4-3-1c0-1.1046-0.895-2-2-2h-4-6-1z" transform="translate(0 1028.4)" fill="#1abc9c"/>
+ </g>
+</svg>
+      ),
+    },
+    {
+      name: "Lab",
+      href: "/lab",
+      icon: (
+    
+<svg width="50px" height="50px" viewBox="0 0 512 512" version="1.1"  xmlns="http://www.w3.org/2000/svg">
+
+<g id="x35_08_x2Cchemistry_x2Clabx2Cchemistry_labx2C_education">
+
+<g>
+
+<polygon points="467.49,85.15 467.49,143.46 417,172.62 367,143.75 367,88.54 366.5,88.25 366.5,85.15     417,56   " fill="#FF7979"/>
+
+<polygon points="374.5,148.081 374.5,95.207 374,94.917 374,91.816 424.5,62.667 467.49,87.486     467.49,85.15 417,56 366.5,85.15 366.5,88.25 367,88.54 367,143.75   " fill="#D65B5B"/>
+
+<polygon points="417,175.15 417,233.46 366.5,262.62 316,233.46 316,175.71 316.5,176 367,146.84     367,146.29   " fill="#A8CFFF"/>
+
+<polygon points="323.5,184.043 324,184.333 374.5,155.173 374.5,154.624 417,179.154 417,175.15     367,146.29 367,146.84 316.5,176 316,175.71 316,233.46 323.5,237.791   " fill="#8BBAE8"/>
+
+<polygon points="367,143.75 367,146.29 366.5,146 316,175.15 316,175.71 266,146.84 266,88.54 316.5,59.38     366.5,88.25 366.5,143.46   " fill="#FFD8A8"/>
+
+<polygon points="269,98.04 319.5,68.88 366.5,96.018 366.5,88.25 316.5,59.38 266,88.54 266,146.84     269,148.572   " fill="#EABD8C"/>
+
+<polygon points="240,36 240,76 220,76 130,76 110,76 110,36   " fill="#57606F"/>
+
+<polygon points="118.375,44.875 240,44.875 240,36 110,36 110,76 118.375,76   " fill="#414A56"/>
+
+<path d="M220,203.06c55.76,18.45,96,70.99,96,132.94c0,77.32-62.68,140-140,140S36,413.32,36,336    c0-61.21,39.28-113.23,94-132.26V76h90V203.06z" fill="#E8F9F9"/>
+
+<g>
+
+<g>
+
+<g>
+
+<path d="M46,346.333c0-61.21,39.28-113.23,94-132.26V86.333h80V76h-90v127.74       C75.28,222.77,36,274.79,36,336c0,40.401,17.121,76.799,44.494,102.353C59.015,413.746,46,381.561,46,346.333z" fill="#CCE5E4"/>
+
+</g>
+
+<g>
+
+<path d="M230,213.393c19.377,6.412,36.878,16.944,51.47,30.554       c-13.989-16.012-31.561-28.811-51.47-37.143V213.393z" fill="#CCE5E4"/>
+
+</g>
+
+</g>
+
+</g>
+
+<rect height="20" width="20" x="216" y="296"/>
+
+<rect height="20" width="20" x="186" y="296"/>
+
+<rect height="20" width="20" x="156" y="296"/>
+
+<rect height="20" width="20" x="126" y="296"/>
+
+<path d="M176,481c-79.953,0-145-65.047-145-145c0-60.488,37.626-114.599,94-135.768V76c0-2.761,2.239-5,5-5s5,2.239,5,5v127.74    c0,2.128-1.347,4.023-3.357,4.723C77.426,227.317,41,278.57,41,336c0,74.439,60.561,135,135,135s135-60.561,135-135    c0-58.355-37.201-109.873-92.571-128.193c-2.047-0.678-3.429-2.591-3.429-4.747V76c0-2.761,2.239-5,5-5s5,2.239,5,5v123.495    c57.573,20.64,96,75.041,96,136.505C321,415.953,255.953,481,176,481z"/>
+
+<path d="M240,81H110c-2.761,0-5-2.239-5-5V36c0-2.761,2.239-5,5-5h130c2.761,0,5,2.239,5,5v40C245,78.761,242.761,81,240,81z     M115,71h120V41H115V71z"/>
+
+<path d="M175,451c-60.654,0-110-49.346-110-110c0-22.417,6.701-43.984,19.378-62.372c12.381-17.957,29.589-31.716,49.764-39.79    c2.565-1.026,5.474,0.22,6.5,2.784s-0.221,5.474-2.784,6.5C99.673,263.403,75,299.86,75,341c0,55.141,44.86,100,100,100    c53.4,0,97.159-42.075,99.867-94.813l-134.689,4.811c-2.738,0.077-5.077-2.058-5.175-4.818c-0.099-2.76,2.059-5.077,4.818-5.176    l140-5c1.344-0.049,2.674,0.456,3.65,1.399c0.977,0.941,1.528,2.24,1.528,3.598C285,401.654,235.654,451,175,451z"/>
+
+<path d="M446,481H36c-2.761,0-5-2.238-5-5s2.239-5,5-5h410c2.762,0,5,2.238,5,5S448.762,481,446,481z"/>
+
+<path d="M316.5,181c-0.866,0-1.733-0.225-2.509-0.675l-0.5-0.29L263.5,151.17c-1.547-0.893-2.5-2.544-2.5-4.33v-58.3    c0-1.786,0.953-3.437,2.5-4.33L314,55.05c1.547-0.894,3.453-0.894,5,0l50.509,29.166c1.542,0.894,2.491,2.542,2.491,4.325v58.3    c0,1.786-0.953,3.437-2.5,4.33L319,180.33C318.227,180.777,317.363,181,316.5,181z M271,143.953l45.501,26.272L362,143.953V91.425    l-45.5-26.272L271,91.427V143.953z"/>
+
+<path d="M366.5,267.62c-0.863,0-1.727-0.224-2.5-0.67l-50.5-29.16c-1.547-0.893-2.5-2.544-2.5-4.33v-58.31    c0-1.787,0.953-3.438,2.5-4.331l50.5-29.15c1.549-0.894,3.46-0.893,5.009,0.005l0.5,0.29l49.99,28.854    c1.548,0.893,2.501,2.544,2.501,4.331v58.31c0,1.786-0.953,3.437-2.5,4.33L369,266.95    C368.227,267.396,367.363,267.62,366.5,267.62z M321,230.573l45.5,26.273l45.5-26.273v-52.536l-45.501-26.263L321,178.037V230.573    z"/>
+
+<path d="M417,177.62c-0.863,0-1.727-0.223-2.5-0.67l-50.509-29.166c-1.542-0.894-2.491-2.542-2.491-4.325V85.15    c0-1.787,0.953-3.438,2.5-4.331l50.5-29.15c1.547-0.893,3.453-0.893,5,0l50.49,29.15c1.547,0.893,2.5,2.544,2.5,4.33v58.31    c0,1.786-0.953,3.437-2.499,4.33l-50.49,29.16C418.728,177.396,417.863,177.62,417,177.62z M371.5,140.575l45.5,26.271    l45.49-26.272V88.037L417,61.773l-45.5,26.264V140.575z"/>
+
+<path d="M476,331H356c-2.762,0-5-2.238-5-5s2.238-5,5-5h120c2.762,0,5,2.238,5,5S478.762,331,476,331z"/>
+
+<path d="M476,361H356c-2.762,0-5-2.238-5-5s2.238-5,5-5h120c2.762,0,5,2.238,5,5S478.762,361,476,361z"/>
+
+<path d="M476,391H356c-2.762,0-5-2.238-5-5s2.238-5,5-5h120c2.762,0,5,2.238,5,5S478.762,391,476,391z"/>
+
+<path d="M476,421h-40c-2.762,0-5-2.238-5-5s2.238-5,5-5h40c2.762,0,5,2.238,5,5S478.762,421,476,421z"/>
+
+</g>
+
+</g>
+
+<g id="Layer_1"/>
+
+</svg>
+      ),
+    },
+    {
+      name: "Profile",
+      href: "/profile",
+      icon: (
+        
+<svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12.1601 10.87C12.0601 10.86 11.9401 10.86 11.8301 10.87C9.45006 10.79 7.56006 8.84 7.56006 6.44C7.56006 3.99 9.54006 2 12.0001 2C14.4501 2 16.4401 3.99 16.4401 6.44C16.4301 8.84 14.5401 10.79 12.1601 10.87Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M7.15997 14.56C4.73997 16.18 4.73997 18.82 7.15997 20.43C9.90997 22.27 14.42 22.27 17.17 20.43C19.59 18.81 19.59 16.17 17.17 14.56C14.43 12.73 9.91997 12.73 7.15997 14.56Z" stroke="#292D32" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+      ),
+    },
+  ];
+
+  if (loggedIn) {
+    bottomBarItems.splice(1, 0, {
+      name: "Leaderboards",
+      href: "/leaderboard",
+      icon: (
+        <svg width="46" height="46" viewBox="0 0 46 46" fill="none">
+          <path
+            d="M7 9.5C7 7.84314 8.34315 6.5 10 6.5H36C37.6569 6.5 39 7.84315 39 9.5V23.5C39 32.3366 31.8366 39.5 23 39.5C14.1634 39.5 7 32.3366 7 23.5V9.5Z"
+            fill="#FEC701"
+          />
+          <path
+            opacity="0.3"
+            d="M39.0001 13.3455V9.5C39.0001 7.84315 37.657 6.5 36.0001 6.5H31.5706L8.30957 29.8497C9.68623 33.0304 12.0656 35.6759 15.0491 37.3877L39.0001 13.3455Z"
+            fill="white"
+          />
+        </svg>
+      ),
+    });
+  }
+
+  return bottomBarItems;
+};
+
+export const BottomBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
+  const bottomBarItems = useBottomBarItems();
+  const [moreOpen, setMoreOpen] = useState(false);
+  const router = useRouter();
+  const loggedIn = useBoundStore((x) => x.loggedIn);
+  const logOut = useBoundStore((x) => x.logOut);
+  const isHindi = typeof window !== "undefined" && window.location.pathname.startsWith("/hindi");
+  const isTelugu = typeof window !== "undefined" && window.location.pathname.startsWith("/telugu");
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-20 border-t-2 border-[#e5e5e5] bg-white md:hidden safe-area-inset-bottom">
+      <ul className="flex h-[88px] xs:h-[96px]">
+        {bottomBarItems.map((item) => {
+          const linkHref = (() => {
+            if (isHindi) {
+              if (item.href === "/learn") return "/hindi";
+              if (item.href === "/lab") return "/hindi/lab";
+              if (item.href === "/profile") return "/hindi/profile";
+              if (item.href === "/leaderboard") return "/hindi/leaderboard";
+            }
+            if (isTelugu) {
+              if (item.href === "/learn") return "/telugu";
+              if (item.href === "/lab") return "/telugu/lab";
+              if (item.href === "/profile") return "/telugu/profile";
+              if (item.href === "/leaderboard") return "/telugu/leaderboard";
+            }
+            return item.href;
+          })();
+          return (
+            <li
+              key={item.href}
+              className="flex flex-1 items-center justify-center"
+            >
+              <Link
+                href={linkHref}
+                className={
+                  item.name === selectedTab
+                    ? "rounded-xl border-2 border-[#84d8ff] bg-[#ddf4ff] px-3 py-2 xs:px-4 xs:py-3 btn-mobile transition-all duration-200"
+                    : "px-3 py-2 xs:px-4 xs:py-3 btn-mobile hover:bg-gray-100 rounded-xl transition-all duration-200"
+                }
+              >
+                {item.icon}
+                <span className="sr-only">{item.name}</span>
+              </Link>
+            </li>
+          );
+        })}
+
+        {/* More menu trigger */}
+        <li className="flex flex-1 items-center justify-center relative">
+          <button
+            onClick={() => setMoreOpen((x) => !x)}
+            className="px-3 py-2 xs:px-4 xs:py-3 btn-mobile hover:bg-gray-100 rounded-xl transition-all duration-200 border border-gray-200"
+            aria-label={isHindi ? "और" : isTelugu ? "మరిన్ని" : "More"}
+          >
+            {/* Three dots icon */}
+            <svg width="32" height="32" viewBox="0 0 46 46" fill="none">
+              <circle cx="15" cy="23" r="3" fill="#555" />
+              <circle cx="23" cy="23" r="3" fill="#555" />
+              <circle cx="31" cy="23" r="3" fill="#555" />
+            </svg>
+            <span className="sr-only">{isHindi ? "और" : isTelugu ? "మరిన్ని" : "More"}</span>
+          </button>
+
+          {/* More menu panel */}
+          {moreOpen && (
+            <div className="absolute bottom-[110%] mb-2 left-1/2 -translate-x-1/2 min-w-[260px] rounded-2xl border-2 border-gray-300 bg-white shadow-xl">
+              <div className="flex flex-col py-2">
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href="/leaderboard?extended=1"
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "स्कूल" : isTelugu ? "పాఠశాల" : "School"}
+                </Link>
+              </div>
+              <div className="flex flex-col border-t-2 border-gray-300 py-2">
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href={loggedIn ? "/settings/account" : "/settings/sound"}
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "सेटिंग्स" : isTelugu ? "సెట్టింగ్స్" : "Settings"}
+                </Link>
+                <Link
+                  className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                  href="/help"
+                  onClick={() => setMoreOpen(false)}
+                >
+                  {isHindi ? "सहायता" : isTelugu ? "సహాయం" : "Help"}
+                </Link>
+                {loggedIn ? (
+                  <button
+                    className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                    onClick={() => {
+                      setMoreOpen(false);
+                      logOut();
+                      router.push("/");
+                    }}
+                  >
+                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : "Sign out"}
+                  </button>
+                ) : (
+                  <Link
+                    className="px-5 py-3 text-left uppercase hover:bg-gray-100"
+                    href="/register"
+                    onClick={() => setMoreOpen(false)}
+                  >
+                    {isHindi ? "प्रोफ़ाइल बनाएँ" : isTelugu ? "ప్రొఫైల్ సృష్టించండి" : "Create a profile"}
+                  </Link>
+                )}
+              </div>
+            </div>
+          )}
+        </li>
+      </ul>
+    </nav>
+  );
+};

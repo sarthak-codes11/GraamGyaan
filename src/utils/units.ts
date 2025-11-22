@@ -1,0 +1,88 @@
+export type Unit = {
+  unitNumber: number;
+  description: string;
+  backgroundColor: `bg-${string}`;
+  textColor: `text-${string}`;
+  borderColor: `border-${string}`;
+  tiles: Tile[];
+};
+
+export type Tile =
+  | {
+      type: "star" | "dumbbell" | "book" | "trophy" | "fast-forward";
+      description: string;
+    }
+  | { type: "treasure" };
+
+export type TileType = Tile["type"];
+
+export const units: readonly Unit[] = [
+  {
+    unitNumber: 1,
+    description: "Sorting Material Into Groups",
+    backgroundColor: "bg-[#8B5E3C]",   // warm medium brown
+    textColor: "text-[#556B2F]",       // soft beige for contrast
+    borderColor: "border-[#6B4226]",   // darker brown for depth
+
+    tiles: [
+      {
+        type: "star",
+        description: "Importance of Sorting Materials",
+      },
+      {
+        type: "book",
+        description: "Objects and Materials",
+      },
+      {
+        type: "star",
+        description: "Properties of Materials",
+      },
+      { type: "treasure" },
+      { type: "book", description: "Grouping Materials Based on Properties" },
+      { type: "trophy", description: "Unit 1 review" },
+    ],
+  },
+  {
+    unitNumber: 2,
+    description: "Getting to know Plants",
+    backgroundColor: "bg-[#4A7C59]", // muted forest green
+    textColor: "text-[#3B5D2A]",     // deep leafy green
+    borderColor: "border-[#8B5E3C]", // earthy brown
+
+
+    tiles: [
+      { type: "fast-forward", description: "Get around in a city" },
+      { type: "dumbbell", description: "Personalized practice" },
+      { type: "book", description: "One thing" },
+      { type: "treasure" },
+      { type: "star", description: "Get around in a city" },
+      { type: "book", description: "A very big family" },
+      { type: "star", description: "Greet people" },
+      { type: "book", description: "The red jacket" },
+      { type: "treasure" },
+      { type: "dumbbell", description: "Personalized practice" },
+      { type: "trophy", description: "Unit 2 review" },
+    ],
+  },
+  {
+    unitNumber: 3,
+    description: "Light, Shadows and Reflections",
+   backgroundColor: "bg-[#D9C4A7]", // soft earthy beige
+textColor: "text-[#5B4636]",     // deep brown for readability
+borderColor: "border-[#A68C6F]", // muted clay/brown for subtle border
+
+
+    tiles: [
+      { type: "fast-forward", description: "Light, Shadows and Reflections" },
+      { type: "book", description: "What is Light?" },
+      { type: "star", description: "Transparent, Translucent, and Opaque Objects" },
+      { type: "treasure" },
+      { type: "book", description: "The Formation of Shadows" },
+      { type: "star", description: "Characteristics of Shadows" },
+      { type: "treasure" },
+      { type: "dumbbell", description: "Reflections and Mirrors" },
+      { type: "book", description: "Doctor Eddy" },
+      { type: "trophy", description: "Full Chapter Revision" },
+    ],
+  },
+];
