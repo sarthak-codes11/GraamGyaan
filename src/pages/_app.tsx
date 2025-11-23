@@ -36,6 +36,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         setLanguage(found as any);
         try {
           window.localStorage.setItem("appLangCode", found.code);
+          window.localStorage.setItem("lang", found.code);
         } catch {}
       }
       return;

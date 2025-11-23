@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 const grades = [
     { name: "Grade 6", value: "6" },
@@ -15,6 +16,16 @@ const grades = [
 
 const SelectGrade: React.FC = () => {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    useEffect(() => {
+        const q = searchParams?.get("lang");
+        if (typeof window !== "undefined" && q) {
+            try {
+                window.localStorage.setItem("appLangCode", q);
+                window.localStorage.setItem("lang", q);
+            } catch {}
+        }
+    }, [searchParams]);
     
     const handleSelect = (grade: string) => {
         // For now, only Grade 6 leads to subject selection

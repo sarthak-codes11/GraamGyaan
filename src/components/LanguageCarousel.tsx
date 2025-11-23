@@ -110,8 +110,16 @@ export const LanguageCarousel = () => {
               <Link
                 key={language.code}
                 className="flex items-center gap-2"
-                href={"/learn"}
-                onClick={() => setLanguage(language)}
+                href={`/learn?lang=${language.code}`}
+                onClick={() => {
+                  setLanguage(language);
+                  try {
+                    if (typeof window !== "undefined") {
+                      window.localStorage.setItem("appLangCode", language.code);
+                      window.localStorage.setItem("lang", language.code);
+                    }
+                  } catch {}
+                }}
               >
                 <Flag language={language} width={40} />
                 <span className="text-sm font-bold uppercase">
