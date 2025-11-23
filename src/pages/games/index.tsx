@@ -24,12 +24,13 @@ const GamesHubPage: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-3xl">
           <Link
-            href="/game"
-            className="rounded-3xl p-6 border-4 border-b-8 text-center font-extrabold shadow-sm"
+            href="/games/graamgyaan"
+            className="rounded-3xl p-6 border-4 border-b-8 text-center font-extrabold shadow-sm flex flex-col items-center justify-center"
             style={{ background: "#E6FAFB", borderColor: "#8AE1E8", color: "#0D7681" }}
           >
-            Materials Sorter
-            <div className="text-sm font-semibold mt-1 opacity-80">Metal vs Plastic, Soluble vs Insoluble</div>
+            <span className="text-4xl mb-2">🎮</span>
+            <span>GraamGyaan (New)</span>
+            <div className="text-sm font-semibold mt-1 opacity-80">Play the integrated Phaser build</div>
           </Link>
           <Link
             href="/games/plants"

@@ -1,0 +1,21 @@
+{
+  "welcome": "Welcome to GraamGyaan!",
+  "tap_to_complete": "Tap to complete this challenge",
+  "level_completed": "Great! Level completed.",
+  "game": {
+    "score": "Score",
+    "lives": "Lives",
+    "level": "Level",
+    "time": "Time",
+    "start": "Start Game",
+    "restart": "Play Again",
+    "game_over": "Game Over",
+    "you_win": "You Win!",
+    "next_level": "Next Level",
+    "back_to_menu": "Back to Menu"
+  },
+  "errors": {
+    "load_error": "Error loading game assets. Please refresh the page.",
+    "save_error": "Error saving game progress."
+  }
+}

@@ -1,11 +1,35 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
+
+  useEffect(() => {
+    if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+      navigator.serviceWorker.register('/sw.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+      
+      // Cleanup function
+      return () => {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(registrations => {
+            registrations.forEach(registration => {
+              registration.unregister();
+            });
+          });
+        }
+      };
+    }
+  }, []);
   return (
     <>
       <Head>
@@ -26,6 +50,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         
         {/* PWA support */}
         <link rel="manifest" href="/app.webmanifest" />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
         
         {/* Prevent zoom on input focus (iOS) */}
