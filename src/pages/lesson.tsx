@@ -158,6 +158,52 @@ const lesson1ProblemsTe = [
   },
 ] as const;
 
+// Odia: Lesson 1
+const lesson1ProblemsOr = [
+  {
+    type: "MCQ",
+    question: "ସାମଗ୍ରୀକୁ ଦଳରେ ବିଭକ୍ତ କରିବା କାହିଁକି ଜରୁରୀ?",
+    answers: [
+      "ସବୁକିଛି ଚିକ୍କଣ ଲାଗିବା ପାଇଁ",
+      "ବୈଜ୍ଞାନିକମାନଙ୍କୁ ଅଳଜଳ କରିବା ପାଇଁ",
+      "ସାମଗ୍ରୀକୁ ସହଜରେ ଅଧ୍ୟୟନ କରି ଭଲଭାବେ ବ୍ୟବହାର କରିବା ପାଇଁ",
+      "ସେଗୁଡ଼ିକୁ ଦାମୀ କରିବା ପାଇଁ",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "ବିଭାଜନ କରିବାରୁ ଆମେ ସାମଗ୍ରୀକୁ ତୁଳନା, ଅଧ୍ୟୟନ ଏବଂ ବୁଝିବା ସହଜ ହୁଏ। ଏଥରେ ନିର୍ଦ୍ଦିଷ୍ଟ କାମ ପାଇଁ ଠିକ୍ ସାମଗ୍ରୀ ବାଛିବାରେ ସହଯୋଗ ମିଳେ।",
+  },
+  {
+    type: "MCQ",
+    question: "ନିମ୍ନୋକ୍ତମଧ୍ୟରୁ କେଉଁଟି ସାମଗ୍ରୀ ବିଭାଜନର ଲାଭ ନୁହେଁ?",
+    answers: [
+      "ଅଧ୍ୟୟନରେ ସହାଯ୍ୟ କରେ",
+      "ରିସାଇକ୍ଲିଂ କୁ ସହଜ କରେ",
+      "ଅଧିକ ସମୟ ନଷ୍ଟ କରେ",
+      "ଠିକ୍ ସାମଗ୍ରୀ ବାଛିବାରେ ସହାଯ୍ୟ କରେ",
+    ],
+    correctAnswer: 2,
+    explanation:
+      "ବିଭାଜନ ବାସ୍ତବରେ ସାମଗ୍ରୀକୁ ଅନୁଶାସିତ କରି ସମୟ ଏବଂ ପ୍ରୟାସ ରକ୍ଷା କରେ। ଏହା ସମୟ ନଷ୍ଟ କରେ ନାହିଁ।",
+  },
+  {
+    type: "MCQ",
+    question: "ରାନ୍ଧଣ ବାଟିଲା ସାଧାରଣତଃ ଧାତୁର କାହିଁକି ବనାଯାଏ?",
+    answers: ["ସେଗୁଡ଼ିକ ଚମକିଳା ଲାଗେ", "ସେଗୁଡ଼ିକ ରଙ୍ଗିନ ଥାଏ", "ତାପକୁ ଭଲ ଭାବରେ ବହନ କରେ", "ସେଗୁଡ଼ିକ ସସ୍ତା"],
+    correctAnswer: 2,
+    explanation:
+      "ଧାତୁ ତାପର ଭଲ ଚାଳକ, ତେଣୁ ଧାତୁର ବାଟିଲାରେ ଖାଦ୍ୟ ସମଭାବେ ସିଜେ।",
+  },
+  {
+    type: "MCQ",
+    question: "ସମାନ ଗୁଣ ଆଧାରରେ ସାମଗ୍ରୀକୁ ଦଳରେ କରିବାକୁ କ’ଣ କୁହାଯାଏ?",
+    answers: ["ପେଣ୍ଟିଂ", "ବିଭାଜନ", "ମିଶାଇବା", "ଡିଜାଇନିଂ"],
+    correctAnswer: 1,
+    explanation:
+      "ବିଭାଜନ ବୋଲି କୁହାଯାଏ ଯେତେବେଳେ ଦେଖା, କଠିନତା, ଘୁଲନଶୀଳତା ପରି ଗୁଣମାନ ଆଧାରରେ ସାମଗ୍ରୀକୁ ଗୋଷ୍ଟୀକରଣ କରାଯାଏ।",
+  },
+] as const;
+
 // Objects and Materials Lesson (Good Morning)
 const objectsAndMaterialsProblems = [
   {
@@ -704,11 +750,12 @@ const Lesson: NextPage = () => {
   type LessonKey = "1" | "2" | "3" | "4";
   const isHindi = router.pathname.startsWith("/hindi");
   const isTelugu = router.pathname.startsWith("/telugu");
+  const isOdia = router.pathname.startsWith("/odia");
 
   const lessons: Record<LessonKey, { title: string; problems: readonly any[] }> = {
     "1": {
       title: "Importance of Sorting Materials",
-      problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : lesson1Problems,
+      problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : isOdia ? lesson1ProblemsOr : lesson1Problems,
     },
     "2": { title: "Objects and Materials", problems: objectsAndMaterialsProblems },
     "3": { title: "Properties of Materials", problems: propertiesOfMaterialsProblems },
@@ -847,6 +894,17 @@ const Lesson: NextPage = () => {
             incorrect: "❌ తప్పు",
             explanation: "వివరణ:",
           }
+        : isOdia
+        ? {
+            quit: "ବାହାରିବେ",
+            question: "ପ୍ରଶ୍ନ",
+            of: "ରୁ",
+            checkAnswer: "ଉତ୍ତର ଯାଞ୍ଚ କରନ୍ତୁ",
+            continue: "ଚାଲୁ ରଖନ୍ତୁ",
+            correct: "✅ ଠିକ୍!",
+            incorrect: "❌ ଭୁଲ",
+            explanation: "ବ୍ୟାଖ୍ୟା:",
+          }
         : {
             quit: "Quit",
             question: "Question",
@@ -873,7 +931,7 @@ const Lesson: NextPage = () => {
             problemIndex={problemIdx}
             totalQuestions={problems.length}
             labels={labels}
-            backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
+            backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : isOdia ? "/odia" : "/learn"}
           />
         </>
       );

@@ -51,6 +51,11 @@ export const LoginScreeno: React.FC<Props> = ({ loginScreenState }) => {
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("lang", "od");
+        }
+      } catch {}
       router.push("/select-grade");
     } catch (err: any) {
       setError(err.message || "କିଛି ଭୁଲ୍ ହୋଇଛି, ଦୟାକରି ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ");
@@ -91,7 +96,7 @@ export const LoginScreeno: React.FC<Props> = ({ loginScreenState }) => {
           .eq("id", signUpData.user.id);
       }
 
-      router.push("/select-grade");
+      router.push("/odia");
     } catch (err: any) {
       setError(err.message || "କିଛି ଭୁଲ୍ ହୋଇଛି, ଦୟାକରି ପୁନର୍ବାର ଚେଷ୍ଟା କରନ୍ତୁ");
     } finally {
