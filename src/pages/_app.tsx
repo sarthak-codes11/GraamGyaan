@@ -1,11 +1,42 @@
 import { type AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { useBoundStore } from "~/hooks/useBoundStore";
+import languages from "~/utils/languages";
 
 import "~/styles/globals.css";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const router = useRouter();
+  const setLanguage = useBoundStore((s) => s.setLanguage);
+
+  // Sync language from query param ?lang=; fallback to localStorage on first mount
+  useEffect(() => {
+    const { lang } = router.query as { lang?: string };
+
+    if (typeof window === "undefined") return;
+
+    if (typeof lang === "string") {
+      const found = languages.find((l) => l.code === lang);
+      if (found) {
+        setLanguage(found as any);
+        try {
+          window.localStorage.setItem("appLangCode", found.code);
+        } catch {}
+      }
+      return;
+    }
+
+    // No query param: hydrate from localStorage if available
+    try {
+      const stored = window.localStorage.getItem("appLangCode");
+      if (stored) {
+        const found = languages.find((l) => l.code === stored);
+        if (found) setLanguage(found as any);
+      }
+    } catch {}
+  }, [router.query, setLanguage]);
   return (
     <>
       <Head>

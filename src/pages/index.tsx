@@ -4,6 +4,7 @@ import { GlobeSvg } from "~/components/Svgs";
 import LoginScreen from "~/components/LoginScreen";
 import LoginScreenh from "~/components/LoginScreenh";
 import LoginScreent from "~/components/LoginScreent";
+import LoginScreeno from "~/components/LoginScreeno";
 import Link from "next/link";
 
 // Text dictionary
@@ -23,6 +24,11 @@ const translations: Record<string, any> = {
     signin: "మిమ్మల్ని సైన్ ఇన్ చేద్దాం",
     changeLang: "🌐 భాష మార్చు",
   },
+  od: {
+    welcome: "ଗ୍ରାମଜ୍ଞାନକୁ ସ୍ୱାଗତ!",
+    signin: "ଆସନ୍ତୁ, ସାଇନ୍ ଇନ୍ କରିବା",
+    changeLang: "🌐 ଭାଷା ପରିବର୍ତ୍ତନ କରନ୍ତୁ",
+  },
 };
 
 const HomePage: React.FC = () => {
@@ -41,6 +47,8 @@ const HomePage: React.FC = () => {
       ? LoginScreenh
       : currentLang === "te"
       ? LoginScreent
+      : currentLang === "od"
+      ? LoginScreeno
       : LoginScreen;
 
   return (
@@ -151,6 +159,12 @@ const HomePage: React.FC = () => {
                   className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
                 >
                   తెలుగు
+                </Link>
+                <Link
+                  href={{ pathname: "/", query: { lang: "od" } }}
+                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
+                >
+                  ଓଡ଼ିଆ
                 </Link>
               </div>
             )}

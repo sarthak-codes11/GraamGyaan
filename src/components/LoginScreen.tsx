@@ -13,7 +13,7 @@ type Props = {
 
 // 🔑 helper to safely get redirect path
 function getStoredRedirectPath() {
-  let redirectPath = "/selectsub";
+  let redirectPath = "/select-grade";
   try {
     if (typeof window !== "undefined") {
       const stored = window.localStorage.getItem("loginRedirect");
@@ -68,8 +68,7 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
-      const redirectPath = getStoredRedirectPath();
-      router.push(redirectPath);
+      router.push("/select-grade");
     } catch (err: any) {
       setError(err.message || "Something went wrong, please try again.");
     } finally {
