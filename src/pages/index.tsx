@@ -4,7 +4,6 @@ import { GlobeSvg } from "~/components/Svgs";
 import LoginScreen from "~/components/LoginScreen";
 import LoginScreenh from "~/components/LoginScreenh";
 import LoginScreent from "~/components/LoginScreent";
-import LoginScreeno from "~/components/LoginScreeno";
 import Link from "next/link";
 
 // Text dictionary
@@ -20,14 +19,9 @@ const translations: Record<string, any> = {
     changeLang: "🌐 भाषा बदलें",
   },
   te: {
-    welcome: "గ్రామజ్��ాన్ కి స్వాగతం!",
+    welcome: "గ్రామజ్�న్ కి స్వాగతం!",
     signin: "మిమ్మల్ని సైన్ ఇన్ చేద్దాం",
     changeLang: "🌐 భాష మార్చు",
-  },
-  or: {
-    welcome: "ଗ୍ରାମଜ୍ଞାନକୁ ସ୍ୱାଗତ!",
-    signin: "ଆସନ୍ତୁ, ଆମେ ଆପଣଙ୍କୁ ସାଇନ୍-ଇନ୍ କରାଇବା",
-    changeLang: "🌐 ଭାଷା ପରିବର୍ତ୍ତନ",
   },
 };
 
@@ -47,8 +41,6 @@ const HomePage: React.FC = () => {
       ? LoginScreenh
       : currentLang === "te"
       ? LoginScreent
-      : currentLang === "or"
-      ? LoginScreeno
       : LoginScreen;
 
   return (
@@ -68,9 +60,9 @@ const HomePage: React.FC = () => {
         style={{ color: "#0B3D0B" }}
       >
         {/* Logo */}
-        <div className="w-full md:w-auto flex justify-center md:justify-start md:pl-16 lg:pl-24">
+        <div className="w-full md:w-auto flex justify-center items-center md:justify-start md:pl-16 lg:pl-24">
           <GlobeSvg
-            className="block h-fit w-10/12 xs:w-9/12 sm:w-8/12 md:w-[350px] translate-x-[6px] sm:translate-x-[4px] md:translate-x-0"
+            className="block h-fit w-10/12 xs:w-9/12 sm:w-8/12 md:w-[350px] mx-auto relative left-1 md:left-0"
             style={{ stroke: "none" }}
           />
         </div>
@@ -159,12 +151,6 @@ const HomePage: React.FC = () => {
                   className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
                 >
                   తెలుగు
-                </Link>
-                <Link
-                  href={{ pathname: "/", query: { lang: "or" } }}
-                  className="block w-full px-4 py-2 text-left text-black hover:bg-gray-200"
-                >
-                  ଓଡ଼ିଆ
                 </Link>
               </div>
             )}

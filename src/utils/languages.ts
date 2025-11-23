@@ -20,8 +20,6 @@ const languages = [
     code: "fr",
   },
   { name: "Hindi", nativeName: "हिंदी", viewBox: "0 1914 82 66", code: "hi" },
-  { name: "Telugu", nativeName: "తెలుగు", viewBox: "0 1914 82 66", code: "te" },
-  { name: "Odia", nativeName: "ଓଡ଼ିଆ", viewBox: "0 1914 82 66", code: "or" },
   {
     name: "Hungarian",
     nativeName: "Magyar",

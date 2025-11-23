@@ -1,10 +1,11 @@
 import type { NextPage } from "next";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { BottomBar } from "~/components/BottomBar";
 import { LeftBar } from "~/components/LeftBar";
 import RightBar from "~/components/RightBar";
 import { TopBar } from "~/components/TopBar";
+import type { UploadItem } from "~/types/uploads";
 import { useBoundStore } from "~/hooks/useBoundStore";
 
 type Video = { id: number; title: string; watched: boolean };
@@ -97,6 +98,19 @@ const LabDashboard: NextPage = () => {
   const addBadge = useBoundStore((s) => s.addBadge);
   const hasBadge = useBoundStore((s) => s.hasBadge);
 
+  // ===== Uploaded Videos =====
+  const [videosFromUploads, setVideosFromUploads] = useState<UploadItem[]>([]);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/manageUploads?type=video");
+        const data = await res.json();
+        if (data?.items) setVideosFromUploads(data.items as UploadItem[]);
+      } catch {}
+    };
+    void load();
+  }, []);
+
   const totalVideos = units.reduce((acc, u) => acc + u.videos.length, 0);
   const watchedVideos = units.reduce((acc, u) => acc + u.videos.filter(v => v.watched).length, 0);
   const totalQuizzes = units.reduce((acc, u) => acc + (u.quizzesAttempted || 0), 0);
@@ -153,6 +167,29 @@ const LabDashboard: NextPage = () => {
               <div className="text-2xl font-bold">{totalAssignments}</div>
             </div>
           </div>
+
+          {/* Uploaded Lab Videos */}
+          <section className="mb-8 p-5 rounded-2xl bg-white/95 shadow-md border-2 border-gray-200">
+            <h2 className="text-lg font-semibold mb-3">Uploaded Lab Videos</h2>
+            {videosFromUploads.length === 0 ? (
+              <div className="text-sm text-gray-500">No videos uploaded yet.</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {videosFromUploads.map((v) => (
+                  <div key={v.id} className="flex flex-col gap-2">
+                    <div className="text-sm font-medium">{v.title}</div>
+                    <video controls className="w-full rounded-lg">
+                      <source src={v.relativePath} type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    {v.description && (
+                      <div className="text-xs text-gray-500">{v.description}</div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
 
           {/* Units */}
           <div className="space-y-6">

@@ -9,6 +9,7 @@
     -webkit-text-size-adjust: 100%;
     /* Smooth scrolling */
     scroll-behavior: smooth;
+    color-scheme: light;
   }
   
   body {
@@ -17,6 +18,7 @@
     /* Better font rendering on mobile */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    @apply bg-white text-gray-900;
   }
   
   /* Improve touch targets on mobile */
@@ -129,5 +131,3 @@
     transition: transform 0.1s ease;
   }
 }
-
-

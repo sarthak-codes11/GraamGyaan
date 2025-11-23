@@ -37,6 +37,7 @@ import LoginScreen, { useLoginScreen } from "~/components/LoginScreen";
 import { useBoundStore } from "~/hooks/useBoundStore";
 import type { Tile, TileType, Unit } from "~/utils/units";
 import { units } from "~/utils/units";
+import type { UploadItem } from "~/types/uploads";
 
 type TileStatus = "LOCKED" | "ACTIVE" | "COMPLETE";
 
@@ -221,6 +222,7 @@ const TileTooltip = ({
       <div
         className={[
           "absolute z-30 flex w-[300px] flex-col gap-4 rounded-xl p-4 font-bold transition-all duration-300",
+          "group",
           status === "ACTIVE"
             ? activeBackgroundColor
             : status === "LOCKED"
@@ -247,10 +249,10 @@ const TileTooltip = ({
           className={[
             "text-lg",
             status === "ACTIVE"
-              ? "text-white"
+              ? "text-white group-hover:text-blue-100"
               : status === "LOCKED"
-              ? "text-gray-400"
-              : "text-yellow-600",
+              ? "text-gray-400 group-hover:text-gray-300"
+              : "text-yellow-600 group-hover:text-yellow-400",
           ].join(" ")}
         >
           {description}
@@ -463,6 +465,10 @@ const Learn: NextPage = () => {
     typeof pickedLang === "string" && supported.has(pickedLang as Lang)
       ? (pickedLang as Lang)
       : "en";
+      
+  // Language detection for routing
+  const isHindi = router.pathname.startsWith("/hindi");
+  const isTelugu = router.pathname.startsWith("/telugu");
 
   const dailyFacts: Record<Lang, string[]> = {
     en: [
@@ -551,6 +557,19 @@ const Learn: NextPage = () => {
   }, []);
   const topBarColors = getTopBarColors(scrollY);
 
+  // ===== Uploaded Notes (Guidebook) =====
+  const [notes, setNotes] = useState<UploadItem[]>([]);
+  useEffect(() => {
+    const load = async () => {
+      try {
+        const res = await fetch("/api/manageUploads?type=note");
+        const data = await res.json();
+        if (data?.items) setNotes(data.items as UploadItem[]);
+      } catch {}
+    };
+    void load();
+  }, []);
+
   return (
     <>
       <style jsx global>{`
@@ -594,7 +613,7 @@ const Learn: NextPage = () => {
             <h3 className="mb-2 text-2xl font-extrabold">
               {text.title}
             </h3>
-            <p className="mb-4 text-base">{facts[factIndex]}</p>
+            <p className="mb-4 text-base text-gray-700">{facts[factIndex]}</p>
             <div className="flex justify-end">
               <button
                 onClick={() => setShowFact(false)}
@@ -612,10 +631,44 @@ const Learn: NextPage = () => {
       <div className="flex justify-center gap-3 pt-14 px-2 xs:px-4 sm:p-6 sm:pt-10 md:ml-24 lg:ml-64 lg:gap-12">
         <div className="flex max-w-2xl grow flex-col w-full">
           {/* Mobile now uses a floating toggle button within RightBar; no inline RightBar here */}
+          {/* Hero summary */}
+          <section className="mb-6 rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-sm">
+            <h1 className="text-2xl font-bold mb-2 text-gray-900">Welcome back!</h1>
+            <p className="text-sm text-gray-600 mb-4">Start with the next active tile below or open your latest class notes in the Guidebook section.</p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="#units" className="rounded-xl border-2 border-b-4 border-blue-300 bg-white px-4 py-2 font-semibold text-blue-600 hover:bg-gray-50 transition">Go to Units</Link>
+              <Link href="#guidebook" className="rounded-xl border-2 border-b-4 border-emerald-300 bg-white px-4 py-2 font-semibold text-emerald-700 hover:bg-gray-50 transition">Open Guidebook</Link>
+            </div>
+          </section>
 
           {units.map((unit) => (
             <UnitSection unit={unit} key={unit.unitNumber} />
           ))}
+
+          {/* Guidebook: Uploaded Notes */}
+          <section id="guidebook" className="mt-8 rounded-2xl border-2 border-gray-200 bg-white p-5">
+            <h2 className="mb-3 text-xl font-bold text-[#5C4033]">Guidebook</h2>
+            <ul className="flex flex-col gap-2">
+              {notes.map((n) => (
+                <li key={n.id} className="flex items-center gap-2">
+                  <a
+                    href={n.relativePath}
+                    className="text-[#7B3F00] font-semibold underline truncate"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {n.title}
+                  </a>
+                  {n.description && (
+                    <span className="text-xs text-gray-500 ml-2 truncate">{n.description}</span>
+                  )}
+                </li>
+              ))}
+              {notes.length === 0 && (
+                <li className="text-sm text-gray-500">No notes uploaded yet.</li>
+              )}
+            </ul>
+          </section>
 
           <div className="sticky bottom-28 xs:bottom-32 left-0 right-0 flex items-end justify-between px-2">
             <div className="flex flex-col items-center gap-2">
@@ -632,6 +685,20 @@ const Learn: NextPage = () => {
               >
                 <span className="sr-only">Practice exercise</span>
                 <PracticeExerciseSvg className="h-6 w-6 xs:h-8 xs:w-8" />
+              </Link>
+              <Link
+                href={isHindi ? "/hindi/purchased-courses" : isTelugu ? "/telugu/purchased-courses" : "/purchased-courses"}
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-purple-300 bg-purple-100 transition hover:bg-purple-200 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">My Purchased Courses</span>
+                <span aria-hidden className="text-2xl">📚</span>
+              </Link>
+              <Link
+                href={isHindi ? "/hindi/daily-quiz" : isTelugu ? "/telugu/daily-quiz" : "/daily-quiz"}
+                className="flex h-14 w-14 xs:h-16 xs:w-16 items-center justify-center rounded-full border-2 border-b-4 border-orange-300 bg-orange-100 transition hover:bg-orange-200 hover:brightness-90 btn-mobile shadow-lg"
+              >
+                <span className="sr-only">Daily Quiz</span>
+                <span aria-hidden className="text-2xl">🧠</span>
               </Link>
             </div>
 
@@ -740,6 +807,41 @@ const UnitHeader = ({
   backgroundColor: `bg-${string}`;
   borderColor: `border-${string}`;
 }) => {
+  const [latestNoteUrl, setLatestNoteUrl] = useState<string | null>(null);
+  const [latestNoteTitle, setLatestNoteTitle] = useState<string>("Class notes");
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      try {
+        const res = await fetch("/api/manageUploads?type=note");
+        const data = await res.json();
+        if (!mounted) return;
+        type NoteLite = { relativePath: string; title?: string; uploadedAt?: string; unitNumber?: number };
+        const items = (data?.items ?? []) as NoteLite[];
+        if (items.length > 0) {
+          // Prefer notes that match this unit number
+          const forUnit = items.filter((it) => (it.unitNumber ?? -1) === unitNumber);
+          const pool = forUnit.length > 0 ? forUnit : items;
+          const sorted = pool
+            .slice()
+            .sort((a, b) => new Date(b.uploadedAt ?? 0).getTime() - new Date(a.uploadedAt ?? 0).getTime());
+          const latestItem = sorted[0]!;
+          setLatestNoteUrl(latestItem.relativePath);
+          setLatestNoteTitle(latestItem.title || "Class notes");
+        } else {
+          setLatestNoteUrl(null);
+        }
+      } catch {
+        setLatestNoteUrl(null);
+      }
+    };
+    void load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <article
       className={["max-w-2xl text-white sm:rounded-xl", backgroundColor].join(
@@ -752,20 +854,22 @@ const UnitHeader = ({
           <p className="text-lg">{description}</p>
         </div>
 
-        {/* ✅ Changed from div → a, added href+download */}
-        <a
-          href="/notes/sorting-materials-into-groups.docx"
-          download
-          className={[
-            "flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100",
-            borderColor,
-          ].join(" ")}
-        >
-          <GuidebookSvg />
-          <span className="sr-only font-bold uppercase lg:not-sr-only">
-            class notes
-          </span>
-        </a>
+        {latestNoteUrl && (
+          <a
+            href={latestNoteUrl}
+            target="_blank"
+            rel="noreferrer"
+            className={[
+              "flex items-center gap-3 rounded-2xl border-2 border-b-4 p-3 transition hover:text-gray-100",
+              borderColor,
+            ].join(" ")}
+          >
+            <GuidebookSvg />
+            <span className="sr-only font-bold uppercase lg:not-sr-only">
+              {latestNoteTitle}
+            </span>
+          </a>
+        )}
       </header>
     </article>
   );

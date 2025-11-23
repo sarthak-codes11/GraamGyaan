@@ -30,20 +30,20 @@ const SelectSub: React.FC = () => {
             background: "linear-gradient(to right, #fceabb, #BAB86C)" 
           }}
         >
-            <div className="flex justify-center mb-10">
-              <h2 className="text-7xl font-extrabold text-[#006400] tracking-wide drop-shadow-lg"  
+            <div className="flex justify-center mb-6 sm:mb-8 md:mb-10 px-4 text-center">
+              <h2 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-extrabold text-[#006400] tracking-wide drop-shadow-lg"  
               style={{ fontFamily: "'Oswald' , Oswald"}}>
-    विषय चुनें
-  </h2>
-</div>
+                विषय चुनें
+              </h2>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 w-full max-w-6xl mx-auto px-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 w-full max-w-6xl mx-auto px-4 sm:px-6">
               {subjects.map((sub) => (
                 <button 
                   key={sub.value}
                   onClick={() => handleSelect(sub.value)}
                   className={`
-                    w-full py-16 rounded-2xl font-extrabold text-5xl shadow-2xl tracking-wide
+                    w-full py-8 sm:py-10 md:py-12 rounded-2xl font-extrabold text-2xl sm:text-3xl md:text-4xl shadow-2xl tracking-wide
                     transition-all transform hover:scale-110 focus:outline-none
                     hover:shadow-[0_0_20px_#FFD700] border-2 border-transparent
                     ${
@@ -60,12 +60,10 @@ const SelectSub: React.FC = () => {
                   `}
                   style={{ fontFamily: "'Oswald', Oswald", backgroundColor:"#B3A285"}}
                 >
-      {sub.name}
-    </button>
-  ))}
-</div>
-
-
+                  {sub.name}
+                </button>
+              ))}
+            </div>
         </div>
     );
 };

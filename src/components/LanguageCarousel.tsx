@@ -84,7 +84,7 @@ export const LanguageCarousel = () => {
 
   const startIndexRef = useRef(0);
   const languagesContainer = useRef<null | HTMLDivElement>(null);
-  const lastLanguageIndex = languages.length - 1;
+  const lastLanguageIndex = 19;
   return (
     <article className="absolute bottom-0 left-0 right-0 hidden h-20 items-center justify-center bg-[#0a4a82] text-white md:flex">
       <div className="flex w-full max-w-5xl justify-between">

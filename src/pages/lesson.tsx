@@ -66,52 +66,6 @@ const lesson1Problems = [
   }
 ] as const;
 
-// Odia: Lesson 1
-const lesson1ProblemsOr = [
-  {
-    type: "MCQ",
-    question: "ପଦାର୍ଥକୁ ଦଳରେ ବିଭକ୍ତ କରିବା କାହିଁକି ଦରକାର?",
-    answers: [
-      "ସବୁ କିଛି ଚିକ୍କଣ ଦେଖାଇବାପାଇଁ",
-      "ବିଜ୍ଞାନୀମାନଙ୍କୁ ଘୁଚାଇବାପାଇଁ",
-      "ପଦାର୍ଥକୁ ସହଜରେ ଅଧ୍ୟୟନ କରି ବଞ୍ଚିତ ସଠିକ୍ ବ୍ୟବହାର ପାଇଁ",
-      "ସେଗୁଡ଼ିକୁ ଦାମିଆ କରିବାପାଇଁ",
-    ],
-    correctAnswer: 2,
-    explanation:
-      "ବର୍ଗୀକରଣ ଦ୍ୱାରା ପଦାର୍ଥଙ୍କୁ ତୁଲନା, ଅଧ୍ୟୟନ ଏବଂ ବୁଝିବା ସହଜ ହୁଏ। ନିର୍ଦ୍ଦିଷ୍ଟ କାମ ପାଇଁ ସଠିକ୍ ପଦାର୍ଥ ବାଛିବାରେ ଏହା ସାହାଯ୍ୟ କରେ।",
-  },
-  {
-    type: "MCQ",
-    question: "ନିମ୍ନଲିଖିତରୁ କୁହିଁଟି ବର୍ଗୀକରଣର ଲାଭ ନୁହେଁ?",
-    answers: [
-      "ଅଧ୍ୟୟନରେ ସାହାଯ୍ୟ କରେ",
-      "ରିସାଇକ୍ଲିଂ ସହଜ କରେ",
-      "ଅଧିକ ସମୟ ନଷ୍ଟ କରେ",
-      "ଠିକ୍ ପଦାର୍ଥ ବାଛିବାରେ ସାହାଯ୍ୟ କରେ",
-    ],
-    correctAnswer: 2,
-    explanation:
-      "ବର୍ଗୀକରଣ ପଦାର୍ଥକୁ ସଠିକ୍ ଭାବେ ଗୋଛାଇ ରଖି ସମୟ ଓ ପରିଶ୍ରମ ବଞ୍ଚାଏ; ଏହା ସମୟ ନଷ୍ଟ କରେ ନାହିଁ।",
-  },
-  {
-    type: "MCQ",
-    question: "ରନ୍ଧଣ ହାଣ୍ଡି ସାଧାରଣତଃ ଧାତୁରୁ କାହିଁକି ତିଆରି କରାଯାଏ?",
-    answers: ["ଯେହେତୁ ଚମକେ", "ଯେହେତୁ ରଙ୍ଗୀନ", "ଯେହେତୁ ତାପ ଭଲ ଭାବେ ବହନ କରେ", "ଯେହେତୁ ସସ୍ତା"],
-    correctAnswer: 2,
-    explanation:
-      "ଧାତୁ ତାପର ଭଲ ବାହକ; ସେଥିପାଇଁ ଧାତୁର ପାତ୍ରରେ ଖାଦ୍ୟ ସମଭାବରେ ସିଜେ।",
-  },
-  {
-    type: "MCQ",
-    question: "ସମାନ ଗୁଣ ଆଧାରରେ ପଦାର୍ଥକୁ ଦଳରେ କରିବାକୁ କ’ଣ କୁହାଯାଏ?",
-    answers: ["ପେଣ୍ଟିଂ", "ବର୍ଗୀକରଣ", "ମିଶାଇବା", "ଡିଜାଇନିଂ"],
-    correctAnswer: 1,
-    explanation:
-      "ବର୍ଗୀକରଣ ଅର୍ଥ ହେଲା ଦେଖା, କଠିନତା, ଦ୍ରାବ୍ୟତା ଇତ୍ୟାଦି ଗୁଣ ଆଧାରରେ ପଦାର୍ଥକୁ ଦଳରେ କରିବା।",
-  },
-] as const;
-
 // Hindi: Lesson 1
 const lesson1ProblemsHi = [
   {
@@ -488,7 +442,7 @@ const FancyButton = ({
   const baseClasses = "rounded-xl px-6 py-3 font-semibold shadow-md transform transition-all border";
   
   const variantClasses = {
-    default: "bg-gradient-to-br from-white to-beige-200 hover:from-beige-100 hover:to-white border-gray-300 hover:scale-105 hover:shadow-lg",
+    default: "bg-gradient-to-br from-white to-beige-200 border-gray-300 text-gray-800",
     selected: "bg-[#A3B18A] border-[#6B7D5B] text-white scale-105",
     correct: "bg-gradient-to-br from-green-100 to-green-200 border-green-400 text-green-800",
     incorrect: "bg-gradient-to-br from-red-100 to-red-200 border-red-400 text-red-800"
@@ -750,12 +704,11 @@ const Lesson: NextPage = () => {
   type LessonKey = "1" | "2" | "3" | "4";
   const isHindi = router.pathname.startsWith("/hindi");
   const isTelugu = router.pathname.startsWith("/telugu");
-  const isOdia = router.pathname.startsWith("/odia");
 
   const lessons: Record<LessonKey, { title: string; problems: readonly any[] }> = {
     "1": {
       title: "Importance of Sorting Materials",
-      problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : isOdia ? lesson1ProblemsOr : lesson1Problems,
+      problems: isHindi ? lesson1ProblemsHi : isTelugu ? lesson1ProblemsTe : lesson1Problems,
     },
     "2": { title: "Objects and Materials", problems: objectsAndMaterialsProblems },
     "3": { title: "Properties of Materials", problems: propertiesOfMaterialsProblems },
@@ -794,21 +747,7 @@ const Lesson: NextPage = () => {
     setCurrentLesson(resolveLessonKey(router.query.lesson as string | undefined));
   }, [router.isReady, router.query.lesson]);
 
-  // select problems; do NOT fall back to lesson1
-  const problems = lessons[currentLesson].problems;
-  if (!router.isReady) return null; // or a loader
-  if (problems.length === 0) {
-    return (
-      <>
-        <AnimatedGradientBackground />
-        <div className="min-h-screen flex items-center justify-center">Coming soon</div>
-      </>
-    );
-  }
-
-  const problem = problems[problemIdx];
-
-  // Timer effect
+  // Timer effect (placed before any early returns to keep hook order stable)
   useEffect(() => {
     if (timer > 0 && !correctAnswerShown) {
       timerRef.current = setTimeout(() => {
@@ -817,8 +756,8 @@ const Lesson: NextPage = () => {
     } else if (timer === 0 && !correctAnswerShown) {
       // Time's up - treat as wrong answer
       setCorrectAnswerShown(true);
-      setIncorrectAnswerCount(c => c + 1);
-      setLives(l => Math.max(0, l - 1));
+      setIncorrectAnswerCount((c) => c + 1);
+      setLives((l) => Math.max(0, l - 1));
     }
 
     return () => {
@@ -833,40 +772,21 @@ const Lesson: NextPage = () => {
     if (!correctAnswerShown) {
       setTimer(TIMER_DURATION_MS);
     }
-  }, [problemIdx]);
+  }, [problemIdx, correctAnswerShown]);
 
-  // Early exits
-  if (lives <= 0) return (
-    <>
-      <AnimatedGradientBackground />
-      <LessonFastForwardEndFail unitNumber={1} backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"} backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"} />
-    </>
-  );
-  if (showSummary) {
-    const isPerfect = incorrectAnswerCount === 0;
+  // select problems; do NOT fall back to lesson1
+  const problems = lessons[currentLesson].problems;
+  if (!router.isReady) return null; // or a loader
+  if (problems.length === 0) {
     return (
       <>
         <AnimatedGradientBackground />
-        <LessonComplete
-          correctAnswerCount={correctAnswerCount}
-          incorrectAnswerCount={incorrectAnswerCount}
-          xpGained={xpGained}
-          isPerfect={isPerfect}
-          lessonsCompleted={lessonsCompleted}
-          totalTimeMs={totalTimeMs}
-          backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
-          backLabel={isHindi ? "मुख्य पेज पर जाएँ" : isTelugu ? "ముఖ్య పేజీకి వెళ్లండి" : "Back to main"}
-        />
+        <div className="min-h-screen flex items-center justify-center">Coming soon</div>
       </>
     );
   }
 
-  if (!problem) return (
-    <>
-      <AnimatedGradientBackground />
-      <div>Unknown problem type</div>
-    </>
-  );
+  const problem = problems[problemIdx];
 
   const isAnswerCorrect = selectedAnswer === problem.correctAnswer;
 
@@ -927,17 +847,6 @@ const Lesson: NextPage = () => {
             incorrect: "❌ తప్పు",
             explanation: "వివరణ:",
           }
-        : isOdia
-        ? {
-            quit: "ବାହାରିବେ",
-            question: "ପ୍ରଶ୍ନ",
-            of: "ମଧ୍ୟରୁ",
-            checkAnswer: "ଉତ୍ତର ଯାଞ୍ଚ କରନ୍ତୁ",
-            continue: "ଆଗକୁ ଯାଆନ୍ତୁ",
-            correct: "✅ ଠିକ୍!",
-            incorrect: "❌ ଭୁଲ୍",
-            explanation: "ବ୍ୟାଖ୍ୟା:",
-          }
         : {
             quit: "Quit",
             question: "Question",
@@ -964,7 +873,7 @@ const Lesson: NextPage = () => {
             problemIndex={problemIdx}
             totalQuestions={problems.length}
             labels={labels}
-            backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : isOdia ? "/odia" : "/learn"}
+            backHref={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
           />
         </>
       );
