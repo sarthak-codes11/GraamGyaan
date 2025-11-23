@@ -51,7 +51,12 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
         .update({ last_login: new Date().toISOString() })
         .eq("id", authData.user.id);
 
-      router.push("/selectsubh");
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("lang", "hi");
+        }
+      } catch {}
+      router.push("/select-grade");
     } catch (err: any) {
       setError(err.message || "कुछ गलत हो गया, कृपया पुनः प्रयास करें");
     } finally {
@@ -91,7 +96,12 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
           .eq("id", signUpData.user.id);
       }
 
-      router.push("/selectsubh");
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("lang", "hi");
+        }
+      } catch {}
+      router.push("/select-grade");
     } catch (err: any) {
       setError(err.message || "कुछ गलत हो गया, कृपया पुनः प्रयास करें");
     } finally {

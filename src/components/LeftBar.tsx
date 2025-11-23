@@ -63,6 +63,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
   const router = useRouter();
   const isHindi = router.pathname.startsWith("/hindi");
   const isTelugu = router.pathname.startsWith("/telugu");
+  const isOdia = router.pathname.startsWith("/odia");
 
   const translateTabName = (name: Tab): string => {
     if (isHindi) {
@@ -75,6 +76,20 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
           return "प्रोफ़ाइल";
         case "Leaderboards":
           return "लीडरबोर्ड";
+        default:
+          return name;
+      }
+    }
+    if (isOdia) {
+      switch (name) {
+        case "Learn":
+          return "ଶିଖନ୍ତୁ";
+        case "Lab":
+          return "ଲାବ୍";
+        case "Profile":
+          return "ପ୍ରୋଫାଇଲ୍";
+        case "Leaderboards":
+          return "ଲିଡରବୋର୍ଡ";
         default:
           return name;
       }
@@ -105,7 +120,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
     <>
       <nav className="fixed bottom-0 left-0 top-0 hidden flex-col gap-5 border-r-2 border-[#e5e5e5] bg-white p-3 md:flex lg:w-64 lg:p-5">
         <Link
-          href={isHindi ? "/hindi" : isTelugu ? "/telugu" : "/learn"}
+          href={isHindi ? "/hindi" : isTelugu ? "/telugu" : isOdia ? "/odia" : "/learn"}
           className="mb-5 ml-5 mt-5 hidden text-3xl font-bold text-[#654321] lg:block"
         >
           GraamGyaan
@@ -119,6 +134,12 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                 if (item.href === "/lab") return "/hindi/lab";
                 if (item.href === "/profile") return "/hindi/profile";
                 if (item.href === "/leaderboard") return "/hindi/leaderboard";
+              }
+              if (isOdia) {
+                if (item.href === "/learn") return "/odia";
+                if (item.href === "/lab") return "/odia/lab";
+                if (item.href === "/profile") return "/odia/profile";
+                if (item.href === "/leaderboard") return "/odia/leaderboard";
               }
               if (isTelugu) {
                 if (item.href === "/learn") return "/telugu";
@@ -161,7 +182,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
             tabIndex={0}
           >
             <LeftBarMoreMenuSvg />{" "}
-            <span className="hidden text-sm lg:inline">{isHindi ? "और" : isTelugu ? "మరిన్ని" : "More"}</span>
+            <span className="hidden text-sm lg:inline">{isHindi ? "और" : isTelugu ? "మరిన్ని" : isOdia ? "ଅଧିକ" : "More"}</span>
             <div
               className={[
                 "absolute left-full top-[-10px] min-w-[300px] rounded-2xl border-2 border-gray-300 bg-white text-left text-gray-400",
@@ -174,14 +195,14 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                   href="/leaderboard?extended=1"
                 >
                   <GlobeIconSvg className="h-10 w-10" />
-                  {isHindi ? "स्कूल" : isTelugu ? "పాఠశాల" : "School"}
+                  {isHindi ? "स्कूल" : isTelugu ? "పాఠశాల" : isOdia ? "ବିଦ୍ୟାଳୟ" : "School"}
                 </Link>
                 <Link
                   className="flex items-center gap-4 px-5 py-2 text-left uppercase hover:bg-gray-100"
-                  href={isHindi ? "/hindi/shop" : isTelugu ? "/telugu/shop" : "/shop"}
+                  href={isHindi ? "/hindi/shop" : isTelugu ? "/telugu/shop" : isOdia ? "/odia/shop" : "/shop"}
                 >
                   <ShopIconSvg className="h-10 w-10" />
-                  {isHindi ? "दुकान" : isTelugu ? "దుకాణం" : "Shop"}
+                  {isHindi ? "दुकान" : isTelugu ? "దుకాణం" : isOdia ? "ଦୋକାନ" : "Shop"}
                 </Link>
               </div>
               <div className="flex flex-col border-t-2 border-gray-300 py-2">
@@ -190,27 +211,27 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                     onClick={() => setShowLogin(true)}
                   >
-                    {isHindi ? "प्रोफ़ाइल बनाएँ" : isTelugu ? "ప్రొఫైల్ సృష్టించండి" : "Create a profile"}
+                    {isHindi ? "प्रोफ़ाइल बनाएँ" : isTelugu ? "ప్రొఫైల్ సృష్టించండి" : isOdia ? "ପ୍ରୋଫାଇଲ୍ ସୃଷ୍ଟି କରନ୍ତୁ" : "Create a profile"}
                   </button>
                 )}
                 <Link
                   className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                   href={loggedIn ? "/settings/account" : "/settings/sound"}
                 >
-                  {isHindi ? "सेटिंग्स" : isTelugu ? "సెట్టింగ్స్" : "Settings"}
+                  {isHindi ? "सेटिंग्स" : isTelugu ? "సెట్టింగ్స్" : isOdia ? "ସେଟିଂସ୍" : "Settings"}
                 </Link>
                 <Link
                   className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                   href="/help"
                 >
-                  {isHindi ? "सहायता" : isTelugu ? "సహాయం" : "Help"}
+                  {isHindi ? "सहायता" : isTelugu ? "సహాయం" : isOdia ? "ସାହାଯ୍ୟ" : "Help"}
                 </Link>
                 {!loggedIn && (
                   <button
                     className="px-5 py-2 text-left uppercase hover:bg-gray-100"
                     onClick={() => router.push("/")}
                   >
-                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : "Sign out"}
+                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : isOdia ? "ସାଇନ୍ ଆଉଟ୍" : "Sign out"}
                   </button>
                 )}
                 {loggedIn && (
@@ -221,7 +242,7 @@ export const LeftBar = ({ selectedTab }: { selectedTab: Tab | null }) => {
                       router.push("/");
                     }}
                   >
-                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : "Sign out"}
+                    {isHindi ? "साइन आउट" : isTelugu ? "సైన్ అవుట్" : isOdia ? "ସାଇନ୍ ଆଉଟ୍" : "Sign out"}
                   </button>
                 )}
               </div>

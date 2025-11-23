@@ -19,7 +19,16 @@ const SelectGrade: React.FC = () => {
     const handleSelect = (grade: string) => {
         // For now, only Grade 6 leads to subject selection
         if (grade === "6") {
-            void router.push("/selectsub");
+            // decide which subject selection page to use based on stored lang
+            let lang = "";
+            try {
+                if (typeof window !== "undefined") {
+                    lang = window.localStorage.getItem("lang") || "";
+                }
+            } catch {}
+
+            const target = lang === "hi" ? "/selectsubh" : lang === "te" ? "/selectsubt" : lang === "od" ? "/selectsubo" : "/selectsub";
+            void router.push(target);
         } else {
             // For other grades, you can add specific logic or show a message
             alert(`Grade ${grade} content coming soon!`);

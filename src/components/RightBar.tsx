@@ -122,6 +122,7 @@ export default function RightBar() {
   const router = useRouter();
   const isHindi = router.pathname.startsWith("/hindi");
   const isTelugu = router.pathname.startsWith("/telugu");
+  const isOdia = router.pathname.startsWith("/odia");
 
   // Live values from store
   const lessonsCompleted = useBoundStore((x) => x.lessonsCompleted);
@@ -150,6 +151,10 @@ export default function RightBar() {
       void router.push("/telugu");
       return;
     }
+    if (isOdia) {
+      void router.push("/odia");
+      return;
+    }
     void router.push("/learn");
   };
   const lessonsRemainingToUnlockLeaderboard = Math.max(1 - lessonsCompleted, 0);
@@ -163,29 +168,35 @@ export default function RightBar() {
     <>
       {/* Daily Streak card */}
       <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "दैनिक स्ट्रीक" : isTelugu ? "దైనందిన స్ట్రీక్" : "Daily Streak"}</h2>
-        <p className="text-sm text-gray-600">{isHindi ? "रोज़ लॉगिन करके अपनी स्ट्रीक बनाए रखें।" : isTelugu ? "ప్రతి రోజు లాగిన్ అయి మీ స్ట్రీక్ కొనసాగించండి." : "Keep your streak alive by logging in daily."}</p>
+        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "दैनिक स्ट्रीक" : isTelugu ? "దైనందిన స్ట్రీక్" : isOdia ? "ଦୈନିକ ଷ୍ଟ୍ରିକ୍" : "Daily Streak"}</h2>
+        <p className="text-sm text-gray-600">{isHindi ? "रोज़ लॉगिन करके अपनी स्ट्रीक बनाए रखें।" : isTelugu ? "ప్రతి రోజు లాగిన్ అయి మీ స్ట్రీక్ కొనసాగించండి." : isOdia ? "ପ୍ରତିଦିନ ଲଗଇନ୍ କରି ଆପଣଙ୍କ ଷ୍ଟ୍ରିକ୍ ଜୀବନ୍ତ ରଖନ୍ତୁ।" : "Keep your streak alive by logging in daily."}</p>
+
         <div className="mt-3 flex items-center justify-between">
           <div className="text-3xl font-extrabold text-orange-500">{streak}</div>
           <button
             className="rounded-xl border-2 border-b-4 border-gray-200 bg-white px-4 py-2 text-sm font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
             onClick={() => addToday()}
           >
-            {isHindi ? "आज चिन्हित करें" : isTelugu ? "ఈ రోజు గుర్తించండి" : "Mark today"}
+            {isHindi ? "आज चिन्हित करें" : isTelugu ? "ఈ రోజు గుర్తించండి" : isOdia ? "ଆଜି ଚିହ୍ନିତ କରନ୍ତୁ" : "Mark today"}
+
           </button>
         </div>
       </article>
 
       {/* Leaderboard (white card, shadow, hover lift) */}
       <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "लीडरबोर्ड" : isTelugu ? "లీడర్‌బోర్డ్" : "Leaderboard"}</h2>
+        <h2 className="mb-2 text-xl font-bold text-[#680B24]">{isHindi ? "लीडरबोर्ड" : isTelugu ? "లీడర్‌బోర్డ్" : isOdia ? "ଲିଡରବୋର୍ଡ" : "Leaderboard"}</h2>
+
         {needsUnlock ? (
           <div className="text-sm text-gray-600">
             {isHindi
               ? `लीडरबोर्ड अनलॉक करने के लिए ${lessonsRemainingToUnlockLeaderboard} और पाठ पूरे करें।`
               : isTelugu
               ? `లీడర్‌బోర్డ్‌ను అన్‌లాక్ చేయడానికి ఇంకో ${lessonsRemainingToUnlockLeaderboard} పాఠం(లు) పూర్తి చేయండి.`
+              : isOdia
+              ? `ଲିଡରବୋର୍ଡ ଅନଲକ୍ କରିବା ପାଇଁ ଆଉ ${lessonsRemainingToUnlockLeaderboard} ପାଠ ସମାପ୍ତ କରନ୍ତୁ।`
               : `Complete ${lessonsRemainingToUnlockLeaderboard} more lesson${lessonsRemainingToUnlockLeaderboard === 1 ? "" : "s"} to unlock the leaderboard.`}
+
           </div>
         ) : (
           <>
@@ -194,13 +205,17 @@ export default function RightBar() {
                 ? <>आप आज <strong>#{userRank}</strong> रैंक पर हैं। इसी तरह आगे बढ़ते रहें!</>
                 : isTelugu
                 ? <>మీరు ఈ రోజు <strong>#{userRank}</strong> ర్యాంక్‌లో ఉన్నారు. అలాగే కొనసాగండి!</>
+                : isOdia
+                ? <>ଆପଣ ଆଜି <strong>#{userRank}</strong> ସ୍ଥାନରେ ଅଛନ୍ତି। ଏଭଳି ଜାରି ରଖନ୍ତୁ!</>
                 : <>You’re ranked <strong>#{userRank}</strong> today. Keep going!</>}
+
             </p>
             <button
               className="mt-2 rounded-xl border-2 border-b-4 border-gray-200 bg-white px-3 py-1 text-xs font-bold uppercase text-green-800 transition hover:bg-gray-50 hover:brightness-90"
               onClick={goToLearn}
             >
-              {isHindi ? "सीखने पर जाएँ" : isTelugu ? "నేర్చుకోవడానికి వెళ్ళండి" : "Go to Learn"}
+              {isHindi ? "सीखने पर जाएँ" : isTelugu ? "నేర్చుకోవడానికి వెళ్ళండి" : isOdia ? "ଶିଖିବାକୁ ଯାଆନ୍ତୁ" : "Go to Learn"}
+
             </button>
             <ul className="mt-4 flex flex-col gap-3">
               {leaderboardData.map((user, i) => (
@@ -214,7 +229,7 @@ export default function RightBar() {
                     {i + 1}. {user.name}
                   </span>
                   <span className="text-sm font-semibold text-gray-600">
-                    {user.xp} {isHindi ? "XP" : isTelugu ? "XP" : "XP"}
+                    {user.xp} {isHindi ? "XP" : isTelugu ? "XP" : isOdia ? "XP" : "XP"}
                   </span>
                 </li>
               ))}
@@ -225,19 +240,22 @@ export default function RightBar() {
 
       {/* Achievements (white card, shadow, hover lift) */}
       <article className="rounded-2xl border border-gray-200 bg-white p-6 text-gray-700 shadow-md transition transform hover:-translate-y-1 hover:shadow-lg">
-        <h2 className="mb-4 text-xl font-bold text-[#680B24]">{isHindi ? "उपलब्धियाँ और इनाम" : isTelugu ? "సాధనలు & బహుమతులు" : "Achievements & Rewards"}</h2>
+        <h2 className="mb-4 text-xl font-bold text-[#680B24]">{isHindi ? "उपलब्धियाँ और इनाम" : isTelugu ? "సాధనలు & బహుమతులు" : isOdia ? "ସାଧନା ଏବଂ ପୁରସ୍କାର" : "Achievements & Rewards"}</h2>
+
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-50 shadow-sm">
             <TrophyIcon />
           </div>
           <div>
             <p className="text-sm text-gray-600">
-              {isHindi ? "कुल अर्जित XP:" : isTelugu ? "మొత్తం సంపాదించిన XP:" : "Total XP earned:"} <span className="font-semibold text-gray-800">{totalXp}</span>
+              {isHindi ? "कुल अर्जित XP:" : isTelugu ? "మొత్తం సంపాదించిన XP:" : isOdia ? "ମୋଟ ଅର୍ଜିତ XP:" : "Total XP earned:"} <span className="font-semibold text-gray-800">{totalXp}</span>
             </p>
+
             <p className="text-sm text-gray-600">
-              {isHindi ? "आज के लक्ष्य के लिए आवश्यक XP:" : isTelugu ? "ఈ రోజు లక్ష్యం కోసం కావాల్సిన XP:" : "XP needed for today’s goal:"} {" "}
+              {isHindi ? "आज के लक्ष्य के लिए आवश्यक XP:" : isTelugu ? "ఈ రోజు లక్ష్యం కోసం కావాల్సిన XP:" : isOdia ? "ଆଜିର ଲକ୍ଷ୍ୟ ପାଇଁ ଆବଶ୍ୟକ XP:" : "XP needed for today’s goal:"} {" "}
               <span className="font-semibold text-gray-800">{xpToReward}</span>
             </p>
+
           </div>
         </div>
         {/* golden animated progress bar */}
@@ -261,8 +279,9 @@ export default function RightBar() {
             <GiftIcon />
           </div>
           <p className="text-sm text-gray-600">
-            {isHindi ? "नई उपलब्धियाँ और पुरस्कार अनलॉक करने के लिए मेहनत जारी रखें!" : isTelugu ? "కొత్త సాధనలు మరియు బహుమతులను అన్‌లాక్ చేసేందుకు కృషి కొనసాగించండి!" : "Keep grinding to unlock new achievements and prizes!"}
+            {isHindi ? "नई उपलब्धियाँ और पुरस्कार अनलॉक करने के लिए मेहनत जारी रखें!" : isTelugu ? "కొత్త సాధనలు మరియు బహుమతులను అన్‌లాక్ చేసేందుకు కృషి కొనసాగించండి!" : isOdia ? "ନୂତନ ସାଧନା ଏବଂ ପୁରସ୍କାର ଅନଲକ୍ କରିବା ପାଇଁ ଅଭ୍ୟାସ ଜାରି ରଖନ୍ତୁ!" : "Keep grinding to unlock new achievements and prizes!"}
           </p>
+
         </div>
       </article>
     </>
@@ -306,7 +325,8 @@ export default function RightBar() {
             aria-label="Right panel"
           >
             <div className="flex items-center justify-between border-b px-4 py-3">
-              <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : "Options"}</h3>
+              <h3 className="text-lg font-semibold">{isHindi ? "विकल्प" : isTelugu ? "ఎంపికలు" : isOdia ? "ବିକଳ୍ପ" : "Options"}</h3>
+
               <button
                 className="rounded-md p-2 text-gray-600 hover:bg-gray-100"
                 onClick={() => closeRightbarMobile()}

@@ -11,7 +11,7 @@ export default function Chatbot({
   docked = true,
 }: {
   pageId: string;
-  locale?: "en" | "hi" | "te";
+  locale?: "en" | "hi" | "te" | "or";
   systemPrompt?: string;
   docked?: boolean;
 }) {
@@ -22,6 +22,8 @@ export default function Chatbot({
       ? "नमस्ते! मैं आपकी सहायता करने के लिए यहाँ हूँ। आप क्या सीखना चाहते हैं?"
       : locale === "te"
       ? "హలో! నేను మీకు సహాయం చేయడానికి ఇక్కడున్నాను. మీరు ఏమి నేర్చుకోవాలనుకుంటున్నారు?"
+      : locale === "or"
+      ? "ନମସ୍କାର! ମୁଁ ଆପଣଙ୍କୁ ସାହାଯ୍ୟ କରିବା ପାଇଁ ଏଠାରେ ଅଛି। ଆପଣ କଣ ଶିଖିବାକୁ ଚାହୁଁଛନ୍ତି?"
       : "Hello! I’m here to help. What would you like to learn?";
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: initialGreeting() },
@@ -132,6 +134,8 @@ export default function Chatbot({
               ? "अपना सवाल पूछें…"
               : locale === "te"
               ? "మీ ప్రశ్నను టైప్ చేయండి…"
+              : locale === "or"
+              ? "ଆପଣଙ୍କ ପ୍ରଶ୍ନ ଟାଇପ୍ କରନ୍ତୁ…"
               : "Type your question…"
           }
           className="flex-1 rounded-xl border-2 px-3 py-3 text-base"
