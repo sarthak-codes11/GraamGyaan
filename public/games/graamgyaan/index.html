@@ -2,7 +2,7 @@
     <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
         <title>GraamGyaan</title>
         <style>
             /* Reset CSS: Please avoid making changes here unless you know what you're doing :) */
@@ -39,11 +39,156 @@
                 text-decoration: none;
                 color: inherit;
             }
+
+            /* ---- Tokens & Global ---- */
+            :root{
+              --page-padding: 1rem;
+              --max-width: 900px;
+              --hit-size: 48px;
+              --gap: 1rem;
+              --primary: #0ea5a4;
+              --muted: #f3f4f6;
+              --card-radius: 12px;
+              --shadow: 0 4px 12px rgba(0,0,0,0.06);
+              --bg: #ffffff;
+            }
+            html,body{overflow-x:hidden}
+            body{padding-bottom: env(safe-area-inset-bottom)}
+            .app-wrapper{
+              width:100%;
+              max-width:var(--max-width);
+              margin:0 auto;
+              padding: calc(var(--page-padding) + env(safe-area-inset-top)) var(--page-padding) calc(var(--page-padding) + env(safe-area-inset-bottom));
+              padding-bottom: calc(var(--page-padding) + 88px);
+            }
+
+            .tap-target{min-width:var(--hit-size);min-height:var(--hit-size);display:inline-flex;align-items:center;justify-content:center;padding:0.25rem;border-radius:10px}
+            .btn{display:inline-flex;align-items:center;justify-content:center;gap:0.5rem;padding:0.5rem 0.75rem;border-radius:10px;border:1px solid #e6e6e6;min-height:44px;cursor:pointer}
+            .btn.primary{background:var(--primary);color:#fff;border:none}
+            .btn.ghost{background:transparent;border:1px solid #dcdcdc}
+
+            .header{position:sticky;top:0;z-index:60;background:linear-gradient(180deg,#7b1220,#6b0814);color:#fff;padding:0.75rem;border-bottom:1px solid rgba(255,255,255,0.03)}
+
+            /* Left rail (desktop) */
+            .left-rail{position:fixed;left:12px;top:120px;display:flex;flex-direction:column;gap:0.75rem;z-index:40}
+            @media (max-width:899px){ .left-rail{display:none} }
+
+            /* Rail toggle FAB for mobile */
+            #rail-fab{display:none;position:fixed;left:12px;bottom:88px;width:48px;height:48px;border-radius:50%;z-index:60;align-items:center;justify-content:center;box-shadow:var(--shadow);background:#fff}
+            @media (max-width:899px){ #rail-fab{display:flex} }
+
+            /* Slide-out rail */
+            #slide-rail{position:fixed;left:0;top:0;bottom:0;width:260px;transform:translateX(-100%);transition:transform .25s ease;z-index:65;background:#fff;padding:1rem;box-shadow:0 8px 24px rgba(0,0,0,0.12)}
+
+            /* Timeline / accordion */
+            .timeline-accordion{display:flex;flex-direction:column;gap:0.75rem;margin:1rem 0}
+            .timeline-accordion .accordion-item{border-radius:var(--card-radius);box-shadow:var(--shadow);overflow:hidden;background:#fff}
+            .timeline-accordion .accordion-toggle{width:100%;text-align:left}
+            .timeline-accordion .accordion-panel{padding:0.75rem}
+            .timeline-accordion .node{width:100%;min-height:64px;border-radius:var(--card-radius);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:0.5rem;padding:0.75rem;background:#fff}
+
+            /* Bottom nav */
+            .bottom-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:space-around;padding:0.5rem calc(1rem + env(safe-area-inset-bottom));background:rgba(255,255,255,0.98);border-top:1px solid #eee;z-index:50}
+            .bottom-nav .nav-btn{min-width:48px;min-height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+
+            /* Game container responsive */
+            #game-container{ width:100%; max-width:900px; margin:1rem auto; display:flex; justify-content:center; align-items:center; }
+            #game-container canvas{ width:100% !important; height:auto !important; display:block; }
+
+            /* Focus styles */
+            :focus{outline:3px solid rgba(14,165,164,0.4);outline-offset:2px}
         </style>
     </head>
     <body>
-        <div id="game-container"></div>
-        <script src="./phaser.js"></script>
-        <script type="module" src="./src/main.js"></script>
+        <header class="header" role="banner">
+          <div style="display:flex;align-items:center;justify-content:space-between;max-width:var(--max-width);margin:0 auto">
+            <strong>GraamGyaan</strong>
+            <span style="opacity:.8;font-size:.9rem">Play & Learn</span>
+          </div>
+        </header>
+
+        <div class="app-wrapper">
+          <!-- Desktop tool rail -->
+          <nav class="left-rail" aria-label="Tools">
+            <button class="btn tap-target" aria-label="Open Game">🎮</button>
+            <button class="btn tap-target" aria-label="Daily Quiz">🧠</button>
+            <button class="btn tap-target" aria-label="Guidebook">📘</button>
+          </nav>
+
+          <!-- Mobile FAB + slide-out rail -->
+          <button id="rail-fab" aria-label="Open tools" class="tap-target">☰</button>
+          <aside id="slide-rail" aria-hidden="true">
+            <button id="rail-close" aria-label="Close" class="tap-target">✕</button>
+            <div style="margin-top:1rem;display:flex;flex-direction:column;gap:0.5rem">
+              <button class="btn">Game</button>
+              <button class="btn">DQ</button>
+              <button class="btn">Guidebook</button>
+            </div>
+          </aside>
+
+          <!-- Timeline accordion (mobile-first) -->
+          <section class="timeline-accordion" aria-label="Learning Timeline">
+            <div class="accordion-item">
+              <button class="accordion-toggle btn" aria-expanded="false">Unit 1 — Start</button>
+              <div class="accordion-panel" hidden>
+                <div class="node">
+                  <div class="label">Sorting Material Into Groups</div>
+                  <button class="btn primary start-game" aria-label="Start Game">Start</button>
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <button class="accordion-toggle btn" aria-expanded="false">Unit 2 — Practice</button>
+              <div class="accordion-panel" hidden>
+                <div class="node">
+                  <div class="label">Practice Exercises</div>
+                  <button class="btn">Open</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Game container -->
+          <div id="game-container" aria-label="Game"></div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav" role="navigation" aria-label="Bottom Navigation">
+          <button class="nav-btn tap-target" aria-label="Learn">📚</button>
+          <button class="nav-btn tap-target" aria-label="Games">🎮</button>
+          <button class="nav-btn tap-target" aria-label="Daily Quiz">🧠</button>
+          <button class="nav-btn tap-target" aria-label="Profile">👤</button>
+        </nav>
+        <script defer src="./phaser.js"></script>
+        <script type="module" defer src="./src/main.js"></script>
+        <script>
+          // Slide-out rail toggle
+          const railFab = document.getElementById('rail-fab');
+          const slideRail = document.getElementById('slide-rail');
+          const railClose = document.getElementById('rail-close');
+          function openRail(){ slideRail.style.transform='translateX(0)'; slideRail.setAttribute('aria-hidden','false'); }
+          function closeRail(){ slideRail.style.transform='translateX(-100%)'; slideRail.setAttribute('aria-hidden','true'); }
+          railFab && railFab.addEventListener('pointerdown', openRail);
+          railClose && railClose.addEventListener('pointerdown', closeRail);
+          slideRail && slideRail.addEventListener('pointerdown', e => e.stopPropagation());
+          document.addEventListener('pointerdown', (e) => { if(e.target!==railFab && !slideRail.contains(e.target)) closeRail(); });
+
+          // Accordion behavior
+          document.querySelectorAll('.accordion-toggle').forEach(btn=>{
+            btn.addEventListener('pointerdown', (e)=>{
+              const expanded = btn.getAttribute('aria-expanded') === 'true';
+              btn.setAttribute('aria-expanded', String(!expanded));
+              const panel = btn.nextElementSibling;
+              if (panel) panel.hidden = expanded;
+            });
+          });
+
+          // Start game lazily on user action
+          document.querySelectorAll('.start-game').forEach(btn => {
+            btn.addEventListener('pointerdown', async ()=>{
+              if (window.startGame) { window.startGame(); }
+            });
+          });
+        </script>
     </body>
     </html>
