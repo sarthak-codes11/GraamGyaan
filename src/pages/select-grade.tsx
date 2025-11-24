@@ -34,6 +34,8 @@ const SelectGrade: React.FC = () => {
             let lang = "";
             try {
                 if (typeof window !== "undefined") {
+                    // persist selected grade for downstream diagnostic generation
+                    window.localStorage.setItem("selectedGrade", grade);
                     lang = window.localStorage.getItem("lang") || "";
                 }
             } catch {}

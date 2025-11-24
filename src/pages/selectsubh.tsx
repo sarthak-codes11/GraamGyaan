@@ -14,7 +14,30 @@ const SelectSub: React.FC = () => {
     const router = useRouter();
     
     const handleSelect = (subject: string) => {
-        // push string URL with query to Hindi page
+        try {
+          if (typeof window !== 'undefined') {
+            const isNew = window.localStorage.getItem('isNewStudent') === 'true';
+            const grade = window.localStorage.getItem('selectedGrade') || '';
+            if (isNew && grade) {
+              const url = `/api/diagnostic/generate?grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`;
+              fetch(url)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                  if (data && data.questions && Array.isArray(data.questions)) {
+                    try {
+                      window.localStorage.setItem('diagnosticQuiz', JSON.stringify(data));
+                      window.localStorage.setItem('isNewStudent', 'false');
+                    } catch {}
+                  }
+                })
+                .catch(() => {});
+              // Redirect new students to the diagnostic page
+              void router.push(`/diagnostic?grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`);
+              return;
+            }
+          }
+        } catch {}
+        // continue navigation unaffected
         void router.push(`/hindi?subject=${encodeURIComponent(subject)}`);
     };
 

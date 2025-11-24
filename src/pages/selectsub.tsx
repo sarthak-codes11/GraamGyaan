@@ -14,7 +14,31 @@ const SelectSub: React.FC = () => {
     const router = useRouter();
     
     const handleSelect = (subject: string) => {
-        // push string URL with query
+        try {
+          if (typeof window !== 'undefined') {
+            const isNew = window.localStorage.getItem('isNewStudent') === 'true';
+            const grade = window.localStorage.getItem('selectedGrade') || '';
+            if (isNew && grade) {
+              // fire-and-forget diagnostic generation; do not block navigation
+              const url = `/api/diagnostic/generate?grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`;
+              fetch(url)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                  if (data && data.questions && Array.isArray(data.questions)) {
+                    try {
+                      window.localStorage.setItem('diagnosticQuiz', JSON.stringify(data));
+                      window.localStorage.setItem('isNewStudent', 'false');
+                    } catch {}
+                  }
+                })
+                .catch(() => {});
+              // redirect new students to diagnostic
+              void router.push(`/diagnostic?grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`);
+              return;
+            }
+          }
+        } catch {}
+        // push string URL with query (unaffected for existing users)
         void router.push(`/learn?subject=${encodeURIComponent(subject)}`);
     };
 

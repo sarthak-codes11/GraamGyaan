@@ -109,6 +109,15 @@ export const LoginScreen: React.FC<Props> = ({ loginScreenState }) => {
           .eq("id", signUpData.user.id);
       }
 
+      // Mark this browser session as a brand-new student for one-time diagnostic
+      try {
+        if (typeof window !== "undefined") {
+          window.localStorage.setItem("isNewStudent", "true");
+          window.localStorage.removeItem("diagnosticQuiz");
+          window.localStorage.removeItem("diagnosticResult");
+        }
+      } catch {}
+
       const redirectPath = getStoredRedirectPath();
       router.push(redirectPath);
     } catch (err: any) {

@@ -25,7 +25,7 @@ const Register: NextPage = () => {
           {languages.map((language) => (
             <Link
               key={language.name}
-              href={`/learn?lang=${language.code}`}
+              href={`/select-grade?lang=${language.code}`}
               className={
                 "flex cursor-pointer flex-col items-center gap-4 rounded-2xl border-2 border-b-4 border-gray-400 px-5 py-8 text-xl font-bold hover:bg-gray-300 hover:bg-opacity-20"
               }
@@ -35,6 +35,8 @@ const Register: NextPage = () => {
                   if (typeof window !== "undefined") {
                     window.localStorage.setItem("appLangCode", language.code);
                     window.localStorage.setItem("lang", language.code);
+                    window.localStorage.setItem("isNewStudent", "true");
+                    window.localStorage.removeItem("diagnosticQuiz");
                   }
                 } catch {}
               }}

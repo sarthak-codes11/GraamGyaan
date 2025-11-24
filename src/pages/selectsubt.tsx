@@ -14,6 +14,26 @@ const SelectSub: React.FC = () => {
     const router = useRouter();
     
     const handleSelect = (subject: string) => {
+        try {
+          if (typeof window !== 'undefined') {
+            const isNew = window.localStorage.getItem('isNewStudent') === 'true';
+            const grade = window.localStorage.getItem('selectedGrade') || '';
+            if (isNew && grade) {
+              const url = `/api/diagnostic/generate?grade=${encodeURIComponent(grade)}&subject=${encodeURIComponent(subject)}`;
+              fetch(url)
+                .then(r => r.ok ? r.json() : null)
+                .then(data => {
+                  if (data && data.questions && Array.isArray(data.questions)) {
+                    try {
+                      window.localStorage.setItem('diagnosticQuiz', JSON.stringify(data));
+                      window.localStorage.setItem('isNewStudent', 'false');
+                    } catch {}
+                  }
+                })
+                .catch(() => {});
+            }
+          }
+        } catch {}
         // push string URL with query to Telugu page
         void router.push(`/telugu?subject=${encodeURIComponent(subject)}`);
     };
